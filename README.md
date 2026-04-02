@@ -122,7 +122,7 @@ TVD/
 │       │   ├── profile.blade.php            # Xem thông tin cá nhân
 │       │   ├── editprofile.blade.php        # Form tự chỉnh sửa tên/avatar
 │       │   ├── my-courses.blade.php         # Danh sách khóa học đã mua
-│       │   └── formdangkykhoahoc.blade.php  # Form cho người dùng đăng ký khóa học
+│       │   └── formdangkykhoahoc.blade.php  #Form cho người dùng đăng ký khóa học
 │       │
 │       ├── auth/
 │       │   ├── login.blade.php
@@ -136,8 +136,6 @@ TVD/
 │
 └── routes/
     └── web.php                              # Định nghĩa tất cả URL dự án
-
-|...............................................................
 
 6. Database
 
