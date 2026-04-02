@@ -1,64 +1,45 @@
-<header class="bg-dark">
-    <div class="container d-flex justify-content-between align-items-center py-2">
-
-        <!-- Logo -->
-        <a href="/" class="text-white fw-bold text-decoration-none fs-4">
-            TVD
-        </a>
-
-        <!-- Menu -->
-        <nav class="d-flex align-items-center gap-4">
-
-            <a href="/" class="text-white text-decoration-none">
-                Trang chủ
+<header class="main-header">
+    <div class="container">
+        <div class="header-wrapper">
+            <!-- Logo -->
+            <a href="/" class="logo">
+                <span class="logo-text">GEMINI<span class="logo-accent">ACEDAMY</span></span>
             </a>
 
-            <a href="/courses" class="text-white text-decoration-none">
-                Khóa học
-            </a>
+            <!-- Navigation Menu -->
+            <nav class="main-nav">
+                <a href="/" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
+                <a href="/courses" class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}">Khóa học</a>
+                <a href="/my-courses" class="nav-link">Khóa học của tôi</a>
+                <a href="/about" class="nav-link">Về chúng tôi</a>
+                <a href="/contact" class="nav-link">Liên hệ</a>
+            </nav>
 
-            @auth
-                <!-- Khóa học của tôi + số lượng -->
-                <a href="/my-courses" class="text-white text-decoration-none">
-                    Khóa học của tôi
-                    ({{ auth()->user()->courses->count() ?? 0 }})
-                </a>
-
-                <!-- Dropdown user -->
-                <div class="dropdown">
-                    <a class="text-white dropdown-toggle text-decoration-none" href="#" data-bs-toggle="dropdown">
-                        {{ auth()->user()->name }}
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="/profile">
-                                Thông tin cá nhân
-                            </a>
-                        </li>
-                        <li>
-                            <form action="/logout" method="POST">
-                                @csrf
-                                <button class="dropdown-item">
-                                    Đăng xuất
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-
-            @else
-                <!-- Guest -->
-                <a href="/login" class="btn btn-outline-light btn-sm">
-                    Đăng nhập
-                </a>
-
-                <a href="/register" class="btn btn-info btn-sm">
-                    Đăng ký
-                </a>
-            @endauth
-
-        </nav>
-
+            <!-- Auth Buttons -->
+            <div class="auth-buttons">
+                @auth
+                    <div class="dropdown user-dropdown">
+                        <button class="user-btn" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span>{{ auth()->user()->name }}</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="/logout" method="POST">
+                                    @csrf
+                                    <button class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @else
+                    <a href="/login" class="btn-login">Đăng nhập</a>
+                    <a href="/register" class="btn-register">Đăng ký</a>
+                @endauth
+            </div>
+        </div>
     </div>
 </header>
