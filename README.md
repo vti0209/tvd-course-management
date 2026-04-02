@@ -1,40 +1,46 @@
 TVD - Online Course Management System
-## 1. Giới thiệu
+
+1. Giới thiệu
+
 Online Course Management System là hệ thống quản lý khóa học trực tuyến cho phép:
 Người dùng đăng ký, đăng nhập và tham gia đăng ký khóa học.
 Quản trị viên quản lý khóa học và người dùng (CRUD)
 Tìm kiếm, lọc và xem chi tiết khóa học
 Dự án được xây dựng theo mô hình MVC sử dụng Laravel.
 
-## 2. Thành viên và phân công
-## Nguyen Thi Dung:
+2. Thành viên và phân công
+Nguyen Thi Dung:
+
 Thiết kế Database (chuẩn 3NF)
 Seed dữ liệu mẫu (Factories, Seeders)
 Xây dựng Dashboard (thống kê User và Course)
 CRUD Users (Admin)
 Lọc user đã đăng ký khóa học
 
-## Hồ Thị Vãi:
+Hồ Thị Vãi:
 
 Xây dựng chức năng Authentication (Login, Register, Logout)
 Phân quyền truy cập (User/Admin)
 Thực thi các thao tác nhanh cho user, admin (lọc, tìm kiếm)
 
-## Hồ Văn Tiết:
+Hồ Văn Tiết:
 
 Giao diện người dùng (Header, Footer, Banner)
 Trang Home, Profile, My Courses
 Trang chi tiết khóa học + đăng ký khóa học
 Tìm kiếm và lọc khóa học
 
-## 3. Công nghệ sử dụng
+3. Công nghệ sử dụng
+
 Backend: Laravel
 Frontend: HTML, CSS, JavaScript
 Database: MySQL, phpMyAdmin
 ORM: Eloquent
 Authentication: Laravel Auth
-## 4. Chức năng chính
-# 4.1 Người dùng
+
+4. Chức năng chính
+4.1 Người dùng
+
 Đăng ký tài khoản
 Đăng nhập / Đăng xuất
 Xem danh sách khóa học (có phân trang)
@@ -42,11 +48,14 @@ Xem chi tiết khóa học
 Đăng ký khóa học
 Quản lý thông tin cá nhân
 Xem danh sách khóa học đã đăng ký
-# 4.2 Quản trị viên
+
+4.2 Quản trị viên
+
 Dashboard thống kê (User, Course)
 Quản lý khóa học (CRUD, tìm kiếm tên, lọc theo danh mục, phân trang)
 Quản lý người dùng (CRUD, tìm theo tên, lọc user đã đăng ký khóa học)
-## 5. Cấu trúc thư mục
+
+5. Cấu trúc thư mục
 TVD/
 ├── app/
 │   ├── Http/
@@ -71,7 +80,7 @@ TVD/
 │       └── User.php                         
 │
 ├── database/
-|   ├── factories/                          
+│   ├── factories/                          
 │   │   ├── CategoryFactory.php              # Fake tên danh mục
 │   │   ├── UserFactory.php                  # Fake email, tên, pass
 │   │   ├── CourseFactory.php                # Fake tiêu đề, giá, slug
@@ -112,8 +121,8 @@ TVD/
 │       │   ├── home.blade.php               # Trang chủ (Slide, 8 khóa học, Phân trang)
 │       │   ├── profile.blade.php            # Xem thông tin cá nhân
 │       │   ├── editprofile.blade.php        # Form tự chỉnh sửa tên/avatar
-│       │   |── my-courses.blade.php         # Danh sách khóa học đã mua
-|       |   └── formdangkykhoahoc.blade.php  #Form cho người dùng đăng ký khóa học
+│       │   ├── my-courses.blade.php         # Danh sách khóa học đã mua
+│       │   └── formdangkykhoahoc.blade.php  # Form cho người dùng đăng ký khóa học
 │       │
 │       ├── auth/
 │       │   ├── login.blade.php
@@ -127,10 +136,10 @@ TVD/
 │
 └── routes/
     └── web.php                              # Định nghĩa tất cả URL dự án
+
 |...............................................................
 
-
-## 6. Database
+6. Database
 
 Hệ thống sử dụng 5 bảng chính:
 users
@@ -139,40 +148,52 @@ courses
 lessons
 course_user (quan hệ N-N giữa User và Course)
 
-## 7. Cài đặt dự án
+7. Cài đặt dự án
+
 Bước 1: Clone project
-### git clone <repository_url>
-### cd tvd
+
+git clone <repository_url>
+cd tvd
 
 Bước 2: Cài dependencies
-### composer install
+
+composer install
 
 Bước 3: Tạo file môi trường
-### cp .env.example .env
-### php artisan key:generate
+
+cp .env.example .env
+php artisan key:generate
 
 Bước 4: Cấu hình database
-### Chỉnh file .env:
+
+Chỉnh file .env:
+
 DB_DATABASE=your_db
 DB_USERNAME=root
 DB_PASSWORD=
 
 Bước 5: Migration và seed dữ liệu
-### php artisan migrate --seed
+
+php artisan migrate --seed
 
 Bước 6: Chạy server
-### php artisan serve
 
-## 8. Tài khoản mẫu
+php artisan serve
+8. Tài khoản mẫu
+Admin:
 
-#### Admin:
 Email: admin@example.com
+
 Password: 123456
 
-#### User:
+User:
+
 Email: user@example.com
+
 Password: 123456
-## 9. Hướng phát triển
+
+9. Hướng phát triển
+
 Thanh toán online
 Đánh giá khóa học
 Upload video bài học
