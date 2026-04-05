@@ -10,9 +10,11 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $courses = Course::with('category')
-            ->latest()
-            ->paginate(8);
+        $courses = Course::select('id', 'category_id', 'title', 'price', 'thumbnail', 'duration')
+            ->with('category:id,name')
+            ->orderBy('created_at', 'desc')
+            ->limit(8)
+            ->get();
 
         return view('users.home', compact('courses'));
     }

@@ -196,7 +196,7 @@ body {
 
 .courses-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
     margin-bottom: 3rem;
 }
@@ -254,6 +254,26 @@ body {
     margin-bottom: 0.75rem;
     line-height: 1.4;
     min-height: 48px;
+}
+
+.course-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.course-duration {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.course-duration i {
+    color: #06b6d4;
+    font-size: 0.75rem;
 }
 
 .course-price {
@@ -409,7 +429,7 @@ body {
     }
 
     .courses-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
     }
 
