@@ -13,13 +13,8 @@
     <form method="POST" action="/login">
         @csrf
 
-        <div class="form-group">
-            <input type="email" name="email" placeholder="Email" required>
-        </div>
-
-        <div class="form-group">
-            <input type="password" name="password" placeholder="Password" required>
-        </div>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
 
         <button class="btn-submit">Login</button>
     </form>

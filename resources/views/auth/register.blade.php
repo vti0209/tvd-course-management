@@ -11,11 +11,12 @@
 
 <form method="POST" action="/register">
     @csrf
-    <input type="text" name="name" placeholder="Name"><br><br>
-    <input type="email" name="email" placeholder="Email"><br><br>
-    <input type="password" name="password" placeholder="Password"><br><br>
+    <input type="text" name="name" placeholder="Name">
+    <input type="email" name="email" placeholder="Email">
+    <input type="password" name="password" placeholder="Password">
+    <input type="password" name="password_confirmation" placeholder="Confirm Password">
     <button>Register</button>
 </form>
 
-<a href="/login">Đăng nhập</a>
+<a href="/login">Đã có tài khoản? Đăng nhập</a>
 @endsection
