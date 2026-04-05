@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,40 +9,62 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Hiện trang đăng nhập
-    public function showLogin() {
+    // FORM
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    // Xử lý đăng nhập
-    public function login(Request $request) {
-        $credentials = $request->only('username', 'password');
-        if (Auth::attempt($credentials)) {
-            return redirect()->route('products.index');
-        }
-        return back()->with('error', 'Sai tài khoản hoặc mật khẩu!');
-    }
-
-    // Hiện trang đăng ký
-    public function showRegister() {
+    public function showRegister()
+    {
         return view('auth.register');
     }
 
-    // Xử lý đăng ký
-    public function register(Request $request) {
+    // REGISTER
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6'
+        ]);
+
         User::create([
-            'username' => $request->username,
-            'fullname' => $request->fullname,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user' // Mặc định là user
+            'role' => 'user'
         ]);
-        return redirect()->route('login')->with('success', 'Đăng ký thành công!');
+
+        return redirect('/login')->with('success', 'Đăng ký thành công!');
     }
 
-    // Đăng xuất
-    public function logout() {
+    // LOGIN
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+
+            $request->session()->regenerate();
+
+            if (Auth::user()->role == 'admin') {
+                return redirect('/admin');
+            }
+
+            return redirect('/trangchu');
+        }
+
+        return back()->with('error', 'Sai email hoặc mật khẩu!');
+    }
+
+    // LOGOUT
+    public function logout(Request $request)
+    {
         Auth::logout();
-        return redirect()->route('login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }
