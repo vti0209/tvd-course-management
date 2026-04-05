@@ -26,7 +26,17 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|same:password'
+        ], [
+            'name.required' => 'Tên là bắt buộc.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email phải là địa chỉ email hợp lệ.',
+            'email.unique' => 'Email đã được sử dụng.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải ít nhất 6 ký tự.',
+            'password_confirmation.required' => 'Xác nhận mật khẩu là bắt buộc.',
+            'password_confirmation.same' => 'Mật khẩu xác nhận không khớp.'
         ]);
 
         User::create([
@@ -42,6 +52,15 @@ class AuthController extends Controller
     // LOGIN
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ], [
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email phải là địa chỉ email hợp lệ.',
+            'password.required' => 'Mật khẩu là bắt buộc.'
+        ]);
+
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
