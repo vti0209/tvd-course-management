@@ -1,5 +1,8 @@
+@extends('layouts.master')
 
+@section('content')
 <link rel="stylesheet" href="{{ asset('css/user.css') }}">
+
 <div class="form-container">
     <h2>Đăng nhập</h2>
 
@@ -25,3 +28,4 @@
         <a href="/register">Chưa có tài khoản? Đăng ký</a>
     </div>
 </div>
+@endsection

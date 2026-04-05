@@ -1,3 +1,6 @@
+@extends('layouts.master')
+
+@section('content')
 <link rel="stylesheet" href="{{ asset('css/user.css') }}">
 <div class="form-container">
     <h2>Đăng ký</h2>
@@ -15,3 +18,4 @@
 </form>
 
 <a href="/login">Đăng nhập</a>
+@endsection
