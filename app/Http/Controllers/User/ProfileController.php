@@ -13,14 +13,14 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('user.profile', compact('user'));
+        return view('users.profile', compact('user'));
     }
 
     // Hiển thị form chỉnh sửa
     public function edit()
     {
         $user = Auth::user();
-        return view('user.editprofile', compact('user'));
+        return view('users.editprofile', compact('user'));
     }
 
     // Xử lý cập nhật
@@ -57,6 +57,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('user.profile')->with('success', 'Cập nhật thông tin thành công!');
+        return redirect()->route('users.profile')->with('success', 'Cập nhật thông tin thành công!');
     }
 }
