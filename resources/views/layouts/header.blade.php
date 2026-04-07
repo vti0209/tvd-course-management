@@ -8,7 +8,7 @@
 
             <!-- Navigation Menu -->
             <nav class="main-nav">
-                <a href="/" class="nav-link {{ request()->routeIs('trangchu') ? 'active' : '' }}">Trang chủ</a>
+                <a href="/trangchu" class="nav-link {{ request()->routeIs('trangchu') ? 'active' : '' }}">Trang chủ</a>
                 <a href="/courses" class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}">Khóa học</a>
                 <a href="/my-courses" class="nav-link">Khóa học của tôi</a>
                 <a href="/about" class="nav-link">Về chúng tôi</a>
@@ -44,5 +44,21 @@
                 @endauth
             </div>
         </div>
+    <form action="{{ route('courses.search') }}" method="GET" class="search-form">
+    
+    <input type="text" name="keyword" placeholder="Tìm kiếm khóa học..." class="search-input">
+
+    <select name="category_id" class="search-select">
+        <option value="">Danh mục</option>
+        @foreach($categories as $cat)
+            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+        @endforeach
+    </select>
+
+    <button type="submit" class="search-btn">
+        <i class="fas fa-search"></i>
+    </button>
+
+</form>
     </div>
 </header>

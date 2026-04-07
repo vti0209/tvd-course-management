@@ -18,6 +18,7 @@ class HomeController extends Controller
             ->get();
 
         return view('users.home', compact('courses'));
+
     }
     // Hiển thị chi tiết khóa học
     public function detail($id)
@@ -48,4 +49,28 @@ class HomeController extends Controller
 
         return redirect()->route('user.my_courses')->with('success', 'Đăng ký khóa học thành công!');
     }
+        public function search(Request $request)
+    {
+        $courses = Course::with('category:id,name');
+
+        if ($request->keyword) {
+            $courses = $courses->where('title', 'like', '%' . $request->keyword . '%');
+        }
+
+        if ($request->category_id) {
+            $courses = $courses->where('category_id', $request->category_id);
+        }
+
+        $courses = $courses->orderBy('created_at', 'desc')->paginate(8);
+
+        return view('users.home', compact('courses'));
+    }
+    public function courses()
+{
+    $courses = Course::with('category:id,name')
+        ->orderBy('created_at', 'desc')
+        ->paginate(8); // phân trang 8 khóa học mỗi trang
+
+    return view('users.courses', compact('courses'));
+}
 }

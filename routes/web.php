@@ -37,3 +37,6 @@ Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.det
 Route::middleware(['auth'])->group(function () {
     Route::post('/enroll/{id}', [HomeController::class, 'enroll'])->name('course.enroll');
 });
+Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
+// courses
+Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
