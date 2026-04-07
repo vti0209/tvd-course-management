@@ -29,3 +29,11 @@ Route::middleware(['auth'])->group(function () {
 // my courses
 use App\Http\Controllers\User\MyCourseController;
 Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_courses');
+
+// course detail & enroll
+// Xem chi tiết khóa học (Ai cũng xem được)
+Route::get('/khoa-hoc/{id}', [HomeController::class, 'detail'])->name('course.detail');
+// Đăng ký khóa học (Phải qua middleware auth)
+Route::middleware(['auth'])->group(function () {
+    Route::post('/enroll/{id}', [HomeController::class, 'enroll'])->name('course.enroll');
+});
