@@ -46,12 +46,15 @@
         </div>
     <form action="{{ route('courses.search') }}" method="GET" class="search-form">
     
-    <input type="text" name="keyword" placeholder="Tìm kiếm khóa học..." class="search-input">
+    <input 
+        type="text" name="keyword" value="{{ request('keyword') }}" placeholder="Tìm kiếm khóa học..." class="search-input">
 
     <select name="category_id" class="search-select">
         <option value="">Danh mục</option>
         @foreach($categories as $cat)
-            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                {{ $cat->name }}
+            </option>
         @endforeach
     </select>
 
