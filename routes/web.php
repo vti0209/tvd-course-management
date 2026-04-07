@@ -25,3 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('user.profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('user.profile.update');
 });
+
+// my courses
+use App\Http\Controllers\User\MyCourseController;
+Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_courses');
