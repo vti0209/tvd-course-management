@@ -8,7 +8,7 @@
 
             <!-- Navigation Menu -->
             <nav class="main-nav">
-                <a href="/" class="nav-link {{ request()->routeIs('trangchu') ? 'active' : '' }}">Trang chủ</a>
+                <a href="/trangchu" class="nav-link {{ request()->routeIs('trangchu') ? 'active' : '' }}">Trang chủ</a>
                 <a href="/courses" class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}">Khóa học</a>
                 <a href="/my-courses" class="nav-link">Khóa học của tôi</a>
                 <a href="/about" class="nav-link">Về chúng tôi</a>

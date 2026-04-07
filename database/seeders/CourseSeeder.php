@@ -60,7 +60,7 @@ class CourseSeeder extends Seeder
             ],
             [
                 'id' => 13, 'category_id' => 4, 'title' => 'Lãnh đạo và quản lý', 'slug' => 'lanh-dao-quan-ly',
-                'description' => null, 'price' => 700000.00, 'thumbnail' => 'khoa-hoc-thuyet-trinh.jpg', 'duration' => '26 giờ', 'status' => 'published', 'created_at' => now(), 'updated_at' => now()
+                'description' => null, 'price' => 700000.00, 'thumbnail' => 'khoa-hoc-thuyet-trinh1.jpg', 'duration' => '26 giờ', 'status' => 'published', 'created_at' => now(), 'updated_at' => now()
             ],
             [
                 'id' => 14, 'category_id' => 1, 'title' => 'Next.js Full Stack', 'slug' => 'nextjs-full-stack',
