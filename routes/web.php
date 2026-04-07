@@ -17,3 +17,4 @@ Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/search', [HomeController::class, 'search'])->name('courses.search');

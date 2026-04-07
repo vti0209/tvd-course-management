@@ -44,5 +44,21 @@
                 @endauth
             </div>
         </div>
+    <form action="{{ route('courses.search') }}" method="GET" class="search-form">
+    
+    <input type="text" name="keyword" placeholder="Tìm kiếm khóa học..." class="search-input">
+
+    <select name="category_id" class="search-select">
+        <option value="">Danh mục</option>
+        @foreach($categories as $cat)
+            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+        @endforeach
+    </select>
+
+    <button type="submit" class="search-btn">
+        <i class="fas fa-search"></i>
+    </button>
+
+</form>
     </div>
 </header>

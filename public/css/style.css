@@ -20,6 +20,7 @@ body {
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding-bottom: 30px;
 }
 
 .header-wrapper {
@@ -134,7 +135,7 @@ body {
 
 /* ==================== HERO CAROUSEL ==================== */
 .hero-section {
-    margin-top: 0;
+    margin-top: 0px;
     background: #0f172a;
 }
 
@@ -470,4 +471,59 @@ body {
     padding: 3rem;
     color: #64748b;
     font-size: 1rem;
+}
+
+
+/* vùng chứa */
+.search-bar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+/* form dạng thanh dài */
+.search-form {
+    display: flex;
+    width: 100%;
+    max-width: 500px; 
+    background: #e9ecef; /* nền xám nhẹ */
+    border-radius: 8px;
+    padding: 6px;  
+    margin: 0 auto; 
+}
+
+/* input */
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+    outline: none;
+    background: #fff;
+}
+
+/* select */
+.search-select {
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    margin-left: 5px;
+    background: #fff;
+}
+
+/* button */
+.search-btn {
+    background: #0dcaf0;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    margin-left: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* hover */
+.search-btn:hover {
+    background: #0bb5d4;
 }
