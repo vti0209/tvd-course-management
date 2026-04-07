@@ -35,4 +35,12 @@ class HomeController extends Controller
 
         return view('users.home', compact('courses'));
     }
+    public function courses()
+{
+    $courses = Course::with('category:id,name')
+        ->orderBy('created_at', 'desc')
+        ->paginate(8); // phân trang 8 khóa học mỗi trang
+
+    return view('users.courses', compact('courses'));
+}
 }
