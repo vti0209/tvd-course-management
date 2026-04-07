@@ -57,6 +57,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('users.profile')->with('success', 'Cập nhật thông tin thành công!');
+        return redirect()->route('user.profile')->with('success', 'Cập nhật thông tin thành công!');
     }
 }
