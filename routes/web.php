@@ -7,7 +7,7 @@ Route::get('/', function () {
 });
 use App\Http\Controllers\User\HomeController;
 
-Route::get('/trangchu', [HomeController::class, 'index']);
+Route::get('/trangchu', [HomeController::class, 'index'])->name('home');
 
 // auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -32,7 +32,7 @@ Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_c
 
 // course detail & enroll
 // Xem chi tiết khóa học (Ai cũng xem được)
-Route::get('/khoa-hoc/{id}', [HomeController::class, 'detail'])->name('course.detail');
+Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.detail');
 // Đăng ký khóa học (Phải qua middleware auth)
 Route::middleware(['auth'])->group(function () {
     Route::post('/enroll/{id}', [HomeController::class, 'enroll'])->name('course.enroll');

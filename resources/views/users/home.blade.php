@@ -58,7 +58,7 @@
                             <span class="course-duration"><i class="fas fa-clock"></i> {{ $course->duration ?? 'Liên hệ' }}</span>
                         </div>
                         <div class="course-price">{{ number_format($course->price) }}₫</div>
-                        <a href="/courses/{{ $course->id }}" class="btn-detail">Xem chi tiết →</a>
+                        <a href="{{ route('course.detail', $course->id) }}" class="btn-detail">Xem chi tiết</a>
                     </div>
                 </div>
             @empty
