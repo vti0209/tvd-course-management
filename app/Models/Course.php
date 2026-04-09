@@ -3,14 +3,36 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Lesson;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Course extends Model
 {
+    use HasFactory;
 
-    public function lessons()
+    protected $fillable = [
+        'title',
+        'slug',
+        'description',
+        'category_id',
+        'price',
+        'duration',
+        'level',
+        'image',
+        'active',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
+        'price' => 'decimal:2',
+    ];
+
+    public function setTitleAttribute($value)
     {
-        return $this->hasMany(Lesson::class, 'course_id');
+        $this->attributes['title'] = $value;
+        if (!$this->slug) {
+            $this->attributes['slug'] = Str::slug($value);
+        }
     }
 
     public function category()

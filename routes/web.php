@@ -2,14 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\DashboardController;
+
 Route::get('/', function () {
     return view('welcome');
 });
-use App\Http\Controllers\User\HomeController;
 
 Route::get('/trangchu', [HomeController::class, 'index'])->name('home');
 
-// auth
+// Auth routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -43,3 +46,19 @@ Route::post('/course/{id}/enroll', [HomeController::class, 'enroll'])->name('cou
 Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
 // courses
 Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
+// Admin routes
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Course management routes
+    Route::resource('courses', CourseController::class, [
+        'names' => [
+            'index' => 'admin.courses.index',
+            'create' => 'admin.courses.create',
+            'store' => 'admin.courses.store',
+            'edit' => 'admin.courses.edit',
+            'update' => 'admin.courses.update',
+            'destroy' => 'admin.courses.destroy',
+        ]
+    ]);
+});
