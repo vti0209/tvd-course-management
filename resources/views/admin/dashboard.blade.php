@@ -64,18 +64,18 @@
         <div class="courses-grid">
             @forelse(\App\Models\Course::latest()->take(8)->get() as $course)
             <div class="course-card">
-                <div class="card-image">
-                    @if($course->image)
-                    <img src="{{ asset($course->image) }}" alt="{{ $course->title }}">
-                    @else
+            <div class="card-image">
+                @if($course->thumbnail)
+                    <img src="{{ asset('images/' . $course->thumbnail) }}" alt="{{ $course->title }}"> {{-- Thêm đường dẫn images/ nếu cần --}}
+                @else
                     <div class="image-placeholder">
                         <i class="fas fa-book"></i>
                     </div>
-                    @endif
-                    <span class="card-badge {{ $course->active ? 'badge-active' : 'badge-inactive' }}">
-                        {{ $course->active ? 'Hoạt động' : 'Tạm dừng' }}
-                    </span>
-                </div>
+                @endif
+                <span class="card-badge {{ $course->active ? 'badge-active' : 'badge-inactive' }}">
+                    {{ $course->active ? 'Hoạt động' : 'Tạm dừng' }}
+                </span>
+            </div>
                 <div class="card-content">
                     <h3 class="card-title">{{ $course->title }}</h3>
                     <p class="card-category">{{ $course->category->name ?? 'N/A' }}</p>

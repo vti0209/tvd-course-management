@@ -63,14 +63,14 @@
                     </td>
                     <td>
                         <div class="course-name">
-                            <div class="course-image">
-                                @if($course->image)
-                                <img src="{{ asset($course->image) }}" alt="{{ $course->title }}"
+                        <div class="course-image">
+                            @if($course->thumbnail)
+                                <img src="{{ asset('images/' . $course->thumbnail) }}" alt="{{ $course->title }}"
                                     style="width: 100%; height: 100%; object-fit: cover;">
-                                @else
+                            @else
                                 <i class="fas fa-book"></i>
-                                @endif
-                            </div>
+                            @endif
+                        </div>
                             <div class="course-info">
                                 <p class="name">{{ $course->title }}</p>
                                 <p class="id">{{ $course->id }}</p>
