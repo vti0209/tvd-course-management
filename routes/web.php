@@ -28,7 +28,10 @@ Route::middleware(['auth'])->group(function () {
 
 // my courses
 use App\Http\Controllers\User\MyCourseController;
-Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_courses');
+// Đặt trong group middleware auth để bắt buộc đăng nhập mới xem được
+Route::middleware(['auth'])->group(function () {
+    Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_courses');
+});
 
 // course detail & enroll
 // Xem chi tiết khóa học (Ai cũng xem được)
