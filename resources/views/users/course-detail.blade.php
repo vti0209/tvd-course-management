@@ -17,10 +17,11 @@
                 <div class="section-box mb-4 overflow-hidden">
                     <div class="row g-0">
                         <div class="col-md-5">
+                            {{-- Đảm bảo dùng đúng thumbnail --}}
                             <img src="{{ asset('images/' . $course->thumbnail) }}"
                                  class="img-fluid w-100 course-img"
                                  alt="{{ $course->title }}"
-                                 style="min-height: 250px;">
+                                 style="min-height: 250px; object-fit: cover;">
                         </div>
                         <div class="col-md-7 p-4 bg-white d-flex flex-column justify-content-center">
                             <h4 class="mb-3 text-primary fw-bold">
@@ -77,29 +78,43 @@
                     </div>
 
                     <div class="d-grid col-md-6 mx-auto">
-                        @auth
-                            @if($isEnrolled)
-                                <a href="{{ route('user.my_courses') }}" class="btn btn-success btn-lg rounded-pill shadow-sm py-3 transition-all">
+                        @if(Auth::check()) {{-- Kiểm tra đã đăng nhập chưa --}}
+
+                            @if($isEnrolled) {{-- Nếu đã đăng nhập, kiểm tra tiếp đã mua khóa này chưa --}}
+                                <a href="{{ route('user.my_courses') }}" class="btn btn-success btn-lg rounded-pill shadow-sm py-3 fw-bold">
                                     <i class="bi bi-arrow-right-circle me-2"></i>Vào học ngay
                                 </a>
-                            @else
-                                <form action="{{ route('course.enroll', $course->id) }}" method="POST">
-                                    @csrf
-                                    <button class="btn btn-primary btn-lg rounded-pill shadow-sm py-3 w-100 transition-all">
-                                        <i class="bi bi-cart-plus me-2"></i>Đăng ký khóa này
-                                    </button>
-                                </form>
+                            @else {{-- Đã đăng nhập nhưng chưa mua --}}
+                                <button type="button" class="btn btn-primary btn-lg rounded-pill shadow-sm py-3 fw-bold"
+                                        data-bs-toggle="modal" data-bs-target="#enrollModal">
+                                    <i class="bi bi-cart-plus me-2"></i>Đăng ký ngay
+                                </button>
                             @endif
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-warning btn-lg rounded-pill shadow-sm py-3 transition-all">
+
+                        @else {{-- Chưa đăng nhập --}}
+                            <a href="{{ route('login') }}" class="btn btn-warning btn-lg rounded-pill shadow-sm py-3 fw-bold">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập để đăng ký
                             </a>
-                        @endauth
+                        @endif
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
+
+{{-- NHÚNG MODAL VÀO ĐÂY --}}
+@include('users.enroll_modal')
+
+@if(session('success'))
+    <script>
+        alert("{{ session('success') }}");
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        alert("{{ session('error') }}");
+    </script>
+@endif
 @endsection

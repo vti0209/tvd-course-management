@@ -36,18 +36,30 @@ class HomeController extends Controller
     }
 
     //Xử lý đăng ký khóa học
-    public function enroll($id)
+    public function enroll(Request $request, $id)
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để đăng ký khóa học!');
-        }
-
         $user = Auth::user();
 
-        // Sử dụng syncWithoutDetaching để tránh lỗi chèn trùng dữ liệu (Duplicate entry)
-        $user->courses()->syncWithoutDetaching([$id]);
+        // 1. Chặn nếu đã đăng ký rồi
+        if ($user->courses()->where('course_id', $id)->exists()) {
+            return back()->with('error', 'Bạn đã đăng ký khóa học này rồi!');
+        }
 
-        return redirect()->route('user.my_courses')->with('success', 'Đăng ký khóa học thành công!');
+        try {
+            // 2. Ghi danh và copy thông tin từ bảng users sang bảng course_user
+            $user->courses()->attach($id, [
+                'full_name'   => $user->name,   // Lấy từ User
+                'email'       => $user->email,  // Lấy từ User
+                'note'        => $request->note, // Lấy từ Form Modal
+                'status'      => 'active',
+                'enrolled_at' => now(),
+            ]);
+
+            return back()->with('success', 'Đăng ký thành công! Chúc bạn học tốt.');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Lỗi hệ thống: ' . $e->getMessage());
+        }
     }
         public function search(Request $request)
     {

@@ -28,10 +28,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function courses()
-    {
-        return $this->belongsToMany(\App\Models\Course::class, 'course_user')
-                    ->withPivot('status', 'enrolled_at')
-                    ->withTimestamps(); 
-    }
+        public function courses()
+        {
+            return $this->belongsToMany(Course::class, 'course_user')
+                        ->withPivot('full_name', 'email', 'note', 'status', 'enrolled_at')
+                        ->withTimestamps();
+        }
 }

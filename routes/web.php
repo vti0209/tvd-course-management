@@ -36,10 +36,10 @@ Route::middleware(['auth'])->group(function () {
 // course detail & enroll
 // Xem chi tiết khóa học (Ai cũng xem được)
 Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.detail');
+
 // Đăng ký khóa học (Phải qua middleware auth)
-Route::middleware(['auth'])->group(function () {
-    Route::post('/enroll/{id}', [HomeController::class, 'enroll'])->name('course.enroll');
-});
+// Route xử lý đăng ký khóa học
+Route::post('/course/{id}/enroll', [HomeController::class, 'enroll'])->name('course.enroll')->middleware('auth');
 Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
 // courses
 Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
