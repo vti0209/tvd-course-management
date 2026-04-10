@@ -1,9 +1,14 @@
 @extends('layouts.master')
 
 @section('content')
-<h1>Danh sách khóa học</h1>
+<section class="courses-section">
+    <div class="container">
+        <div class="section-header">
+            <h1 class="section-title">Danh sách khóa học</h1>
+            <div class="title-line"></div>
+        </div>
 
-<div class="courses-grid">
+        <div class="courses-grid">
     @forelse($courses as $course)
         <div class="course-card">
             <div class="course-image">
@@ -26,7 +31,9 @@
 </div>
 
 {{-- Phân trang --}}
-<div class="pagination">
-    {{ $courses->links() }}
-</div>
+        <div class="pagination-wrapper">
+            {{ $courses->links() }}
+        </div>
+    </div>
+</section>
 @endsection
