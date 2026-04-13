@@ -11,12 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Gọi file SystemSeeder của bạn ở đây
         $this->call([
-            UserSeeder::class,
-            CategorySeeder::class,
-            CourseSeeder::class,
-            LessonSeeder::class,
-            CourseUserSeeder::class,
+            SystemSeeder::class,
         ]);
     }
 }
