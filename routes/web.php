@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\HomeController;
-use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Provider\DashboardController as ProviderDashboardController;
+use App\Http\Controllers\Admin\CourseController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,23 +32,19 @@ Route::middleware(['auth'])->group(function () {
 
 // my courses
 use App\Http\Controllers\User\MyCourseController;
-// Đặt trong group middleware auth để bắt buộc đăng nhập mới xem được
 Route::middleware(['auth'])->group(function () {
     Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_courses');
 });
 
 // course detail & enroll
-// Xem chi tiết khóa học (Ai cũng xem được)
 Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.detail');
-
-// Đăng ký khóa học (Phải qua middleware auth)
-// Route xử lý đăng ký khóa học
 Route::post('/course/{id}/enroll', [HomeController::class, 'enroll'])->name('course.enroll')->middleware('auth');
 Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
-// courses
 Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
+
 // Admin routes
 Route::prefix('admin')->group(function () {
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Course management routes

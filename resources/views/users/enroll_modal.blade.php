@@ -19,7 +19,7 @@
                     {{-- Hiển thị Tên --}}
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-secondary">HỌC VIÊN</label>
-                        <input type="text" class="form-control bg-light border-0" value="{{ Auth::check() ? Auth::user()->name : '' }}" readonly>
+                        <input type="text" class="form-control bg-light border-0" value="{{ Auth::check() ? Auth::user()->full_name : '' }}" readonly>
                     </div>
 
                     {{-- Hiển thị Email --}}

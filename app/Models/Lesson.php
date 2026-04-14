@@ -6,8 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
-    public function course()
+    protected $fillable = [
+        'chapter_id',
+        'title',
+        'content_type',
+        'content_url',
+        'sort_order',
+    ];
+
+    /**
+     * Get the chapter that owns the lesson.
+     */
+    public function chapter()
     {
-        return $this->belongsTo(Course::class, 'course_id');
+        return $this->belongsTo(Chapter::class, 'chapter_id');
     }
 }

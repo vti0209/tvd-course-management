@@ -25,7 +25,7 @@
                     <div class="dropdown user-dropdown">
                         <button class="user-btn" data-bs-toggle="dropdown">
                             <i class="fas fa-user-circle"></i>
-                            <span>{{ auth()->user()->name }}</span>
+                            <span>{{ auth()->user()->full_name }}</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <ul class="dropdown-menu">

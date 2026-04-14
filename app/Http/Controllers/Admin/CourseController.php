@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class CourseController extends Controller
 {
@@ -44,21 +47,24 @@ class CourseController extends Controller
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'level' => 'nullable|in:beginner,intermediate,advanced',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'duration' => 'nullable|integer|min:0',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        $validated['status'] = $request->has('active') ? 'active' : 'pending';
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        // Handle thumbnail upload
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/courses'), $filename);
-            $validated['image'] = 'images/courses/' . $filename;
+            $validated['thumbnail'] = 'images/courses/' . $filename;
         }
 
-        $validated['active'] = $request->has('active');
+        // Provider ID will be set by the Provider controller
+        // Status defaults to 'pending' for Admin review
+        if (!isset($validated['provider_id'])) {
+        $validated['provider_id'] = auth()->user()->id;
+}
+        $validated['status'] = 'pending';
 
         Course::create($validated);
 
@@ -87,26 +93,21 @@ class CourseController extends Controller
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'duration' => 'nullable|numeric|min:0',
-            'level' => 'nullable|in:beginner,intermediate,advanced',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'active' => 'nullable|boolean',
+            'duration' => 'nullable|integer|min:0',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($course->image && file_exists(public_path($course->image))) {
-                unlink(public_path($course->image));
+        // Handle thumbnail upload
+        if ($request->hasFile('thumbnail')) {
+            // Delete old thumbnail if exists
+            if ($course->thumbnail && file_exists(public_path($course->thumbnail))) {
+                unlink(public_path($course->thumbnail));
             }
-            $file = $request->file('image');
+            $file = $request->file('thumbnail');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images/courses'), $filename);
-            $imagePath = 'images/courses/' . $filename;
-            $validated['image'] = $imagePath;
+            $validated['thumbnail'] = 'images/courses/' . $filename;
         }
-
-        $validated['active'] = $request->has('active');
 
         $course->update($validated);
 
@@ -119,9 +120,9 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        // Delete image if exists
-        if ($course->image && file_exists(public_path($course->image))) {
-            unlink(public_path($course->image));
+        // Delete thumbnail if exists
+        if ($course->thumbnail && file_exists(public_path($course->thumbnail))) {
+            unlink(public_path($course->thumbnail));
         }
 
         $course->delete();

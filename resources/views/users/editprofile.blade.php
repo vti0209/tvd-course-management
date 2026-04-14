@@ -10,7 +10,7 @@
 
         <div class="mb-3">
             <label class="form-label">Họ và tên</label>
-            <input type="text" name="name" class="form-control" value="{{ $user->name }}">
+            <input type="text" name="name" class="form-control" value="{{ $user->full_name }}">
             @error('name') <small class="text-danger">{{ $message }}</small> @enderror
         </div>
 
