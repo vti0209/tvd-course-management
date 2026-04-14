@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $courses = Course::select('id', 'category_id', 'title', 'price', 'thumbnail', 'duration')
+        $courses = Course::select('id', 'category_id', 'title', 'price', 'thumbnail', 'status')
             ->with('category:id,name')
             ->orderBy('created_at', 'desc')
             ->limit(8)

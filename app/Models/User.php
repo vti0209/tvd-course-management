@@ -11,9 +11,14 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
+        'username',
+        'full_name',
         'email',
         'password',
+        'phone',
+        'avatar',
+        'role',
+        'status',
     ];
 
     protected $hidden = [
@@ -34,4 +39,9 @@ class User extends Authenticatable
                         ->withPivot('full_name', 'email', 'note', 'status', 'enrolled_at')
                         ->withTimestamps();
         }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
 }

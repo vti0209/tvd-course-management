@@ -125,6 +125,8 @@
                         </div>
                         @if ($course->image)
                         <img id="imagePreview" src="{{ asset($course->image) }}" class="image-preview">
+                        @elseif ($course->thumbnail)
+                        <img id="imagePreview" src="{{ asset('images/' . $course->thumbnail) }}" class="image-preview">
                         @else
                         <img id="imagePreview" class="image-preview" style="display: none;">
                         @endif
@@ -140,7 +142,7 @@
             <div class="card-body">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="active" name="active" value="1"
-                        {{ old('active', $course->active) ? 'checked' : '' }}>
+                        {{ old('active', $course->status) == 'active' ? 'checked' : ($course->status === 'active' ? 'checked' : '') }}>
                     <label class="form-check-label" for="active">
                         Kích hoạt khóa học
                     </label>

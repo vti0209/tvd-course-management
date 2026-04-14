@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Provider\DashboardController as ProviderDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,4 +62,17 @@ Route::prefix('admin')->group(function () {
             'destroy' => 'admin.courses.destroy',
         ]
     ]);
+});
+
+// Provider routes
+Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(function () {
+    Route::get('/dashboard', [ProviderDashboardController::class, 'index'])->name('provider.dashboard');
+    
+    // Placeholder routes - sẽ tạo controllers sau
+    Route::get('/courses', fn() => abort(404))->name('provider.courses.index');
+    Route::get('/courses/create', fn() => abort(404))->name('provider.courses.create');
+    Route::get('/courses/{id}/edit', fn() => abort(404))->name('provider.courses.edit');
+    Route::get('/students', fn() => abort(404))->name('provider.students');
+    Route::get('/earnings', fn() => abort(404))->name('provider.earnings');
+    Route::get('/profile', fn() => abort(404))->name('provider.profile');
 });

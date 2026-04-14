@@ -15,12 +15,12 @@
         </h2>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
-            @forelse(\App\Models\Course::where('active', true)->latest()->take(8)->get() as $course)
+            @forelse(\App\Models\Course::where('status', 'active')->latest()->take(8)->get() as $course)
             <div
                 style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s ease; display: flex; flex-direction: column;">
                 <div style="position: relative; height: 180px; background: linear-gradient(135deg, #06b6d4, #0891b2);">
-                    @if($course->image)
-                    <img src="{{ asset($course->image) }}" alt="{{ $course->title }}"
+                    @if($course->thumbnail)
+                    <img src="{{ asset('images/' . $course->thumbnail) }}" alt="{{ $course->title }}"
                         style="width: 100%; height: 100%; object-fit: cover;">
                     @else
                     <div

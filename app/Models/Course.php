@@ -12,19 +12,17 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
+        'provider_id',
+        'category_id',
         'title',
         'slug',
         'description',
-        'category_id',
         'price',
-        'duration',
-        'level',
-        'image',
-        'active',
+        'thumbnail',
+        'status',
     ];
 
     protected $casts = [
-        'active' => 'boolean',
         'price' => 'decimal:2',
     ];
 
@@ -48,5 +46,10 @@ class Course extends Model
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class);
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
     }
 }

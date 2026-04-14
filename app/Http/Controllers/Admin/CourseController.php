@@ -44,11 +44,11 @@ class CourseController extends Controller
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'duration' => 'nullable|numeric|min:0',
             'level' => 'nullable|in:beginner,intermediate,advanced',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-            'active' => 'nullable|boolean',
         ]);
+
+        $validated['status'] = $request->has('active') ? 'active' : 'pending';
 
         // Handle image upload
         if ($request->hasFile('image')) {
