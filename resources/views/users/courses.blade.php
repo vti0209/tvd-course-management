@@ -3,7 +3,17 @@
 @section('content')
 <div class="section-header">
     <hr>
-    <h2 class="section-title">Tất cả khóa học</h2>
+    @if(!empty($searchHeading))
+        <h2 class="section-title">{{ $searchHeading }}</h2>
+    @elseif(!empty($filterHeading))
+        <h2 class="section-title">{{ $filterHeading }}</h2>
+    @else
+        <h2 class="section-title">Tất cả khóa học</h2>
+    @endif
+
+    @if(!empty($searchHeading) && !empty($filterHeading))
+        <p class="search-summary mb-0">{{ $filterHeading }}</p>
+    @endif
     <div class="title-line"></div>
 </div>
 

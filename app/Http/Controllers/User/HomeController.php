@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Course;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
@@ -65,7 +66,8 @@ class HomeController extends Controller
     }
         public function search(Request $request)
     {
-        $courses = Course::with('category:id,name');
+        $courses = Course::with(['category:id,name', 'chapters.lessons'])
+            ->where('status', 'active');
 
         if ($request->keyword) {
             $courses = $courses->where('title', 'like', '%' . $request->keyword . '%');
@@ -77,7 +79,21 @@ class HomeController extends Controller
 
         $courses = $courses->orderBy('created_at', 'desc')->paginate(8);
 
-        return view('users.home', compact('courses'));
+        $searchHeading = null;
+        $filterHeading = null;
+
+        if ($request->keyword) {
+            $searchHeading = 'Kết quả tìm kiếm: "' . $request->keyword . '"';
+        }
+
+        if ($request->category_id) {
+            $categoryName = Category::find($request->category_id)?->name;
+            if ($categoryName) {
+                $filterHeading = 'Kết quả lọc: "' . $categoryName . '"';
+            }
+        }
+
+        return view('users.courses', compact('courses', 'searchHeading', 'filterHeading'));
     }
     public function courses()
 {
