@@ -200,6 +200,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
     margin-bottom: 3rem;
+    padding: 0 1rem;
 }
 
 .course-card {
@@ -432,6 +433,7 @@ body {
     .courses-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem;
+        padding: 0 0.5rem;
     }
 
     .footer-content {
@@ -455,7 +457,17 @@ body {
     }
 
     .course-card {
-        margin: 0 1rem;
+        margin: 0 0.5rem;
+    }
+
+    .courses-grid {
+        padding: 0 1rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .courses-grid {
+        padding: 0 2rem;
     }
 }
 

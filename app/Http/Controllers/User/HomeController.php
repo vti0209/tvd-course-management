@@ -11,8 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $courses = Course::select('id', 'category_id', 'title', 'price', 'thumbnail', 'status')
-            ->with('category:id,name')
+        $courses = Course::with(['category:id,name', 'chapters.lessons'])
             ->where('status', 'active')
             ->orderBy('created_at', 'desc')
             ->limit(8)
@@ -55,6 +54,9 @@ class HomeController extends Controller
                 'enrolled_at' => now(),
             ]);
 
+            // 3. Log thông tin đăng ký (tuỳ chọn)
+            // Bạn có thể lưu full_name, email, note vào bảng khác nếu cần
+
             return back()->with('success', 'Đăng ký thành công! Chúc bạn học tốt.');
 
         } catch (\Exception $e) {
@@ -79,7 +81,7 @@ class HomeController extends Controller
     }
     public function courses()
 {
-    $courses = Course::with('category:id,name')
+    $courses = Course::with(['category:id,name', 'chapters.lessons'])
         ->orderBy('created_at', 'desc')
         ->paginate(8); // phân trang 8 khóa học mỗi trang
 

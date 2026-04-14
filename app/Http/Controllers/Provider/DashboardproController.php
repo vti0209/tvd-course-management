@@ -7,7 +7,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class DashboardproController extends Controller
 {
     /**
      * Hiển thị dashboard cho provider
