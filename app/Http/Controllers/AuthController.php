@@ -23,6 +23,15 @@ class AuthController extends Controller
     // REGISTER
     public function register(Request $request)
     {
+        if ($request->type === 'provider') {
+            return $this->registerProvider($request);
+        }
+
+        return $this->registerUser($request);
+    }
+
+    private function registerUser(Request $request)
+    {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -41,7 +50,7 @@ class AuthController extends Controller
 
         // Generate username from email (part before @)
         $username = explode('@', $request->email)[0];
-        
+
         // Ensure username is unique
         $baseUsername = $username;
         $counter = 1;
@@ -62,6 +71,54 @@ class AuthController extends Controller
         return redirect('/login')->with('success', 'Đăng ký thành công!');
     }
 
+    private function registerProvider(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'provider_info' => 'required|file|mimes:pdf,doc,docx|max:5120'
+        ], [
+            'name.required' => 'Tên là bắt buộc.',
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email phải là địa chỉ email hợp lệ.',
+            'email.unique' => 'Email đã được sử dụng.',
+            'provider_info.required' => 'Tài liệu xác minh là bắt buộc.',
+            'provider_info.file' => 'Tài liệu phải là file.',
+            'provider_info.mimes' => 'Tài liệu phải có định dạng PDF, DOC hoặc DOCX.',
+            'provider_info.max' => 'Tài liệu không được vượt quá 5MB.'
+        ]);
+
+        // Generate username from email (part before @)
+        $username = explode('@', $request->email)[0];
+
+        // Ensure username is unique
+        $baseUsername = $username;
+        $counter = 1;
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
+        // Handle file upload
+        $fileName = time() . '_' . $username . '.' . $request->file('provider_info')->getClientOriginalExtension();
+        $request->file('provider_info')->move(public_path('uploads/providers'), $fileName);
+
+        // Generate default password
+        $defaultPassword = 'Gemini2026!';
+
+        User::create([
+            'username' => $username,
+            'full_name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($defaultPassword),
+            'role' => 'provider',
+            'status' => 'pending',
+            'provider_info' => 'uploads/providers/' . $fileName
+        ]);
+
+        return redirect('/register')->with('info', 'Tài khoản của bạn đang chờ duyệt. Chúng tôi sẽ gửi thông tin đăng nhập qua email sau khi được phê duyệt.');
+    }
+
     // LOGIN
     public function login(Request $request)
     {
@@ -77,11 +134,21 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            // Check if user status is active
+            if ($user->status !== 'active') {
+                Auth::logout();
+                return back()->with('error', 'Tài khoản của bạn chưa được kích hoạt. Vui lòng liên hệ quản trị viên.');
+            }
 
             $request->session()->regenerate();
 
-            if (Auth::user()->role == 'admin') {
-                return redirect('/admin');
+            // Redirect based on role
+            if ($user->role === 'admin') {
+                return redirect('/admin/dashboard');
+            } elseif ($user->role === 'provider') {
+                return redirect('/admin/dashboard'); // Providers go to admin dashboard for now
             }
 
             return redirect('/trangchu');
