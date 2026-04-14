@@ -50,6 +50,10 @@
         @error('name') <span class="error">{{ $message }}</span> @enderror
         <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
         @error('email') <span class="error">{{ $message }}</span> @enderror
+        <input type="password" name="password" placeholder="Mật khẩu" required>
+        @error('password') <span class="error">{{ $message }}</span> @enderror
+        <input type="password" name="password_confirmation" placeholder="Xác nhận mật khẩu" required>
+        @error('password_confirmation') <span class="error">{{ $message }}</span> @enderror
 
         <div class="mb-3">
             <label for="provider_info" class="form-label">Tài liệu xác minh (PDF, DOC, DOCX)</label>

@@ -76,12 +76,18 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required|same:password',
             'provider_info' => 'required|file|mimes:pdf,doc,docx|max:5120'
         ], [
             'name.required' => 'Tên là bắt buộc.',
             'email.required' => 'Email là bắt buộc.',
             'email.email' => 'Email phải là địa chỉ email hợp lệ.',
             'email.unique' => 'Email đã được sử dụng.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải ít nhất 6 ký tự.',
+            'password_confirmation.required' => 'Xác nhận mật khẩu là bắt buộc.',
+            'password_confirmation.same' => 'Mật khẩu xác nhận không khớp.',
             'provider_info.required' => 'Tài liệu xác minh là bắt buộc.',
             'provider_info.file' => 'Tài liệu phải là file.',
             'provider_info.mimes' => 'Tài liệu phải có định dạng PDF, DOC hoặc DOCX.',
@@ -103,20 +109,17 @@ class AuthController extends Controller
         $fileName = time() . '_' . $username . '.' . $request->file('provider_info')->getClientOriginalExtension();
         $request->file('provider_info')->move(public_path('uploads/providers'), $fileName);
 
-        // Generate default password
-        $defaultPassword = 'Gemini2026!';
-
         User::create([
             'username' => $username,
             'full_name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($defaultPassword),
+            'password' => Hash::make($request->password),
             'role' => 'provider',
             'status' => 'pending',
             'provider_info' => 'uploads/providers/' . $fileName
         ]);
 
-        return redirect('/register')->with('info', 'Tài khoản của bạn đang chờ duyệt. Chúng tôi sẽ gửi thông tin đăng nhập qua email sau khi được phê duyệt.');
+        return redirect('/register')->with('info', 'Tài khoản của bạn đang chờ duyệt. Mật khẩu đã được tạo khi đăng ký, bạn sẽ nhận email khi yêu cầu được phê duyệt.');
     }
 
     // LOGIN
@@ -148,7 +151,7 @@ class AuthController extends Controller
             if ($user->role === 'admin') {
                 return redirect('/admin/dashboard');
             } elseif ($user->role === 'provider') {
-                return redirect('/admin/dashboard'); // Providers go to admin dashboard for now
+                return redirect()->route('provider.dashboard');
             }
 
             return redirect('/trangchu');
