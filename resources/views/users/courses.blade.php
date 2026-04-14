@@ -14,11 +14,13 @@
         <div class="course-info">
             <h3 class="course-title">{{ $course->title }}</h3>
             <div class="course-meta">
-                <span class="course-duration"><i class="fas fa-clock"></i> {{ $course->duration ?? 'Liên hệ' }}
-                    giờ</span>
+                <span class="course-duration">
+                    <i class="fas fa-clock"></i>
+                        {{ $course->duration ?? $course->chapters->sum(fn($ch) => $ch->lessons->count()) ?? 0 }} giờ
+                </span>
             </div>
             <div class="course-price">{{ number_format($course->price) }}₫</div>
-            <a href="/courses/{{ $course->id }}" class="btn-detail">Xem chi tiết →</a>
+            <a href="/courses/{{ $course->id }}" class="btn-detail">Xem chi tiết</a>
         </div>
     </div>
     @empty

@@ -94,6 +94,19 @@ class SystemSeeder extends Seeder
             'created_at' => now(),
         ]);
 
+        // Khóa học 3: Khóa học MIỄN PHÍ - Lập trình JavaScript Cơ bản
+        $course3Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[1],
+            'category_id' => 1,
+            'title' => 'JavaScript Cơ bản - Khóa học miễn phí',
+            'description' => 'Khóa học JavaScript từ zero đến hero hoàn toàn miễn phí. Học lập trình web với JavaScript thuần và ES6+.',
+            'price' => 0,
+            'duration' => 20,
+            'thumbnail' => 'javascript_free.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
         // --- 5. TẠO CHƯƠNG VÀ BÀI HỌC CHO KHÓA LARAVEL ---
         $chapters = [
             'Chương 1: Cài đặt và Cấu trúc dự án',
@@ -120,7 +133,33 @@ class SystemSeeder extends Seeder
             }
         }
 
-        // --- 6. TẠO USER HỌC VIÊN MẪU ---
+        // --- 6. TẠO CHƯƠNG VÀ BÀI HỌC CHO KHÓA JAVASCRIPT MIỄN PHÍ ---
+        $jsChapters = [
+            'Chương 1: Giới thiệu JavaScript',
+            'Chương 2: Biến và Kiểu dữ liệu',
+            'Chương 3: Hàm và Sự kiện',
+        ];
+
+        foreach ($jsChapters as $index => $cTitle) {
+            $chapterId = DB::table('chapters')->insertGetId([
+                'course_id' => $course3Id,
+                'title' => $cTitle,
+                'sort_order' => $index + 1,
+            ]);
+
+            // Mỗi chương tạo 3 bài học
+            for ($i = 1; $i <= 3; $i++) {
+                DB::table('lessons')->insert([
+                    'chapter_id' => $chapterId,
+                    'title' => 'Bài học số ' . $i . ' của ' . $cTitle,
+                    'content_type' => 'video',
+                    'content_url' => 'https://youtube.com/watch?v=js_tutorial_' . $i,
+                    'sort_order' => $i,
+                ]);
+            }
+        }
+
+        // --- 7. TẠO USER HỌC VIÊN MẪU ---
         for ($i = 1; $i <= 5; $i++) {
             $uId = DB::table('users')->insertGetId([
                 'username' => 'hocvien' . $i,
@@ -132,12 +171,15 @@ class SystemSeeder extends Seeder
                 'created_at' => now(),
             ]);
 
-            // Cho mỗi học viên mua ngẫu nhiên khóa học 1 hoặc 2
+            // Cho mỗi học viên mua ngẫu nhiên khóa học 1, 2 hoặc 3
+            $randomCourse = [$course1Id, $course2Id, $course3Id][array_rand([$course1Id, $course2Id, $course3Id])];
+            $coursePrices = [$course1Id => 1200000, $course2Id => 850000, $course3Id => 0];
+
             DB::table('enrollments')->insert([
                 'user_id' => $uId,
-                'course_id' => ($i % 2 == 0) ? $course1Id : $course2Id,
+                'course_id' => $randomCourse,
                 'payment_status' => 'paid',
-                'price_at_purchase' => ($i % 2 == 0) ? 1200000 : 850000,
+                'price_at_purchase' => $coursePrices[$randomCourse],
                 'enrolled_at' => now(),
             ]);
         }
