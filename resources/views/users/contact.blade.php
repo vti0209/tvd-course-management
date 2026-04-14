@@ -32,11 +32,17 @@
                             <form>
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Họ tên</label>
-                                    <input type="text" class="form-control" id="name" required>
+                                    <input type="text" class="form-control" id="name"
+                                           value="@auth{{ auth()->user()->full_name }}@endauth"
+                                           @auth readonly @endauth
+                                           @guest required @endguest>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" required>
+                                    <input type="email" class="form-control" id="email"
+                                           value="@auth{{ auth()->user()->email }}@endauth"
+                                           @auth readonly @endauth
+                                           @guest required @endguest>
                                 </div>
                                 <div class="mb-3">
                                     <label for="message" class="form-label">Tin nhắn</label>
