@@ -47,17 +47,15 @@ class User extends Authenticatable
     /**
      * Get the courses that the user has enrolled in.
      */
-    public function courses(): HasManyThrough
-    {
-        return $this->hasManyThrough(
-            Course::class,
-            Enrollment::class,
-            'user_id',      // Foreign key on Enrollment pointing to User
-            'course_id',    // Foreign key on Enrollment pointing to Course
-            'id',           // Local key on User
-            'id'            // Primary key on Course
-        );
-    }
+    public function courses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+            {
+                return $this->belongsToMany(
+                    Course::class,
+                    'enrollments', // Tên bảng trung gian
+                    'user_id',     // Khóa ngoại của User trong bảng enrollments
+                    'course_id'    // Khóa ngoại của Course trong bảng enrollments
+                );
+            }
 
     /**
      * Get the provider profile of the user.

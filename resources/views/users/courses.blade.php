@@ -1,7 +1,11 @@
 @extends('layouts.master')
 
 @section('content')
-<h1>Danh sách khóa học</h1>
+<div class="section-header">
+    <hr>
+    <h2 class="section-title">Tất cả khóa học</h2>
+    <div class="title-line"></div>
+</div>
 
 <div class="courses-grid">
     @forelse($courses as $course)
