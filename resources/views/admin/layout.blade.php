@@ -32,13 +32,29 @@
                     <i class="fas fa-chart-line"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="/admin/courses" class="nav-item {{ request()->routeIs('admin.courses.*') ? 'active' : '' }}">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Khóa học</span>
-                </a>
-                <a href="/admin/users" class="nav-item">
+                <a href="/admin/users" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i>
-                    <span>Người dùng</span>
+                    <span>Quản lý người dùng</span>
+                </a>
+                <a href="/admin/providers" class="nav-item {{ request()->routeIs('admin.providers.*') ? 'active' : '' }}">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Phê duyệt Provider</span>
+                </a>
+                <a href="/admin/content-moderation" class="nav-item {{ request()->routeIs('admin.content-moderation.*') ? 'active' : '' }}">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Duyệt nội dung</span>
+                </a>
+                <a href="/admin/categories" class="nav-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                    <i class="fas fa-list"></i>
+                    <span>Quản lý danh mục</span>
+                </a>
+                <a href="/admin/withdrawals" class="nav-item {{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Quản lý rút tiền</span>
+                </a>
+                <a href="/admin/system/settings" class="nav-item {{ request()->routeIs('admin.system.*') ? 'active' : '' }}">
+                    <i class="fas fa-cogs"></i>
+                    <span>Cài đặt hệ thống</span>
                 </a>
             </nav>
 
@@ -49,7 +65,7 @@
                         <i class="fas fa-user-circle"></i>
                     </div>
                     <div class="user-details">
-                        <p class="user-name">{{ auth()->user()->name }}</p>
+                        <p class="user-name">{{ auth()->user()->full_name }}</p>
                         <p class="user-role">{{ auth()->user()->role ?? 'Quản trị viên' }}</p>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
@@ -12,28 +13,26 @@ class Course extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'slug',
-        'description',
+        'provider_id',
         'category_id',
+        'title',
+        'description',
         'price',
         'duration',
-        'level',
-        'image',
-        'active',
+        'thumbnail',
+        'status',
     ];
 
     protected $casts = [
-        'active' => 'boolean',
         'price' => 'decimal:2',
     ];
 
-    public function setTitleAttribute($value)
+    /**
+     * Get the user (provider) that owns the course.
+     */
+    public function provider()
     {
-        $this->attributes['title'] = $value;
-        if (!$this->slug) {
-            $this->attributes['slug'] = Str::slug($value);
-        }
+        return $this->belongsTo(User::class, 'provider_id');
     }
 
     public function category()
@@ -41,12 +40,42 @@ class Course extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function users()
+    /**
+     * Get the enrollments for the course.
+     */
+    public function enrollments(): HasMany
     {
-        return $this->belongsToMany(User::class, 'course_user');
+        return $this->hasMany(Enrollment::class, 'course_id');
     }
-    public function lessons(): HasMany
+
+    /**
+     * Get the users that have enrolled in this course.
+     */
+    public function users(): HasManyThrough
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasManyThrough(
+            User::class,
+            Enrollment::class,
+            'course_id',    // Foreign key on Enrollment pointing to Course
+            'user_id',      // Foreign key on Enrollment pointing to User
+            'id',           // Local key on Course
+            'id'            // Primary key on User
+        );
+    }
+
+    /**
+     * Get the chapters for the course.
+     */
+    public function chapters(): HasMany
+    {
+        return $this->hasMany(Chapter::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Get the lessons for the course through chapters.
+     */
+    public function lessons(): HasManyThrough
+    {
+        return $this->hasManyThrough(Lesson::class, Chapter::class);
     }
 }

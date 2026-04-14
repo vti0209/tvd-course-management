@@ -69,36 +69,17 @@
                         @enderror
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="form-card">
-            <div class="card-header">
-                <h3><i class="fas fa-clock"></i> Thông tin thời gian</h3>
-            </div>
-            <div class="card-body">
-                <!-- Thời lượng -->
+                <!-- Thời lượng khóa học -->
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="duration" class="form-label">Thời lượng (giờ)</label>
+                        <label for="duration" class="form-label">Thời lượng khóa học (giờ)</label>
                         <input type="number" id="duration" name="duration"
                             class="form-control @error('duration') is-invalid @enderror" placeholder="0"
-                            value="{{ old('duration') }}">
+                            value="{{ old('duration') }}" min="0">
                         @error('duration')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
-
-                    <!-- Cấp độ -->
-                    <div class="form-group">
-                        <label for="level" class="form-label">Cấp độ</label>
-                        <select id="level" name="level" class="form-select">
-                            <option value="beginner" {{ old('level') == 'beginner' ? 'selected' : '' }}>Cơ bản</option>
-                            <option value="intermediate" {{ old('level') == 'intermediate' ? 'selected' : '' }}>Trung
-                                bình</option>
-                            <option value="advanced" {{ old('level') == 'advanced' ? 'selected' : '' }}>Nâng cao
-                            </option>
-                        </select>
                     </div>
                 </div>
             </div>
@@ -106,14 +87,14 @@
 
         <div class="form-card">
             <div class="card-header">
-                <h3><i class="fas fa-image"></i> Hình ảnh</h3>
+                <h3><i class="fas fa-image"></i> Hình ảnh đại diện</h3>
             </div>
             <div class="card-body">
                 <!-- Hình ảnh -->
                 <div class="form-group">
-                    <label for="image" class="form-label">Hình ảnh khóa học</label>
+                    <label for="thumbnail" class="form-label">Thumbnail khóa học</label>
                     <div class="image-upload">
-                        <input type="file" id="image" name="image" class="image-input" accept="image/*">
+                        <input type="file" id="thumbnail" name="thumbnail" class="image-input" accept="image/*">
                         <div class="upload-placeholder">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <p>Kéo thả hình ảnh hoặc <span>chọn từ máy tính</span></p>
@@ -121,21 +102,6 @@
                         </div>
                         <img id="imagePreview" class="image-preview" style="display: none;">
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-card">
-            <div class="card-header">
-                <h3><i class="fas fa-toggle-on"></i> Trạng thái</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="active" name="active" value="1"
-                        {{ old('active') ? 'checked' : '' }}>
-                    <label class="form-check-label" for="active">
-                        Kích hoạt khóa học ngay
-                    </label>
                 </div>
             </div>
         </div>
@@ -159,7 +125,7 @@
 @push('scripts')
 <script>
 const imageUpload = document.querySelector('.image-upload');
-const imageInput = document.getElementById('image');
+const imageInput = document.getElementById('thumbnail');
 const imagePreview = document.getElementById('imagePreview');
 const uploadPlaceholder = document.querySelector('.upload-placeholder');
 
@@ -198,6 +164,16 @@ imageUpload.addEventListener('drop', (e) => {
     if (file && file.type.startsWith('image/')) {
         imageInput.files = e.dataTransfer.files;
         const reader = new FileReader();
+        reader.onload = (event) => {
+            imagePreview.src = event.target.result;
+            imagePreview.style.display = 'block';
+            uploadPlaceholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+@endpush
         reader.onload = (event) => {
             imagePreview.src = event.target.result;
             imagePreview.style.display = 'block';

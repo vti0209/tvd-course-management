@@ -50,6 +50,7 @@
                     <th>Danh mục</th>
                     <th>Giảng viên</th>
                     <th>Giá</th>
+                    <th>Thời lượng</th>
                     <th>Học viên</th>
                     <th>Trạng thái</th>
                     <th>Thao tác</th>
@@ -63,14 +64,14 @@
                     </td>
                     <td>
                         <div class="course-name">
-                        <div class="course-image">
-                            @if($course->thumbnail)
+                            <div class="course-image">
+                                @if($course->thumbnail)
                                 <img src="{{ asset('images/' . $course->thumbnail) }}" alt="{{ $course->title }}"
                                     style="width: 100%; height: 100%; object-fit: cover;">
-                            @else
+                                @else
                                 <i class="fas fa-book"></i>
-                            @endif
-                        </div>
+                                @endif
+                            </div>
                             <div class="course-info">
                                 <p class="name">{{ $course->title }}</p>
                                 <p class="id">{{ $course->id }}</p>
@@ -87,11 +88,15 @@
                         <span class="price">{{ number_format($course->price ?? 0, 0, ',', '.') }}đ</span>
                     </td>
                     <td>
+                        <span class="duration">{{ $course->duration ?? 'N/A' }}{{ $course->duration ? ' giờ' : '' }}</span>
+                    </td>
+                    <td>
                         <span class="student-count">{{ $course->users_count ?? 0 }}</span>
                     </td>
                     <td>
-                        <span class="badge {{ $course->active ? 'badge-active' : 'badge-inactive' }}">
-                            {{ $course->active ? 'Hoạt động' : 'Tạm dừng' }}
+                        <span
+                            class="badge {{ $course->status === 'active' ? 'badge-active' : ($course->status === 'pending' ? 'badge-pending' : 'badge-rejected') }}">
+                            {{ $course->status === 'active' ? 'Hoạt động' : ($course->status === 'pending' ? 'Chờ duyệt' : 'Bị từ chối') }}
                         </span>
                     </td>
                     <td>

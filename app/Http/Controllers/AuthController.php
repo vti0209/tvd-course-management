@@ -39,11 +39,24 @@ class AuthController extends Controller
             'password_confirmation.same' => 'Mật khẩu xác nhận không khớp.'
         ]);
 
+        // Generate username from email (part before @)
+        $username = explode('@', $request->email)[0];
+        
+        // Ensure username is unique
+        $baseUsername = $username;
+        $counter = 1;
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
         User::create([
-            'name' => $request->name,
+            'username' => $username,
+            'full_name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user'
+            'role' => 'user',
+            'status' => 'active'
         ]);
 
         return redirect('/login')->with('success', 'Đăng ký thành công!');

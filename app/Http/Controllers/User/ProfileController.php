@@ -37,7 +37,7 @@ class ProfileController extends Controller
             'avatar.max' => 'Ảnh không được vượt quá 2MB.'
         ]);
 
-        $user->name = $request->name;
+        $user->full_name = $request->name;
 
         // Xử lý Upload ảnh đại diện
         if ($request->hasFile('avatar')) {

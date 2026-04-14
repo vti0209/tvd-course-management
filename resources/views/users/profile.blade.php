@@ -26,7 +26,7 @@
                             <table class="table table-borderless">
                                 <tr>
                                     <th width="30%">Họ và tên:</th>
-                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->full_name }}</td>
                                 </tr>
                                 <tr>
                                     <th>Email:</th>

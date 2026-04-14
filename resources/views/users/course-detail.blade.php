@@ -27,10 +27,17 @@
                             <h4 class="mb-3 text-primary fw-bold">
                                 <i class="bi bi-info-circle-fill me-2"></i>Giới thiệu khóa học
                             </h4>
-                            <p class="text-muted lh-lg mb-0">
+                            <p class="text-muted lh-lg mb-3">
                                 {{ $course->description ?? 'Nội dung mô tả đang được cập nhật.' }}
                             </p>
-                        </div>
+                            <div class="d-flex gap-3 flex-wrap">
+                                @if($course->duration)
+                                <div>
+                                    <i class="bi bi-clock-history text-primary"></i>
+                                    <span class="ms-2 text-muted">{{ $course->duration }} giờ</span>
+                                </div>
+                                @endif
+                            </div>
                     </div>
                 </div>
 

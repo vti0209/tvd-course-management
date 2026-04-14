@@ -11,8 +11,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $courses = Course::select('id', 'category_id', 'title', 'price', 'thumbnail', 'duration')
+        $courses = Course::select('id', 'category_id', 'title', 'price', 'thumbnail', 'status')
             ->with('category:id,name')
+            ->where('status', 'active')
             ->orderBy('created_at', 'desc')
             ->limit(8)
             ->get();
@@ -29,7 +30,7 @@ class HomeController extends Controller
         // Kiểm tra xem User đã đăng ký khóa học này chưa
         $isEnrolled = false;
         if (Auth::check()) {
-            $isEnrolled = Auth::user()->courses()->where('course_id', $id)->exists();
+            $isEnrolled = Auth::user()->enrollments()->where('course_id', $id)->exists();
         }
 
         return view('users.course-detail', compact('course', 'isEnrolled'));
@@ -41,17 +42,16 @@ class HomeController extends Controller
         $user = Auth::user();
 
         // 1. Chặn nếu đã đăng ký rồi
-        if ($user->courses()->where('course_id', $id)->exists()) {
+        if ($user->enrollments()->where('course_id', $id)->exists()) {
             return back()->with('error', 'Bạn đã đăng ký khóa học này rồi!');
         }
 
         try {
-            // 2. Ghi danh và copy thông tin từ bảng users sang bảng course_user
-            $user->courses()->attach($id, [
-                'full_name'   => $user->name,   // Lấy từ User
-                'email'       => $user->email,  // Lấy từ User
-                'note'        => $request->note, // Lấy từ Form Modal
-                'status'      => 'active',
+            // 2. Tạo bản ghi enrollment
+            $user->enrollments()->create([
+                'course_id' => $id,
+                'payment_status' => 'paid',
+                'price_at_purchase' => Course::find($id)->price,
                 'enrolled_at' => now(),
             ]);
 
