@@ -46,6 +46,10 @@ Route::post('/course/{id}/enroll', [HomeController::class, 'enroll'])->name('cou
 Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
 Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
 
+// About and Contact pages
+Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+
 // Admin routes
 Route::prefix('admin')->group(function () {
     // Dashboard

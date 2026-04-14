@@ -648,3 +648,17 @@ body {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
 }
+
+/* ==================== ABOUT & CONTACT PAGES ==================== */
+.contact-info p {
+    margin-bottom: 0.5rem;
+}
+
+.social-links .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -16,8 +16,8 @@
                     </a>
                 @endauth
 
-                <a href="/about" class="nav-link">Về chúng tôi</a>
-                <a href="/contact" class="nav-link">Liên hệ</a>
+                <a href="/about" class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">Về chúng tôi</a>
+                <a href="/contact" class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">Liên hệ</a>
             </nav>
 
             <div class="auth-buttons">

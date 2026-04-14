@@ -103,4 +103,14 @@ class HomeController extends Controller
 
     return view('users.courses', compact('courses'));
 }
+
+    public function about()
+    {
+        return view('users.about');
+    }
+
+    public function contact()
+    {
+        return view('users.contact');
+    }
 }
