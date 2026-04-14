@@ -1,32 +1,31 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Provider;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Enrollment;
 use App\Models\Course;
-use App\Models\Provider;
 
 class DashboardController extends Controller
 {
-    /**
-     * Show the admin dashboard.
-     */
     public function index()
     {
-        $stats = [
-            'total_users' => User::where('role', 'user')->count(),
-            'total_providers' => User::where('role', 'provider')->count(),
-            'pending_providers' => Provider::whereNull('approved_at')->count(),
-            'total_courses' => Course::count(),
-            'pending_courses' => Course::where('status', 'pending')->count(),
-            'active_courses' => Course::where('status', 'active')->count(),
-            'rejected_courses' => Course::where('status', 'rejected')->count(),
-            'blocked_users' => User::where('status', 'blocked')->count(),
-        ];
+        $user = Auth::user();
 
-        return view('admin.dashboard', [
-            'stats' => $stats,
-        ]);
+        // 1. Tổng số khóa học (Lấy từ quan hệ taughtCourses đã tạo ở Bước 1)
+        $totalCourses = $user->taughtCourses()->count();
+
+        // 2. Tổng số học sinh
+        // Chúng ta lấy ID của tất cả khóa học của ông thầy này, 
+        // sau đó đếm số lượng bản ghi trong bảng Enrollment
+        $courseIds = $user->taughtCourses()->pluck('id');
+        $totalStudents = Enrollment::whereIn('course_id', $courseIds)->count();
+
+        // 3. Tổng doanh thu
+        // Giả sử bảng Enrollment của bạn có cột 'total_price'
+        $totalRevenue = Enrollment::whereIn('course_id', $courseIds)->sum('total_price');
+
+        return view('provider.dashboard', compact('totalCourses', 'totalStudents', 'totalRevenue'));
     }
 }

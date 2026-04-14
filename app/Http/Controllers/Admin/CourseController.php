@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class CourseController extends Controller
 {
@@ -59,8 +62,8 @@ class CourseController extends Controller
         // Provider ID will be set by the Provider controller
         // Status defaults to 'pending' for Admin review
         if (!isset($validated['provider_id'])) {
-            $validated['provider_id'] = auth()->id();
-        }
+        $validated['provider_id'] = auth()->user()->id;
+}
         $validated['status'] = 'pending';
 
         Course::create($validated);
