@@ -1,4 +1,4 @@
-@extends('admin.layout')
+@extends('provider.layout')
 
 @section('title', 'Thêm khóa học mới')
 @section('page_title', 'Thêm khóa học mới')
@@ -124,64 +124,57 @@
 
 @push('scripts')
 <script>
-const imageUpload = document.querySelector('.image-upload');
-const imageInput = document.getElementById('thumbnail');
-const imagePreview = document.getElementById('imagePreview');
-const uploadPlaceholder = document.querySelector('.upload-placeholder');
+    const imageUpload = document.querySelector('.image-upload');
+    const imageInput = document.getElementById('thumbnail');
+    const imagePreview = document.getElementById('imagePreview');
+    const uploadPlaceholder = document.querySelector('.upload-placeholder');
 
-imageUpload.addEventListener('click', () => imageInput.click());
+    imageUpload.addEventListener('click', () => imageInput.click());
 
-imageInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            imagePreview.src = event.target.result;
-            imagePreview.style.display = 'block';
-            uploadPlaceholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    }
-});
+    imageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+                uploadPlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-imageUpload.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    imageUpload.style.borderColor = '#06b6d4';
-    imageUpload.style.background = '#f0f9fc';
-});
+    // Các sự kiện drag & drop
+    imageUpload.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        imageUpload.style.borderColor = '#06b6d4';
+        imageUpload.style.background = '#f0f9fc';
+    });
 
-imageUpload.addEventListener('dragleave', () => {
-    imageUpload.style.borderColor = '#e2e8f0';
-    imageUpload.style.background = '#f9fbfd';
-});
+    imageUpload.addEventListener('dragleave', () => {
+        imageUpload.style.borderColor = '#e2e8f0';
+        imageUpload.style.background = '#f9fbfd';
+    });
 
-imageUpload.addEventListener('drop', (e) => {
-    e.preventDefault();
-    imageUpload.style.borderColor = '#e2e8f0';
-    imageUpload.style.background = '#f9fbfd';
+    imageUpload.addEventListener('drop', (e) => {
+        e.preventDefault();
+        imageUpload.style.borderColor = '#e2e8f0';
+        imageUpload.style.background = '#f9fbfd';
 
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        imageInput.files = e.dataTransfer.files;
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            imagePreview.src = event.target.result;
-            imagePreview.style.display = 'block';
-            uploadPlaceholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    }
-});
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            imageInput.files = e.dataTransfer.files;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+                uploadPlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 @endpush
-        reader.onload = (event) => {
-            imagePreview.src = event.target.result;
-            imagePreview.style.display = 'block';
-            uploadPlaceholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    }
-});
-</script>
-@endpush
+
+{{-- Kết thúc section content chính --}}
 @endsection

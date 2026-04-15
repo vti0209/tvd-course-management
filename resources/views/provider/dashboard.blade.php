@@ -90,7 +90,13 @@
                     <td>{{ number_format($course->price, 0, ',', '.') }}₫</td>
                     <td>
                         <span class="status-badge status-{{ $course->status }}">
-                            {{ ucfirst($course->status) }}
+                            @if($course->status == 'active' || $course->status == 'approved')
+                                <i class="fas fa-check-circle"></i> Đã duyệt
+                            @elseif($course->status == 'pending')
+                                <i class="fas fa-clock"></i> Chờ duyệt
+                            @else
+                                {{ ucfirst($course->status) }}
+                            @endif
                         </span>
                     </td>
                     <td>

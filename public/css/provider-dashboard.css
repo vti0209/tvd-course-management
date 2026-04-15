@@ -119,3 +119,97 @@
         grid-template-columns: 1fr;
     }
 }
+/* Cấu trúc bảng trong Dashboard */
+.chart-container table, 
+.table-container table {
+    width: 100% !important;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* Ép khoảng cách các cột */
+.chart-container th, .chart-container td,
+.table-container th, .table-container td {
+    padding: 15px 20px !important; /* Tăng padding ngang lên 20px */
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
+    white-space: nowrap; /* Không cho rớt dòng */
+}
+
+/* Cột Tiêu đề chiếm nhiều chỗ nhất */
+.chart-container td:first-child {
+    white-space: normal !important; /* Tiêu đề dài thì cho xuống dòng */
+    min-width: 200px;
+    max-width: 300px;
+}
+
+/* Badge trạng thái chuẩn chỉnh */
+.status-badge {
+    display: inline-flex !important;
+    padding: 5px 12px !important;
+    border-radius: 15px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: capitalize;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Màu sắc trạng thái */
+.status-active, .status-approved { background: #dcfce7 !important; color: #166534 !important; }
+.status-pending { background: #fef9c3 !important; color: #854d0e !important; }
+.status-paid { background: #e0f2fe !important; color: #0369a1 !important; }
+
+/* Các nút hành động */
+.btn-sm {
+    padding: 6px 10px !important;
+    margin: 0 2px;
+}
+
+/* public/css/provider-dashboard.css */
+
+/* --- 1. Cấu trúc bảng chung cho cả 2 bảng trên Dashboard --- */
+.chart-container table,
+.table-container table {
+    width: 100% !important;
+    table-layout: fixed; /* Ép bảng tuân thủ độ rộng cột mình đặt, tránh bị phình */
+    border-collapse: collapse;
+}
+
+/* Giảm padding để tiết kiệm diện tích và tránh dính sát */
+.chart-container th, .chart-container td,
+.table-container th, .table-container td {
+    padding: 12px 15px !important; /* Padding ngang 15px để tạo khoảng thở */
+    text-align: left;
+    white-space: nowrap; /* Mặc định các cột khác không xuống dòng */
+    vertical-align: middle;
+}
+
+/* --- 2. Xử lý xuống dòng cho Tiêu đề Khóa học ở BẢNG TRÊN --- */
+/* Cột thứ 1: Tiêu đề */
+.chart-container table td:first-child {
+    white-space: normal !important; /* Cho phép xuống dòng */
+    word-wrap: break-word; /* Bẻ từ nếu quá dài */
+    line-height: 1.5; /* Khoảng cách dòng cho dễ đọc */
+    min-width: 200px; /* Độ rộng tối thiểu để tiêu đề không quá bó */
+}
+
+/* --- 3. Xử lý xuống dòng cho Tiêu đề Khóa học ở BẢNG DƯỚI --- */
+/* Cột thứ 2: Khóa học */
+.table-container table td:nth-child(2) {
+    white-space: normal !important; /* Cho phép xuống dòng */
+    word-wrap: break-word; /* Bẻ từ nếu quá dài */
+    line-height: 1.5; /* Khoảng cách dòng cho dễ đọc */
+    min-width: 200px; /* Độ rộng tối thiểu */
+}
+
+/* --- 4. Tinh chỉnh Badge Trạng Thái cho gọn --- */
+.status-badge {
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 20px;
+}

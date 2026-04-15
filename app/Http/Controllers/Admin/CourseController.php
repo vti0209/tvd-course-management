@@ -16,23 +16,28 @@ class CourseController extends Controller
     /**
      * Display a listing of the courses.
      */
-    public function index()
-    {
-        $courses = Course::with('category')
-            ->paginate(10);
-        
-        return view('admin.courses.index', [
-            'courses' => $courses,
-            'categories' => Category::all(),
-        ]);
-    }
+  public function index()
+{
+    $providerId = auth()->id();
+
+    // Sửa 'user_id' thành 'provider_id'
+    $courses = Course::where('provider_id', $providerId) 
+        ->with('category')
+        ->withCount('enrollments') // Giữ nguyên để hiện số học viên
+        ->paginate(10);
+    
+    return view('provider.courses.index', [
+        'courses' => $courses,
+        'categories' => Category::all(),
+    ]);
+}
 
     /**
      * Show the form for creating a new course.
      */
     public function create()
     {
-        return view('admin.courses.create', [
+        return view('provider.courses.create', [
             'categories' => Category::all(),
         ]);
     }
@@ -40,44 +45,27 @@ class CourseController extends Controller
     /**
      * Store a newly created course in storage.
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric|min:0',
-            'duration' => 'nullable|integer|min:0',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
-        ]);
+    public function store(Request $request) {
+    // ... validate dữ liệu ...
 
-        // Handle thumbnail upload
-        if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/courses'), $filename);
-            $validated['thumbnail'] = 'images/courses/' . $filename;
-        }
+    $course = new Course();
+    $course->fill($request->all());
+    $course->provider_id = auth()->id();
+    
+    // Chốt trạng thái mặc định là chờ duyệt
+    $course->status = 'pending'; 
+    
+    $course->save();
 
-        // Provider ID will be set by the Provider controller
-        // Status defaults to 'pending' for Admin review
-        if (!isset($validated['provider_id'])) {
-        $validated['provider_id'] = auth()->user()->id;
+    return redirect()->route('provider.courses.index')
+                     ->with('success', 'Khóa học đã được gửi, vui lòng chờ Admin phê duyệt!');
 }
-        $validated['status'] = 'pending';
-
-        Course::create($validated);
-
-        return redirect('/admin/courses')
-            ->with('success', 'Khóa học được tạo thành công!');
-    }
-
     /**
      * Show the form for editing the specified course.
      */
     public function edit(Course $course)
     {
-        return view('admin.courses.edit', [
+        return view('provider.courses.edit', [
             'course' => $course,
             'categories' => Category::all(),
         ]);
@@ -111,7 +99,7 @@ class CourseController extends Controller
 
         $course->update($validated);
 
-        return redirect('/admin/courses')
+        return redirect('/provider/courses')
             ->with('success', 'Khóa học được cập nhật thành công!');
     }
 
@@ -127,7 +115,7 @@ class CourseController extends Controller
 
         $course->delete();
 
-        return redirect('/admin/courses')
+        return redirect('/provider/courses')
             ->with('success', 'Khóa học được xóa thành công!');
     }
 }

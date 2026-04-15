@@ -1,0 +1,83 @@
+/* public/css/provider-students.css */
+
+/* Khung bao ngoài cùng */
+.student-management-container {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+/* Cấu trúc bảng - QUAN TRỌNG để chống lòi */
+.student-management-container table {
+    width: 100% !important;
+    table-layout: fixed; /* Ép các cột chia theo % cố định */
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* Header của bảng */
+.student-management-container th {
+    background-color: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 15px 12px;
+    border-bottom: 2px solid #edf2f7;
+    text-align: left;
+}
+
+/* Các ô dữ liệu */
+.student-management-container td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #334155;
+    font-size: 14px;
+}
+
+/* Chia tỷ lệ cột để đồng bộ với Dashboard */
+.col-student { width: 25%; }
+.col-course  { width: 35%; }
+.col-date    { width: 20%; }
+.col-status  { width: 20%; }
+
+/* Xử lý tên khóa học xuống dòng đẹp mắt */
+.course-name-link {
+    display: block;
+    white-space: normal !important;
+    word-wrap: break-word;
+    line-height: 1.5;
+    font-weight: 500;
+    color: #0f172a;
+}
+
+/* Badge trạng thái giống Dashboard */
+.payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-paid {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+/* Hiệu ứng khi di chuột qua hàng */
+.student-management-container tbody tr:hover {
+    background-color: #fbfcfe;
+    transition: background 0.2s ease;
+}

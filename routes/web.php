@@ -53,13 +53,24 @@ Route::middleware(['auth'])->group(function () {
 
 // Provider routes
 Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(function () {
+    
+    // Trang Dashboard
     Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
-    Route::get('/courses', fn() => abort(404))->name('provider.courses.index');
-    Route::get('/courses/create', fn() => abort(404))->name('provider.courses.create');
-    Route::get('/courses/{id}/edit', fn() => abort(404))->name('provider.courses.edit');
-    Route::get('/students', fn() => abort(404))->name('provider.students');
-    Route::get('/earnings', fn() => abort(404))->name('provider.earnings');
-    Route::get('/profile', fn() => abort(404))->name('provider.profile');
+
+    // Quản lý Courses (Tự động tạo route cho index, create, edit, store, update, destroy)
+    Route::resource('courses', CourseController::class)->names([
+        'index' => 'provider.courses.index',
+        'create' => 'provider.courses.create',
+        'edit' => 'provider.courses.edit',
+        'store' => 'provider.courses.store',
+        'update' => 'provider.courses.update',
+        'destroy' => 'provider.courses.destroy',
+    ]);
+
+    // Các trang khác trỏ về hàm tương ứng trong CourseController (hoặc bạn tạo Controller riêng)
+    Route::get('/students', [ProviderController::class, 'students'])->name('provider.students');
+    Route::get('/earnings', [ProviderController::class, 'earnings'])->name('provider.earnings');
+    Route::get('/profile', [ProviderController::class, 'profile'])->name('provider.profile');
 });
 
 // About and Contact pages
@@ -74,7 +85,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('courses', CourseController::class, [
         'names' => [
             'index'   => 'admin.courses.index',
-            'create'  => 'admin.courses.create',
+            // 'create'  => 'admin.courses.create',
             'store'   => 'admin.courses.store',
             'edit'    => 'admin.courses.edit',
             'update'  => 'admin.courses.update',

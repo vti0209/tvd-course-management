@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Models\Enrollment;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Provider;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class ProviderController extends Controller
@@ -158,4 +158,20 @@ class ProviderController extends Controller
 
         return redirect()->route('admin.providers.index')->with('success', 'Yêu cầu Provider bị từ chối! Email thông báo đã được gửi.');
     }
+
+public function students()
+{
+    $providerId = auth()->id();
+
+    $enrollments = Enrollment::whereHas('course', function($query) use ($providerId) {
+        // PHẢI dùng 'provider_id' mới đúng với cấu trúc bảng của bạn
+        $query->where('provider_id', $providerId); 
+    })
+    ->with(['user', 'course'])
+    ->latest('enrolled_at')
+    ->paginate(10);
+
+    return view('provider.students', compact('enrollments'));
+}
+
 }
