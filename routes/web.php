@@ -50,8 +50,8 @@ Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index'
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
-// Admin routes
-Route::prefix('admin')->group(function () {
+// Admin routes - Only accessible by admin users
+Route::prefix('admin')->middleware('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 

@@ -36,25 +36,25 @@
                     <i class="fas fa-users"></i>
                     <span>Quản lý người dùng</span>
                 </a>
-                <a href="/admin/providers" class="nav-item {{ request()->routeIs('admin.providers.*') ? 'active' : '' }}">
+                <a href="/admin/providers"
+                    class="nav-item {{ request()->routeIs('admin.providers.*') ? 'active' : '' }}">
                     <i class="fas fa-user-tie"></i>
                     <span>Phê duyệt Provider</span>
                 </a>
-                <a href="/admin/content-moderation" class="nav-item {{ request()->routeIs('admin.content-moderation.*') ? 'active' : '' }}">
+                <a href="/admin/content-moderation"
+                    class="nav-item {{ request()->routeIs('admin.content-moderation.*') ? 'active' : '' }}">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Duyệt nội dung</span>
                 </a>
-                <a href="/admin/categories" class="nav-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <a href="/admin/categories"
+                    class="nav-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                     <i class="fas fa-list"></i>
                     <span>Quản lý danh mục</span>
                 </a>
-                <a href="/admin/withdrawals" class="nav-item {{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
+                <a href="/admin/withdrawals"
+                    class="nav-item {{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
                     <i class="fas fa-money-bill-wave"></i>
                     <span>Quản lý rút tiền</span>
-                </a>
-                <a href="/admin/system/settings" class="nav-item {{ request()->routeIs('admin.system.*') ? 'active' : '' }}">
-                    <i class="fas fa-cogs"></i>
-                    <span>Cài đặt hệ thống</span>
                 </a>
             </nav>
 
@@ -72,7 +72,7 @@
                 <form action="/logout" method="POST" class="logout-form">
                     @csrf
                     <button type="submit" class="btn-logout">
-                        <i class="fas fa-sign-out-alt"></i>
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
                     </button>
                 </form>
                 @else

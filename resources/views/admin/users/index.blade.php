@@ -63,12 +63,17 @@
                         </td>
                         <td>{{ $user->created_at->format('d/m/Y H:i') }}</td>
                         <td>
-                            <a href="/admin/users/{{ $user->id }}" class="btn btn-sm btn-info" title="Xem chi tiết">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <button type="button" class="btn btn-sm btn-{{ $user->status === 'active' ? 'danger' : 'warning' }}" data-bs-toggle="modal" data-bs-target="#statusModal{{ $user->id }}" title="Thay đổi trạng thái">
-                                <i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }}"></i>
-                            </button>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="/admin/users/{{ $user->id }}" class="btn btn-info" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button type="button" class="btn btn-{{ $user->status === 'active' ? 'danger' : 'warning' }}" data-bs-toggle="modal" data-bs-target="#statusModal{{ $user->id }}" title="Thay đổi trạng thái">
+                                    <i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }}"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $user->id }}" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
 
@@ -89,6 +94,39 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
                                         <button type="submit" class="btn btn-danger">Xác nhận</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger bg-opacity-10">
+                                    <h5 class="modal-title">
+                                        <i class="fas fa-exclamation-triangle text-danger"></i> Xác nhận xóa
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form method="POST" action="/admin/users/{{ $user->id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="modal-body">
+                                        <p class="mb-3">
+                                            Bạn có chắc chắn muốn xóa người dùng <strong>{{ $user->username }}</strong> không?
+                                        </p>
+                                        <div class="alert alert-danger small">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <strong>Cảnh báo:</strong> Hành động này không thể hoàn tác.
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fas fa-trash"></i> Xóa vĩnh viễn
+                                        </button>
                                     </div>
                                 </form>
                             </div>
