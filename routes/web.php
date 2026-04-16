@@ -62,6 +62,7 @@ Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(functi
     Route::resource('courses', CourseController::class)->names([
         'index' => 'provider.courses.index',
         'create' => 'provider.courses.create',
+        'show' => 'provider.courses.show',
         'edit' => 'provider.courses.edit',
         'store' => 'provider.courses.store',
         'update' => 'provider.courses.update',
@@ -92,6 +93,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('courses', CourseController::class, [
         'names' => [
             'index'   => 'admin.courses.index',
+            'show'    => 'admin.courses.show',
             // 'create'  => 'admin.courses.create',
             'store'   => 'admin.courses.store',
             'edit'    => 'admin.courses.edit',
