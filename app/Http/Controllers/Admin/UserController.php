@@ -212,11 +212,6 @@ class UserController extends Controller
                 // Delete related enrollments first
                 $user->enrollments()->delete();
 
-                // Delete provider profile if exists
-                if ($user->provider) {
-                    $user->provider->delete();
-                }
-
                 // Delete the user
                 $user->delete();
             });
