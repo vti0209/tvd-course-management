@@ -79,7 +79,7 @@ class UserController extends Controller
     {
         try {
             // Load relationships
-            $user->load('courses', 'provider');
+            $user->load('courses');
 
             // Log the action
             Log::info('Admin viewed user details', [

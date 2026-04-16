@@ -91,43 +91,32 @@
                         @if($user->isProvider())
                         <div class="col-md-6">
                             <h6 class="mb-3"><strong>Thông tin Provider</strong></h6>
-                            @if($user->provider)
+                            @if($user->provider_info)
                             <table class="table table-sm table-borderless">
                                 <tr>
-                                    <td><strong>Tiểu sử:</strong></td>
-                                    <td>{{ strlen($user->provider->bio ?? '') > 50 ? substr($user->provider->bio, 0, 50) . '...' : ($user->provider->bio ?? 'N/A') }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Tài khoản ngân hàng:</strong></td>
-                                    <td>{{ $user->provider->bank_account ?? 'N/A' }}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>File CV:</strong></td>
+                                    <td><strong>Tài liệu phê duyệt:</strong></td>
                                     <td>
-                                        @if($user->provider->cv_file)
-                                        <a href="{{ $user->provider->cv_file }}" target="_blank"
+                                        <a href="{{ $user->provider_info }}" target="_blank"
                                             class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-file-download"></i> Tải CV
+                                            <i class="fas fa-file-download"></i> Xem tài liệu
                                         </a>
-                                        @else
-                                        <span class="text-muted">Chưa tải</span>
-                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Trạng thái duyệt:</strong></td>
+                                    <td><strong>Trạng thái:</strong></td>
                                     <td>
-                                        @if($user->provider->isApproved())
+                                        @if($user->status === 'active')
                                         <span class="badge bg-success">Đã phê duyệt</span>
-                                        @else
+                                        @elseif($user->status === 'pending')
                                         <span class="badge bg-warning">Chờ phê duyệt</span>
+                                        @else
+                                        <span class="badge bg-danger">Bị từ chối</span>
                                         @endif
                                     </td>
                                 </tr>
                             </table>
                             @else
-                            <p class="text-muted">Chưa có thông tin provider</p>
+                            <p class="text-muted">Chưa có tài liệu provider</p>
                             @endif
                         </div>
                         @endif

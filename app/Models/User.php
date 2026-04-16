@@ -77,4 +77,15 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+
+    /**
+     * Get provider profile (provider_info from users table).
+     */
+    public function getProviderInfoAttribute()
+    {
+        if ($this->role === 'provider') {
+            return $this->provider_info;
+        }
+        return null;
+    }
 }
