@@ -184,3 +184,107 @@ table td:first-child {
     align-items: center;
 }
 
+/* Container chính của thanh header */
+.action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đẩy 3 cụm ra 2 đầu và giữa */
+    gap: 20px;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.page-title h2 {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 1.25rem;
+    color: #1e293b;
+}
+
+/* Thanh lọc ngang hàng */
+.header-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1; /* Để thanh tìm kiếm giãn ra chiếm không gian ở giữa */
+    max-width: 600px;
+}
+
+.search-input-group {
+    position: relative;
+    flex: 1;
+}
+
+.search-input-group i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-input-group input {
+    width: 100%;
+    padding: 8px 12px 8px 35px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.select-filter {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    background: #fff;
+    min-width: 130px;
+}
+
+.btn-search-icon, .btn-reset {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-search-icon {
+    background: #1e293b;
+    color: #fff;
+    border: none;
+}
+
+.btn-reset {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-create {
+    white-space: nowrap; /* Không cho nút Thêm mới bị xuống dòng */
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Mobile responsive */
+@media (max-width: 992px) {
+    .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .header-filter {
+        max-width: 100%;
+    }
+}

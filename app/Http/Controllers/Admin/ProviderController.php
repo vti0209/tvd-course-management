@@ -159,17 +159,32 @@ class ProviderController extends Controller
         return redirect()->route('admin.providers.index')->with('success', 'Yêu cầu Provider bị từ chối! Email thông báo đã được gửi.');
     }
 
-public function students()
+public function students(Request $request)
 {
     $providerId = auth()->id();
+    $search = $request->input('search');
+    $learningStatus = $request->input('learning_status');
 
     $enrollments = Enrollment::whereHas('course', function($query) use ($providerId) {
-        // PHẢI dùng 'provider_id' mới đúng với cấu trúc bảng của bạn
-        $query->where('provider_id', $providerId); 
-    })
-    ->with(['user', 'course'])
-    ->latest('enrolled_at')
-    ->paginate(10);
+            $query->where('provider_id', $providerId);
+        })
+        ->when($search, function($query, $search) {
+            return $query->where(function($q) use ($search) {
+                $q->whereHas('user', function($u) use ($search) {
+                    $u->where('full_name', 'LIKE', "%{$search}%")->orWhere('username', 'LIKE', "%{$search}%");
+                })->orWhereHas('course', function($c) use ($search) {
+                    $c->where('title', 'LIKE', "%{$search}%");
+                });
+            });
+        })
+        // Lọc theo trạng thái học tập (cột status trong bảng enrollments)
+        ->when($learningStatus, function($query, $learningStatus) {
+            return $query->where('status', $learningStatus);
+        })
+        ->with(['user', 'course'])
+        ->latest('enrolled_at')
+        ->paginate(10)
+        ->withQueryString();
 
     return view('provider.students', compact('enrollments'));
 }

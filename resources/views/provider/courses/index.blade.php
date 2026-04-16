@@ -2,7 +2,6 @@
 
 @section('title', 'Quản lý khóa học')
 @section('page_title', 'Danh sách khóa học của tôi')
-
 @section('css')
     {{-- Gọi file CSS riêng --}}
     <link rel="stylesheet" href="{{ asset('css/provider-courses.css') }}">
@@ -10,13 +9,41 @@
 
 @section('content')
 <div class="course-card-container">
+    @section('content')
+<div class="course-card-container">
     <div class="action-bar">
-        <div>
+        <div class="page-title">
             <h2>Tất cả khóa học</h2>
-            <p>Danh sách các khóa học bạn đã gửi yêu cầu cho Admin</p>
         </div>
+
+        <form action="{{ route('provider.courses.index') }}" method="GET" class="header-filter">
+            <div class="search-input-group">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm tên khóa học...">
+            </div>
+
+            <select name="category_id" class="select-filter">
+                <option value="">Danh mục</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <button type="submit" class="btn-search-icon" title="Lọc">
+                <i class="fas fa-filter"></i>
+            </button>
+
+            @if(request('search') || request('category_id'))
+                <a href="{{ route('provider.courses.index') }}" class="btn-reset" title="Xóa lọc">
+                    <i class="fas fa-sync-alt"></i>
+                </a>
+            @endif
+        </form>
+
         <a href="{{ route('provider.courses.create') }}" class="btn-create">
-            <i class="fas fa-plus"></i> Thêm khóa học mới
+            <i class="fas fa-plus"></i> <span>Thêm mới</span>
         </a>
     </div>
 
