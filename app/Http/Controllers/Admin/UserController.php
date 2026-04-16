@@ -78,6 +78,8 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
+            \Log::info('Show method called', ['user_id' => $user->id, 'user_username' => $user->username]);
+            
             // Load relationships
             $user->load('courses');
 
@@ -94,6 +96,12 @@ class UserController extends Controller
                 'user' => $user,
             ]);
         } catch (\Exception $e) {
+            \Log::error('Error in show method', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $user->id ?? 'unknown',
+            ]);
+            
             Log::error('Error displaying user details', [
                 'error' => $e->getMessage(),
                 'admin_id' => auth()->id(),
@@ -102,7 +110,7 @@ class UserController extends Controller
             ]);
 
             return redirect()->route('admin.users.index')
-                ->with('error', 'Có lỗi xảy ra khi tải thông tin người dùng!');
+                ->with('error', 'Có lỗi xảy ra khi tải thông tin người dùng! Error: ' . $e->getMessage());
         }
     }
 
