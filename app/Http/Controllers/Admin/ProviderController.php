@@ -12,20 +12,42 @@ class ProviderController extends Controller
     /**
      * Display pending provider requests.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Get providers from users table (new system)
+        $search = $request->query('search', '');
+
+        // Get pending providers from users table (new system)
         $pendingUserProviders = User::where('role', 'provider')
             ->where('status', 'pending')
-            ->paginate(15);
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('full_name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
+        // Get approved providers from users table
         $approvedUserProviders = User::where('role', 'provider')
             ->where('status', 'active')
-            ->paginate(15);
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('full_name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.providers.index', [
             'pendingUserProviders' => $pendingUserProviders,
             'approvedUserProviders' => $approvedUserProviders,
+            'search' => $search,
         ]);
     }
 
