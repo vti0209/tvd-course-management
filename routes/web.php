@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController;
 // Provider dùng DashboardproController
 use App\Http\Controllers\Provider\DashboardproController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\MyCourseController;
 use App\Http\Controllers\Admin\ProviderController;
@@ -81,6 +82,12 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // User Management
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    Route::post('/users/{user}/status', [UserController::class, 'updateStatus'])->name('admin.users.update-status');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
     Route::resource('courses', CourseController::class, [
         'names' => [
