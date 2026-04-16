@@ -10,20 +10,23 @@
             <h5 class="mb-0">Danh sách người dùng</h5>
             <div>
                 <form method="GET" class="d-flex gap-2">
-                    <select name="role" class="form-select form-select-sm" onchange="this.form.submit()" style="width: 150px;">
+                    <select name="role" class="form-select form-select-sm" onchange="this.form.submit()"
+                        style="width: 150px;">
                         <option value="">-- Tất cả vai trò --</option>
                         <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>Người học</option>
                         <option value="provider" {{ request('role') == 'provider' ? 'selected' : '' }}>Provider</option>
                         <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                     </select>
 
-                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="width: 120px;">
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()"
+                        style="width: 120px;">
                         <option value="">-- Tất cả trạng thái --</option>
                         <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Hoạt động</option>
                         <option value="blocked" {{ request('status') == 'blocked' ? 'selected' : '' }}>Bị khóa</option>
                     </select>
 
-                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm..." value="{{ request('search') }}" style="width: 200px;">
+                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm..."
+                        value="{{ request('search') }}" style="width: 200px;">
                     <button type="submit" class="btn btn-sm btn-primary">
                         <i class="fas fa-search"></i> Tìm
                     </button>
@@ -52,7 +55,8 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->full_name ?? 'N/A' }}</td>
                         <td>
-                            <span class="badge bg-{{ $user->role === 'admin' ? 'danger' : ($user->role === 'provider' ? 'success' : 'info') }}">
+                            <span
+                                class="badge bg-{{ $user->role === 'admin' ? 'danger' : ($user->role === 'provider' ? 'success' : 'info') }}">
                                 {{ ucfirst($user->role) }}
                             </span>
                         </td>
@@ -67,10 +71,14 @@
                                 <a href="/admin/users/{{ $user->id }}" class="btn btn-info" title="Xem chi tiết">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <button type="button" class="btn btn-{{ $user->status === 'active' ? 'danger' : 'warning' }}" data-bs-toggle="modal" data-bs-target="#statusModal{{ $user->id }}" title="Thay đổi trạng thái">
+                                <button type="button"
+                                    class="btn btn-{{ $user->status === 'active' ? 'danger' : 'warning' }}"
+                                    data-bs-toggle="modal" data-bs-target="#statusModal{{ $user->id }}"
+                                    title="Thay đổi trạng thái">
                                     <i class="fas fa-{{ $user->status === 'active' ? 'ban' : 'check' }}"></i>
                                 </button>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $user->id }}" title="Xóa">
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ $user->id }}" title="Xóa">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -88,11 +96,15 @@
                                 <form method="POST" action="/admin/users/{{ $user->id }}/status">
                                     @csrf
                                     <div class="modal-body">
-                                        <p>Bạn muốn {{ $user->status === 'active' ? 'khóa' : 'mở khóa' }} người dùng <strong>{{ $user->username }}</strong>?</p>
-                                        <input type="hidden" name="status" value="{{ $user->status === 'active' ? 'blocked' : 'active' }}">
+                                        <p>Bạn muốn {{ $user->status === 'active' ? 'khóa' : 'mở khóa' }} người dùng
+                                            <strong>{{ $user->username }}</strong>?
+                                        </p>
+                                        <input type="hidden" name="status"
+                                            value="{{ $user->status === 'active' ? 'blocked' : 'active' }}">
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Hủy</button>
                                         <button type="submit" class="btn btn-danger">Xác nhận</button>
                                     </div>
                                 </form>
@@ -115,7 +127,8 @@
                                     @method('DELETE')
                                     <div class="modal-body">
                                         <p class="mb-3">
-                                            Bạn có chắc chắn muốn xóa người dùng <strong>{{ $user->username }}</strong> không?
+                                            Bạn có chắc chắn muốn xóa người dùng <strong>{{ $user->username }}</strong>
+                                            không?
                                         </p>
                                         <div class="alert alert-danger small">
                                             <i class="fas fa-exclamation-circle"></i>
@@ -123,7 +136,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Hủy</button>
                                         <button type="submit" class="btn btn-danger">
                                             <i class="fas fa-trash"></i> Xóa vĩnh viễn
                                         </button>

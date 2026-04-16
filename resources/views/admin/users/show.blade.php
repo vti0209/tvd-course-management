@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Chi tiết người dùng - ' . $user->full_name)
+@section('title', 'Chi tiết người dùng - ' . ($user->full_name ?? $user->username))
 @section('page_title', 'Chi tiết người dùng')
 
 @section('content')
@@ -150,12 +150,12 @@
                                             {{ $course->title }}
                                         </a>
                                     </td>
-                                    <td>{{ $course->pivot->created_at ? $course->pivot->created_at->format('d/m/Y H:i') : 'N/A' }}
+                                    <td>{{ $course->pivot->enrolled_at ? $course->pivot->enrolled_at->format('d/m/Y H:i') : 'N/A' }}
                                     </td>
                                     <td>
                                         <span
-                                            class="badge bg-{{ $course->pivot->status === 'enrolled' ? 'success' : 'warning' }}">
-                                            {{ ucfirst($course->pivot->status ?? 'enrolled') }}
+                                            class="badge bg-{{ $course->pivot->payment_status === 'paid' ? 'success' : 'warning' }}">
+                                            {{ $course->pivot->payment_status === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán' }}
                                         </span>
                                     </td>
                                 </tr>
