@@ -95,9 +95,6 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     // Provider Management & Approval
     Route::get('/providers', [ProviderController::class, 'index'])->name('admin.providers.index');
-    Route::get('/providers/{provider}', [ProviderController::class, 'show'])->name('admin.providers.show');
-    Route::post('/providers/{provider}/approve', [ProviderController::class, 'approve'])->name('admin.providers.approve');
-    Route::post('/providers/{provider}/reject', [ProviderController::class, 'reject'])->name('admin.providers.reject');
     Route::post('/providers/user/{user}/approve', [ProviderController::class, 'approveUser'])->name('admin.providers.approve-user');
     Route::post('/providers/user/{user}/reject', [ProviderController::class, 'rejectUser'])->name('admin.providers.reject-user');
 
