@@ -102,8 +102,15 @@
                             <p>Kéo thả hình ảnh hoặc <span>chọn từ máy tính</span></p>
                             <small>PNG, JPG tối đa 5MB</small>
                         </div>
+<<<<<<< HEAD
+                        @if ($course->image)
+                        <img id="imagePreview" src="{{ asset($course->image) }}" class="image-preview">
+                        @elseif ($course->thumbnail)
+                        <img id="imagePreview" src="{{ asset('images/' . $course->thumbnail) }}" class="image-preview">
+=======
                         @if ($course->thumbnail)
                         <img id="imagePreview" src="{{ asset($course->thumbnail) }}" class="image-preview">
+>>>>>>> cf2f52c64cd5a7b4d8457c3a48a4a4e6616fb063
                         @else
                         <img id="imagePreview" class="image-preview" style="display: none;">
                         @endif
@@ -112,6 +119,24 @@
             </div>
         </div>
 
+<<<<<<< HEAD
+        <div class="form-card">
+            <div class="card-header">
+                <h3><i class="fas fa-toggle-on"></i> Trạng thái</h3>
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="active" name="active" value="1"
+                        {{ old('active', $course->status) == 'active' ? 'checked' : ($course->status === 'active' ? 'checked' : '') }}>
+                    <label class="form-check-label" for="active">
+                        Kích hoạt khóa học
+                    </label>
+                </div>
+            </div>
+        </div>
+
+=======
+>>>>>>> cf2f52c64cd5a7b4d8457c3a48a4a4e6616fb063
         <!-- Submit Buttons -->
         <div class="form-actions">
             <a href="/admin/courses" class="btn btn-secondary">

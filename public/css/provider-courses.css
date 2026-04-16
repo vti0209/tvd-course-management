@@ -1,0 +1,290 @@
+/* public/css/provider-courses.css */
+
+:root {
+    --primary-color: #06B6D4; /* Màu xanh Cyan bạn thích */
+    --primary-hover: #0891b2;
+    --dark-bg: #1e293b;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --white: #ffffff;
+    --border-color: #e2e8f0;
+}
+
+.course-card-container {
+    padding: 20px;
+}
+
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.action-bar h2 {
+    margin: 0;
+    color: var(--text-main);
+}
+
+.action-bar p {
+    color: var(--text-muted);
+    margin: 5px 0 0 0;
+}
+
+.btn-create {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-create:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+}
+
+.table-responsive {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #f8fafc;
+    border-bottom: 2px solid var(--border-color);
+}
+
+th {
+    padding: 15px;
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.course-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.course-img {
+    width: 60px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #e2e8f0;
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-active { background: #dcfce7; color: #166534; }
+.status-pending { background: #fef9c3; color: #854d0e; }
+.status-draft { background: #f1f5f9; color: #475569; }
+
+.btn-action {
+    width: 35px;
+    height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-right: 5px;
+    transition: 0.2s;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.btn-edit { 
+    background: #ecfeff; 
+    color: var(--primary-hover); 
+    border-color: #cffafe; 
+}
+
+.btn-edit:hover { 
+    background: var(--primary-hover); 
+    color: white; 
+}
+
+.btn-delete { 
+    background: #fff1f2; 
+    color: #e11d48; 
+    border-color: #ffe4e6; 
+}
+
+.btn-delete:hover { 
+    background: #e11d48; 
+    color: white; 
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.5;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-flex; /* Giúp icon và chữ nằm trên 1 hàng */
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap; /* QUAN TRỌNG: Không cho phép nhảy dòng */
+}
+
+/* Fix lỗi bảng bị vỡ hàng */
+table td {
+    white-space: nowrap; 
+    vertical-align: middle;
+}
+
+/* Riêng cột thông tin khóa học thì cho phép xuống dòng nếu tiêu đề quá dài */
+table td:first-child {
+    white-space: normal;
+    min-width: 250px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Container chính của thanh header */
+.action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đẩy 3 cụm ra 2 đầu và giữa */
+    gap: 20px;
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.page-title h2 {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 1.25rem;
+    color: #1e293b;
+}
+
+/* Thanh lọc ngang hàng */
+.header-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1; /* Để thanh tìm kiếm giãn ra chiếm không gian ở giữa */
+    max-width: 600px;
+}
+
+.search-input-group {
+    position: relative;
+    flex: 1;
+}
+
+.search-input-group i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-input-group input {
+    width: 100%;
+    padding: 8px 12px 8px 35px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.select-filter {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    background: #fff;
+    min-width: 130px;
+}
+
+.btn-search-icon, .btn-reset {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-search-icon {
+    background: #1e293b;
+    color: #fff;
+    border: none;
+}
+
+.btn-reset {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-create {
+    white-space: nowrap; /* Không cho nút Thêm mới bị xuống dòng */
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Mobile responsive */
+@media (max-width: 992px) {
+    .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .header-filter {
+        max-width: 100%;
+    }
+}

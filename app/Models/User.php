@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Course;
+use App\Models\Enrollment;
 
 class User extends Authenticatable
 {
@@ -29,41 +31,27 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function courses(): BelongsToMany
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id')
+                    ->withPivot('full_name', 'email', 'note', 'status', 'enrolled_at')
+                    ->withTimestamps();
     }
 
-    /**
-     * Get the enrollments for the user.
-     */
     public function enrollments(): HasMany
     {
-        return $this->hasMany(Enrollment::class, 'user_id');
+        return $this->hasMany(Enrollment::class);
     }
 
-    /**
-     * Get the courses that the user has enrolled in.
-     */
-    public function courses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-            {
-                return $this->belongsToMany(
-                    Course::class,
-                    'enrollments', // Tên bảng trung gian
-                    'user_id',     // Khóa ngoại của User trong bảng enrollments
-                    'course_id'    // Khóa ngoại của Course trong bảng enrollments
-                );
-            }
-
-    /**
-     * Get the provider profile of the user.
-     */
-    public function provider()
+    // Khóa học mà người này làm giảng viên (Provider)
+    public function taughtCourses(): HasMany
     {
-        return $this->hasOne(Provider::class, 'user_id');
+        return $this->hasMany(Course::class, 'provider_id');
     }
 
     /**

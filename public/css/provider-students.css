@@ -1,0 +1,80 @@
+/* public/css/provider-students.css */
+
+.student-management-wrapper {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Bắt buộc có dòng này để các thông số % bên dưới hoạt động */
+}
+
+/* Định nghĩa độ rộng các cột tại đây */
+.col-student  { width: 25%; }
+.col-course   { width: 25%; }
+.col-date     { width: 15%; }
+.col-learning { width: 18%; }
+.col-payment  { width: 17%; }
+
+th {
+    padding: 14px 12px;
+    background-color: #f8fafc;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: left;
+}
+
+td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+/* Style cho nội dung trong ô Học viên */
+.student-profile {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-profile .name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.student-profile .email {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* Hệ thống Badge */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-learning { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+.badge-completed { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+.badge-paid { background: #ecfeff; color: #0891b2; }
+.badge-unpaid { background: #fffbeb; color: #b45309; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    table { table-layout: auto; } /* Tắt cố định % trên mobile để tránh vỡ bảng */
+    .col-student, .col-course, .col-date, .col-learning, .col-payment {
+        width: auto;
+    }
+}
