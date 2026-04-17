@@ -135,35 +135,48 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            // Check if user status is active
-            if ($user->status !== 'active') {
-                Auth::logout();
-                return back()->with('error', 'Tài khoản của bạn chưa được kích hoạt. Vui lòng liên hệ quản trị viên.');
-            }
-
-            $request->session()->regenerate();
-
-            // Redirect based on role
-            if ($user->role === 'admin') {
-                return redirect('/admin/dashboard');
-            } elseif ($user->role === 'provider') {
-                return redirect()->route('provider.dashboard');
-            }
-
-            return redirect('/trangchu');
+        
+        // Find user first
+        $user = User::where('email', $credentials['email'])->first();
+        
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return back()->with('error', 'Sai email hoặc mật khẩu!');
         }
 
-        return back()->with('error', 'Sai email hoặc mật khẩu!');
+        // Check if user status is active
+        if ($user->status !== 'active') {
+            return back()->with('error', 'Tài khoản của bạn chưa được kích hoạt. Vui lòng liên hệ quản trị viên.');
+        }
+
+        // Login with appropriate guard based on role
+        $guard = 'web'; // default for user
+        if ($user->role === 'admin') {
+            $guard = 'admin';
+        } elseif ($user->role === 'provider') {
+            $guard = 'provider';
+        }
+
+        Auth::guard($guard)->login($user);
+        $request->session()->regenerate();
+
+        // Redirect based on role
+        if ($user->role === 'admin') {
+            return redirect('/admin/dashboard');
+        } elseif ($user->role === 'provider') {
+            return redirect()->route('provider.dashboard');
+        }
+
+        return redirect('/trangchu');
     }
 
     // LOGOUT
     public function logout(Request $request)
     {
-        Auth::logout();
+        // Logout from all guards
+        Auth::guard('web')->logout();
+        Auth::guard('admin')->logout();
+        Auth::guard('provider')->logout();
+        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

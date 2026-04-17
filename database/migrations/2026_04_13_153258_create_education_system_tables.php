@@ -18,7 +18,6 @@ return new class extends Migration
     Schema::dropIfExists('enrollments');
     Schema::dropIfExists('courses');
     Schema::dropIfExists('categories');
-    Schema::dropIfExists('provider_profiles');
     Schema::dropIfExists('users');
     Schema::enableForeignKeyConstraints();
 
@@ -36,18 +35,7 @@ return new class extends Migration
         $table->timestamps();
     });
 
-    // 2. Bảng Provider Profiles
-    Schema::create('provider_profiles', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-        $table->string('cv_file');
-        $table->text('bio')->nullable();
-        $table->string('bank_account', 50)->nullable();
-        $table->timestamp('approved_at')->nullable();
-        $table->timestamps();
-    });
-
-    // 3. Bảng Categories
+    // 2. Bảng Categories
     Schema::create('categories', function (Blueprint $table) {
         $table->id();
         $table->string('name', 100);

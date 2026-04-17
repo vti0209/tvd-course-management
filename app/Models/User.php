@@ -39,7 +39,7 @@ class User extends Authenticatable
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'enrollments', 'user_id', 'course_id')
-                    ->withPivot('full_name', 'email', 'note', 'status', 'enrolled_at')
+                    ->withPivot('payment_status', 'price_at_purchase', 'enrolled_at')
                     ->withTimestamps();
     }
 
@@ -76,5 +76,16 @@ class User extends Authenticatable
     public function isUser()
     {
         return $this->role === 'user';
+    }
+
+    /**
+     * Get provider profile (provider_info from users table).
+     */
+    public function getProviderInfoAttribute()
+    {
+        if ($this->role === 'provider') {
+            return $this->attributes['provider_info'] ?? null;
+        }
+        return null;
     }
 }

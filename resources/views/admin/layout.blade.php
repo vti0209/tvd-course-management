@@ -100,7 +100,7 @@
                 <div class="header-right">
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Tìm kiếm...">
+                        <input type="text" id="adminSearch" placeholder="Tìm kiếm..." value="{{ request()->query('search', '') }}">
                     </div>
                 </div>
             </div>
@@ -132,8 +132,44 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+    // Sidebar toggle
     document.getElementById('sidebarToggle')?.addEventListener('click', function() {
         document.querySelector('.admin-sidebar').classList.toggle('collapsed');
+    });
+
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('adminSearch');
+        if (!searchInput) return;
+        
+        let searchTimeout;
+        
+        searchInput.addEventListener('keyup', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+            const currentUrl = window.location.pathname;
+            const currentParams = new URLSearchParams(window.location.search);
+            
+            searchTimeout = setTimeout(() => {
+                // Xây dựng URL mới với search parameter
+                let newUrl = currentUrl;
+                if (query) {
+                    // Giữ các parameters khác (như page, sort), chỉ update search
+                    currentParams.set('search', query);
+                    currentParams.delete('page'); // Reset page khi search
+                } else {
+                    currentParams.delete('search');
+                    currentParams.delete('page');
+                }
+                
+                const params = currentParams.toString();
+                if (params) {
+                    newUrl += '?' + params;
+                }
+                
+                window.location.href = newUrl;
+            }, 500); // Debounce 500ms
+        });
     });
     </script>
     @stack('scripts')

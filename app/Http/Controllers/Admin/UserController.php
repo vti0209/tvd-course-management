@@ -78,8 +78,10 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
+            \Log::info('Show method called', ['user_id' => $user->id, 'user_username' => $user->username]);
+            
             // Load relationships
-            $user->load('courses', 'provider');
+            $user->load('courses');
 
             // Log the action
             Log::info('Admin viewed user details', [
@@ -94,6 +96,12 @@ class UserController extends Controller
                 'user' => $user,
             ]);
         } catch (\Exception $e) {
+            \Log::error('Error in show method', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $user->id ?? 'unknown',
+            ]);
+            
             Log::error('Error displaying user details', [
                 'error' => $e->getMessage(),
                 'admin_id' => auth()->id(),
@@ -102,7 +110,7 @@ class UserController extends Controller
             ]);
 
             return redirect()->route('admin.users.index')
-                ->with('error', 'Có lỗi xảy ra khi tải thông tin người dùng!');
+                ->with('error', 'Có lỗi xảy ra khi tải thông tin người dùng! Error: ' . $e->getMessage());
         }
     }
 
@@ -211,11 +219,6 @@ class UserController extends Controller
             DB::transaction(function () use ($user) {
                 // Delete related enrollments first
                 $user->enrollments()->delete();
-
-                // Delete provider profile if exists
-                if ($user->provider) {
-                    $user->provider->delete();
-                }
 
                 // Delete the user
                 $user->delete();
