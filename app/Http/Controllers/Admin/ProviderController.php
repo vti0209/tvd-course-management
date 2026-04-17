@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class ProviderController extends Controller
 {
@@ -104,11 +105,11 @@ class ProviderController extends Controller
         return redirect()->route('admin.providers.index')->with('success', 'Yêu cầu Provider bị từ chối! Email thông báo đã được gửi.');
     }
 
-public function students(Request $request)
-{
-    $providerId = auth()->id();
-    $search = $request->input('search');
-    $learningStatus = $request->input('learning_status');
+    public function students(Request $request)
+    {
+        $providerId = Auth::user()->id;
+        $search = $request->input('search');
+        $learningStatus = $request->input('learning_status');
 
     $enrollments = Enrollment::whereHas('course', function($query) use ($providerId) {
             $query->where('provider_id', $providerId);
