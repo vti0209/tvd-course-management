@@ -71,8 +71,9 @@
                 <tr>
                     <td>
                         <div class="course-info">
-                            {{-- Hiển thị ảnh thumbnail hoặc ảnh mặc định nếu trống --}}
-                            <img src="{{ $course->thumbnail ? asset($course->thumbnail) : asset('images/default-course.png') }}" class="course-img">
+                            <img src="{{ asset($course->thumbnail) }}" 
+                                alt="{{ $course->title }}" 
+                                style="width: 100px; height: 60px; object-fit: cover;">
                             <div>
                                 <div style="font-weight: 600; color: #1e293b;">{{ $course->title }}</div>
                                 {{-- Sửa lỗi format() on null bằng dấu ? --}}
