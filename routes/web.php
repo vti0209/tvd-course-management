@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\WithdrawController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // ==========================================
 // Public Routes
@@ -37,7 +38,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
+// Hiển thị trang nhập email
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
+// Xử lý gửi mail
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ==========================================

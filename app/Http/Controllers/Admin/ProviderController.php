@@ -54,29 +54,28 @@ class ProviderController extends Controller
     /**
      * Approve a provider request.
      */
-    public function approve(Request $request, Provider $provider)
-    {
-        // Update provider status
-        $provider->update([
-            'approved_at' => now(),
-        ]);
+    public function approve(Request $request, User $user)
+{
+    // Cập nhật trạng thái
+    $user->update(['status' => 'active']);
 
-        // Send approval email
-        try {
-            Mail::send('emails.provider-approved', [
-                'user' => $provider->user,
-                'email' => $provider->user->email,
-                'password' => $request->input('password', 'default_password_123'),
-            ], function ($message) use ($provider) {
-                $message->to($provider->user->email)
-                        ->subject('Yêu cầu cung cấp khóa học của bạn được phê duyệt!');
-            });
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Phê duyệt thành công nhưng gửi email thất bại!');
-        }
-
-        return redirect()->route('admin.providers.index')->with('success', 'Yêu cầu Provider được phê duyệt thành công! Email thông báo đã được gửi.');
+    try {
+        Mail::send('emails.provider-approved', [
+            'user' => $user,
+            'email' => $user->email,
+            'password' => 'The password you registered with', 
+        ], function ($message) use ($user) {
+            $message->to($user->email)
+                    ->subject('Your Provider Account has been Approved!');
+        });
+        
+        return redirect()->route('admin.providers.index')->with('success', 'Approved and Email sent!');
+    } catch (\Exception $e) {
+        // Ghi log lỗi để kiểm tra tại sao không gửi được mail
+        \Log::error("Mail Error: " . $e->getMessage());
+        return redirect()->route('admin.providers.index')->with('warning', 'Approved but failed to send email.');
     }
+}
 
     /**
      * Reject a provider request.

@@ -26,7 +26,11 @@
     </form>
 
     <div class="form-footer">
-        <a href="/register">Chưa có tài khoản? Đăng ký</a>
+    <div style="margin-bottom: 10px;">
+        <a href="{{ route('password.request') }}" class="forgot-password">Quên mật khẩu?</a>
     </div>
+    
+    <a href="/register">Chưa có tài khoản? Đăng ký</a>
+</div>
 </div>
 @endsection
