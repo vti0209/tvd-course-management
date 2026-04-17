@@ -15,13 +15,13 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="{{ asset('images/slide1.jfif') }}" alt="Slide 1">
+                    <img src="{{ asset('images/slide1.png') }}" alt="Slide 1">
                 </div>
                 <div class="carousel-item">
                     <img src="{{ asset('images/slide2.png') }}" alt="Slide 2">
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ asset('images/slide3.jfif') }}" alt="Slide 3">
+                    <img src="{{ asset('images/slide3.png') }}" alt="Slide 3">
                 </div>
                 <div class="carousel-item">
                     <img src="{{ asset('images/slide4.png') }}" alt="Slide 4">
