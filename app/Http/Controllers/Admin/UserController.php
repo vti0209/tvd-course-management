@@ -79,7 +79,7 @@ class UserController extends Controller
     {
         try {
             \Log::info('Show method called', ['user_id' => $user->id, 'user_username' => $user->username]);
-            
+
             // Load relationships
             $user->load('courses');
 
@@ -101,7 +101,7 @@ class UserController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'user_id' => $user->id ?? 'unknown',
             ]);
-            
+
             Log::error('Error displaying user details', [
                 'error' => $e->getMessage(),
                 'admin_id' => auth()->id(),

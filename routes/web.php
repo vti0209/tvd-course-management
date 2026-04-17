@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\WithdrawController;
+use App\Http\Controllers\Provider\DashboardproController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -98,4 +99,19 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/withdrawals/{id}', [WithdrawController::class, 'show'])->name('admin.withdrawals.show');
     Route::post('/withdrawals/{id}/approve', [WithdrawController::class, 'approve'])->name('admin.withdrawals.approve');
     Route::post('/withdrawals/{id}/reject', [WithdrawController::class, 'reject'])->name('admin.withdrawals.reject');
+});
+
+// ==========================================
+// Provider Routes
+// ==========================================
+Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(function () {
+    // Gọi đúng DashboardproController của Provider
+    Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
+
+    Route::get('/courses', fn() => abort(404))->name('provider.courses.index');
+    Route::get('/courses/create', fn() => abort(404))->name('provider.courses.create');
+    Route::get('/courses/{id}/edit', fn() => abort(404))->name('provider.courses.edit');
+    Route::get('/students', fn() => abort(404))->name('provider.students');
+    Route::get('/earnings', fn() => abort(404))->name('provider.earnings');
+    Route::get('/profile', fn() => abort(404))->name('provider.profile');
 });
