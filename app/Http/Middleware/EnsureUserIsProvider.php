@@ -13,7 +13,7 @@ class EnsureUserIsProvider
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'provider') {
+        if (Auth::guard('provider')->check()) {
             return $next($request);
         }
 
