@@ -3,64 +3,100 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\HomeController;
+// Admin dùng DashboardController
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\UserController;
+// Provider dùng DashboardproController
+use App\Http\Controllers\Provider\DashboardproController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\MyCourseController;
 use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\WithdrawController;
-use App\Http\Controllers\Provider\DashboardproController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
+// ==========================================
+// Public Routes
+// ==========================================
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/trangchu', [HomeController::class, 'index'])->name('home');
+Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
+Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
+Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.detail');
 
-// Auth routes
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+// ==========================================
+// Auth Routes
+// ==========================================
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+// Hiển thị trang nhập email
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
-Route::get('/register', [AuthController::class, 'showRegister']);
-Route::post('/register', [AuthController::class, 'register']);
+// Xử lý gửi mail
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::post('/logout', [AuthController::class, 'logout']);
-
-// profile - only for user role
-use App\Http\Controllers\User\ProfileController;
-Route::middleware(['auth', 'RestrictAdminProviderFromUserPages'])->group(function () {
+// ==========================================
+// User Routes
+// ==========================================
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('user.profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('user.profile.update');
-});
-
-// my courses - only for user role
-use App\Http\Controllers\User\MyCourseController;
-Route::middleware(['auth', 'RestrictAdminProviderFromUserPages'])->group(function () {
     Route::get('/my-courses', [MyCourseController::class, 'index'])->name('user.my_courses');
+    Route::post('/course/{id}/enroll', [HomeController::class, 'enroll'])->name('course.enroll');
 });
 
-// course detail & enroll
-Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.detail');
-Route::post('/course/{id}/enroll', [HomeController::class, 'enroll'])->name('course.enroll')->middleware(['auth', 'RestrictAdminProviderFromUserPages']);
-Route::get('/search', [HomeController::class, 'search'])->name('courses.search');
-Route::get('/courses', [HomeController::class, 'courses'])->name('courses.index');
+// Provider routes
+Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(function () {
+    
+    // Trang Dashboard
+    Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
+
+    // Quản lý Courses (Tự động tạo route cho index, create, edit, store, update, destroy)
+    Route::resource('courses', CourseController::class)->names([
+        'index' => 'provider.courses.index',
+        'create' => 'provider.courses.create',
+        'edit' => 'provider.courses.edit',
+        'store' => 'provider.courses.store',
+        'update' => 'provider.courses.update',
+        'destroy' => 'provider.courses.destroy',
+    ]);
+
+    // Các trang khác trỏ về hàm tương ứng trong CourseController (hoặc bạn tạo Controller riêng)
+    Route::get('/students', [ProviderController::class, 'students'])->name('provider.students');
+    Route::get('/earnings', [ProviderController::class, 'earnings'])->name('provider.earnings');
+    Route::get('/profile', [ProviderController::class, 'profile'])->name('provider.profile');
+});
 
 // About and Contact pages
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
-// Admin routes - Only accessible by admin users
-Route::prefix('admin')->middleware('admin')->group(function () {
+// Admin routes
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    // User Management
-    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
-    Route::post('/users/{user}/status', [UserController::class, 'updateStatus'])->name('admin.users.update-status');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::resource('courses', CourseController::class, [
+        'names' => [
+            'index'   => 'admin.courses.index',
+            // 'create'  => 'admin.courses.create',
+            'store'   => 'admin.courses.store',
+            'edit'    => 'admin.courses.edit',
+            'update'  => 'admin.courses.update',
+            'destroy' => 'admin.courses.destroy',
+        ]
+    ]);
 
     // Provider Management & Approval
     Route::get('/providers', [ProviderController::class, 'index'])->name('admin.providers.index');

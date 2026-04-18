@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 
 class CourseController extends Controller
@@ -60,20 +61,70 @@ class CourseController extends Controller
     /**
      * Store a newly created course in storage.
      */
-    public function store(Request $request) {
-    // ... validate dữ liệu ...
+public function store(Request $request)
+{
+    // Sử dụng DB Transaction để đảm bảo nếu lỗi ở bất kỳ bước nào thì dữ liệu sẽ không bị lưu dở dang
+    DB::transaction(function () use ($request) {
+        
+        // --- 1. XỬ LÝ LƯU THUMBNAIL KHÓA HỌC ---
+        $thumbnailPath = 'images/courses/default.jpg'; // Ảnh mặc định nếu không upload
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            // Lưu trực tiếp vào thư mục public/images/courses như cấu trúc bạn chụp
+            $file->move(public_path('images/courses'), $filename);
+            $thumbnailPath = 'images/courses/' . $filename;
+        }
 
-    $course = new Course();
-    $course->fill($request->all());
-    $course->provider_id = auth()->id();
-    
-    // Chốt trạng thái mặc định là chờ duyệt
-    $course->status = 'pending'; 
-    
-    $course->save();
+        // --- 2. TẠO KHÓA HỌC ---
+        // Sử dụng Auth::user()->courses()->create sẽ tự động gán provider_id cho bạn
+        $course = Auth::user()->courses()->create([
+            'category_id' => $request->category_id,
+            'title'       => $request->title,
+            'slug'        => Str::slug($request->title) . '-' . time(), // Thêm time để tránh trùng slug
+            'description' => $request->description ?? '',
+            'price'       => $request->price,
+            'status'      => 'active',
+            'thumbnail'   => $thumbnailPath,
+        ]);
 
-    return redirect()->route('provider.courses.index')
-                     ->with('success', 'Khóa học đã được gửi, vui lòng chờ Admin phê duyệt!');
+        // --- 3. LƯU CHƯƠNG VÀ BÀI HỌC (DEMO ẢNH) ---
+        if ($request->has('chapters')) {
+            foreach ($request->chapters as $cIndex => $cData) {
+                // Lưu chương
+                $chapter = $course->chapters()->create([
+                    'title'      => $cData['title'],
+                    'sort_order' => $cIndex,
+                ]);
+
+                // Lưu bài học trong chương
+                if (isset($cData['lessons'])) {
+                    foreach ($cData['lessons'] as $lIndex => $lData) {
+                        $lessonImagePath = 'images/courses/default-lesson.jpg';
+
+                        // Xử lý lưu FILE ẢNH DEMO cho từng bài học (nếu có)
+                        // Lưu ý: Key 'lesson_image' phải khớp với tên trong file create.blade.php
+                        if ($request->hasFile("chapters.$cIndex.lessons.$lIndex.lesson_image")) {
+                            $lFile = $request->file("chapters.$cIndex.lessons.$lIndex.lesson_image");
+                            $lFilename = time() . '_lesson_' . $lFile->getClientOriginalName();
+                            $lFile->move(public_path('images/courses'), $lFilename);
+                            $lessonImagePath = 'images/courses/' . $lFilename;
+                        }
+
+                        // Lưu vào bảng lessons
+                        $chapter->lessons()->create([
+                            'title'        => $lData['title'],
+                            'content_url'  => $lessonImagePath, // Lưu đường dẫn ảnh vào cột content_url
+                            'content_type' => 'video',          // Để 'video' để tránh lỗi ENUM database của bạn
+                            'sort_order'   => $lIndex,
+                        ]);
+                    }
+                }
+            }
+        }
+    });
+
+    return redirect()->route('provider.courses.index')->with('success', 'Khóa học và nội dung demo đã được lưu thành công!');
 }
     /**
      * Show the form for editing the specified course.

@@ -28,4 +28,5 @@ class Chapter extends Model
     {
         return $this->hasMany(Lesson::class, 'chapter_id')->orderBy('sort_order');
     }
+    
 }

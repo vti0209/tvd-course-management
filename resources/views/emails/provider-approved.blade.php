@@ -29,7 +29,6 @@
             <div class="credentials">
                 <h3>Thông tin đăng nhập:</h3>
                 <p><strong>Email:</strong> {{ $email }}</p>
-                <p><strong>Mật khẩu:</strong> {{ $password }}</p>
                 <p style="color: #dc3545; font-weight: bold;">⚠️ Vui lòng đổi mật khẩu ngay sau khi đăng nhập lần đầu!</p>
             </div>
 
@@ -37,7 +36,6 @@
             <ol>
                 <li>Truy cập <a href="{{ url('/login') }}">trang đăng nhập</a></li>
                 <li>Đăng nhập với thông tin ở trên</li>
-                <li>Đổi mật khẩu trong phần cài đặt tài khoản</li>
                 <li>Bắt đầu tạo khóa học đầu tiên của bạn!</li>
             </ol>
 
