@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\WithdrawController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // ==========================================
