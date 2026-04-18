@@ -34,10 +34,12 @@ Route::get('/courses/{id}', [HomeController::class, 'detail'])->name('course.det
 // ==========================================
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
+
+// POST login route - NO guest middleware needed (handled inside controller)
+Route::post('/login', [AuthController::class, 'login']);
 // Hiển thị trang nhập email
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 
@@ -57,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Provider routes
-Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(function () {
+Route::prefix('provider')->middleware(['auth:provider', 'ensure.provider'])->group(function () {
     
     // Trang Dashboard
     Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
@@ -83,7 +85,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
 // Admin routes
-Route::prefix('admin')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -138,12 +140,5 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 });
 
 // ==========================================
-// Provider Routes
+// REMOVED DUPLICATE - Provider Routes are defined above in line 62-81
 // ==========================================
-Route::prefix('provider')->middleware(['auth', 'ensure.provider'])->group(function () {
-    // Gọi đúng DashboardproController của Provider
-    Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
-    Route::get('/students', [ProviderController::class, 'students'])->name('provider.students');
-    Route::get('/earnings', [ProviderController::class, 'earnings'])->name('provider.earnings');
-    Route::get('/profile', [ProviderController::class, 'profile'])->name('provider.profile');
-});

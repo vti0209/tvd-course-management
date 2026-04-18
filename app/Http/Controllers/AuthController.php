@@ -144,7 +144,8 @@ class AuthController extends Controller
         }
 
         // Check if user status is active
-        if ($user->status !== 'active') {
+        // For provider, allow 'pending' status to login (they can use dashboard while waiting approval)
+        if ($user->status !== 'active' && !($user->role === 'provider' && $user->status === 'pending')) {
             return back()->with('error', 'Tài khoản của bạn chưa được kích hoạt. Vui lòng liên hệ quản trị viên.');
         }
 
