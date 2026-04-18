@@ -21,10 +21,16 @@ class Course extends Model
         'duration',
         'thumbnail',
         'status',
+        'rejection_reason',
+        'approved_at',
+        'approved_by',
+        'rejected_at',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'approved_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 
     /**
@@ -76,5 +82,50 @@ class Course extends Model
     public function lessons(): HasManyThrough
     {
         return $this->hasManyThrough(Lesson::class, Chapter::class);
+    }
+
+    /**
+     * Get the admin who approved this course.
+     */
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Check if course is pending approval.
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Check if course is approved.
+     */
+    public function isApproved(): bool
+    {
+        return $this->status === 'active' && $this->approved_at !== null;
+    }
+
+    /**
+     * Check if course is rejected.
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
+    /**
+     * Get the approval status formatted for display.
+     */
+    public function getApprovalStatusLabel(): string
+    {
+        return match($this->status) {
+            'pending' => '⏳ Chờ phê duyệt',
+            'active' => '✅ Đã phê duyệt',
+            'rejected' => '❌ Bị từ chối',
+            default => '❓ Không xác định',
+        };
     }
 }

@@ -8,8 +8,10 @@
     <!-- Tabs -->
     <ul class="nav nav-tabs mb-3" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-                <i class="fas fa-clock"></i> Chờ duyệt {{ $pendingCourses->total() > 0 ? '(' . $pendingCourses->total() . ')' : '' }}
+            <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending"
+                type="button" role="tab">
+                <i class="fas fa-clock"></i> Chờ duyệt
+                {{ $pendingCourses->total() > 0 ? '(' . $pendingCourses->total() . ')' : '' }}
             </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -50,13 +52,16 @@
                                 <td>{{ number_format($course->price, 0, ',', '.') }}đ</td>
                                 <td>{{ $course->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
-                                    <a href="/admin/content-moderation/{{ $course->id }}" class="btn btn-sm btn-info" title="Xem chi tiết">
+                                    <a href="/admin/content-moderation/{{ $course->id }}" class="btn btn-sm btn-info"
+                                        title="Xem chi tiết">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveModal{{ $course->id }}" title="Phê duyệt">
+                                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#approveModal{{ $course->id }}" title="Phê duyệt">
                                         <i class="fas fa-check"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $course->id }}" title="Từ chối">
+                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#rejectModal{{ $course->id }}" title="Từ chối">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </td>
@@ -70,14 +75,17 @@
                                             <h5 class="modal-title">Phê duyệt khóa học</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
-                                        <form method="POST" action="/admin/content-moderation/{{ $course->id }}/approve">
+                                        <form method="POST"
+                                            action="/admin/content-moderation/{{ $course->id }}/approve">
                                             @csrf
                                             <div class="modal-body">
                                                 <p>Phê duyệt khóa học <strong>{{ $course->title }}</strong>?</p>
-                                                <p class="text-muted small">Khóa học sẽ hiển thị công khai trên hệ thống</p>
+                                                <p class="text-muted small">Khóa học sẽ hiển thị công khai trên hệ thống
+                                                </p>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Hủy</button>
                                                 <button type="submit" class="btn btn-success">Phê duyệt</button>
                                             </div>
                                         </form>
@@ -96,14 +104,18 @@
                                         <form method="POST" action="/admin/content-moderation/{{ $course->id }}/reject">
                                             @csrf
                                             <div class="modal-body">
-                                                <p>Bạn chắc chắn muốn từ chối khóa học <strong>{{ $course->title }}</strong>?</p>
+                                                <p>Bạn chắc chắn muốn từ chối khóa học
+                                                    <strong>{{ $course->title }}</strong>?</p>
                                                 <div class="mb-3">
-                                                    <label for="reason{{ $course->id }}" class="form-label">Lý do từ chối:</label>
-                                                    <textarea class="form-control" id="reason{{ $course->id }}" name="reason" rows="3" required></textarea>
+                                                    <label for="reason{{ $course->id }}" class="form-label">Lý do từ
+                                                        chối:</label>
+                                                    <textarea class="form-control" id="reason{{ $course->id }}"
+                                                        name="reason" rows="3" required></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Hủy</button>
                                                 <button type="submit" class="btn btn-danger">Từ chối</button>
                                             </div>
                                         </form>
@@ -150,7 +162,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($allCourses as $course)
+                            @forelse($courses as $course)
                             <tr>
                                 <td><strong>#{{ $course->id }}</strong></td>
                                 <td>{{ Str::limit($course->title, 40) }}</td>
@@ -159,16 +171,17 @@
                                 <td>{{ number_format($course->price, 0, ',', '.') }}đ</td>
                                 <td>
                                     @if($course->status === 'active')
-                                        <span class="badge bg-success">Đang hoạt động</span>
+                                    <span class="badge bg-success">Đang hoạt động</span>
                                     @elseif($course->status === 'pending')
-                                        <span class="badge bg-warning">Chờ duyệt</span>
+                                    <span class="badge bg-warning">Chờ duyệt</span>
                                     @else
-                                        <span class="badge bg-danger">Bị từ chối</span>
+                                    <span class="badge bg-danger">Bị từ chối</span>
                                     @endif
                                 </td>
                                 <td>{{ $course->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
-                                    <a href="/admin/content-moderation/{{ $course->id }}" class="btn btn-sm btn-info" title="Xem chi tiết">
+                                    <a href="/admin/content-moderation/{{ $course->id }}" class="btn btn-sm btn-info"
+                                        title="Xem chi tiết">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                 </td>
@@ -184,9 +197,9 @@
                         </tbody>
                     </table>
                 </div>
-                @if($allCourses->total() > 0)
+                @if($courses->total() > 0)
                 <div class="card-footer bg-white">
-                    {{ $allCourses->links() }}
+                    {{ $courses->links() }}
                 </div>
                 @endif
             </div>

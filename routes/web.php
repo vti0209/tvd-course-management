@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
-use App\Http\Controllers\Admin\WithdrawController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // ==========================================
@@ -113,6 +113,10 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::get('/content-moderation/{course}', [ContentModerationController::class, 'show'])->name('admin.content-moderation.show');
     Route::post('/content-moderation/{course}/approve', [ContentModerationController::class, 'approve'])->name('admin.content-moderation.approve');
     Route::post('/content-moderation/{course}/reject', [ContentModerationController::class, 'reject'])->name('admin.content-moderation.reject');
+    Route::post('/content-moderation/{course}/request-changes', [ContentModerationController::class, 'requestChanges'])->name('admin.content-moderation.request-changes');
+    Route::post('/content-moderation/bulk/approve', [ContentModerationController::class, 'bulkApprove'])->name('admin.content-moderation.bulk-approve');
+    Route::get('/content-moderation/export/data', [ContentModerationController::class, 'export'])->name('admin.content-moderation.export');
+    Route::get('/content-moderation/api/statistics', [ContentModerationController::class, 'statistics'])->name('admin.content-moderation.statistics');
 
     // Category Management
     Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
@@ -137,6 +141,12 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::get('/withdrawals/{id}', [WithdrawController::class, 'show'])->name('admin.withdrawals.show');
     Route::post('/withdrawals/{id}/approve', [WithdrawController::class, 'approve'])->name('admin.withdrawals.approve');
     Route::post('/withdrawals/{id}/reject', [WithdrawController::class, 'reject'])->name('admin.withdrawals.reject');
+
+    // User Management
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    Route::post('/users/{user}/status', [UserController::class, 'updateStatus'])->name('admin.users.update-status');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 // ==========================================
