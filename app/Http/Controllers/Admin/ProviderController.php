@@ -111,7 +111,7 @@ class ProviderController extends Controller
         $search = $request->input('search');
         $learningStatus = $request->input('learning_status');
 
-    $enrollments = Enrollment::whereHas('course', function($query) use ($providerId) {
+        $enrollments = Enrollment::whereHas('course', function($query) use ($providerId) {
             $query->where('provider_id', $providerId);
         })
         ->when($search, function($query, $search) {
@@ -123,7 +123,6 @@ class ProviderController extends Controller
                 });
             });
         })
-        // Lọc theo trạng thái học tập (cột status trong bảng enrollments)
         ->when($learningStatus, function($query, $learningStatus) {
             return $query->where('status', $learningStatus);
         })
@@ -132,7 +131,46 @@ class ProviderController extends Controller
         ->paginate(10)
         ->withQueryString();
 
-    return view('provider.students', compact('enrollments'));
-}
+        return view('provider.students', compact('enrollments'));
+    }
 
+    /**
+     * Get provider's earnings
+     */
+    public function earnings(Request $request)
+    {
+        $providerId = Auth::user()->id;
+        $year = $request->input('year', date('Y'));
+        $month = $request->input('month');
+
+        $query = Enrollment::whereHas('course', function($query) use ($providerId) {
+            $query->where('provider_id', $providerId);
+        })
+        ->where('payment_status', 'paid')
+        ->whereYear('enrolled_at', $year);
+
+        if ($month) {
+            $query->whereMonth('enrolled_at', $month);
+        }
+
+        $earnings = $query->with('course')
+            ->latest('enrolled_at')
+            ->paginate(15);
+
+        // Calculate totals
+        $totalEarnings = Enrollment::whereHas('course', function($query) use ($providerId) {
+            $query->where('provider_id', $providerId);
+        })->where('payment_status', 'paid')->sum('price_at_purchase');
+
+        return view('provider.earnings', compact('earnings', 'totalEarnings', 'year', 'month'));
+    }
+
+    /**
+     * Get provider's profile
+     */
+    public function profile()
+    {
+        $provider = Auth::user();
+        return view('provider.profile', compact('provider'));
+    }
 }
