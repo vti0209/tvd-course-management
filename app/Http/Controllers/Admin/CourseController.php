@@ -84,6 +84,7 @@ public function store(Request $request)
         'slug' => Str::slug($request->title) . '-' . time(),
         'description' => $request->description ?? '',
         'price' => $request->price,
+        'duration'    => $request->duration,
         'status' => 'pending',
         'thumbnail' => $thumbnailPath,
     ]);
