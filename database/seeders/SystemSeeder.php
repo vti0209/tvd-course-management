@@ -76,7 +76,7 @@ class SystemSeeder extends Seeder
             'description' => 'Khóa học giúp bạn làm chủ Framework Laravel mạnh mẽ nhất của PHP qua việc xây dựng dự án Course Management.',
             'price' => 1200000,
             'duration' => 40,
-            'thumbnail' => 'laravel_course.jpg',
+            'thumbnail' => 'images/courses/laravel_course.jpg',
             'status' => 'active',
             'created_at' => now(),
         ]);

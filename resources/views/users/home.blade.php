@@ -49,7 +49,7 @@
             @forelse($courses as $course)
             <div class="course-card">
                 <div class="course-image">
-                    <img src="{{ asset('images/' . $course->thumbnail) }}" alt="{{ $course->title }}">
+                    <img src="{{ asset($course->thumbnail) }}" alt="{{ $course->title }}">
                     <span class="course-badge">{{ $course->category->name ?? 'LavaNet' }}</span>
                 </div>
                 <div class="course-info">

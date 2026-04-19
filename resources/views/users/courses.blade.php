@@ -21,8 +21,8 @@
     @forelse($courses as $course)
     <div class="course-card">
         <div class="course-image">
-            {{-- Fix ảnh --}}
-            <img src="{{ asset('images/' . $course->thumbnail) }}" alt="{{ $course->title }}">
+            {{-- FIX ẢNH TẠI ĐÂY --}}
+            <img src="{{ asset($course->thumbnail) }}" alt="{{ $course->title }}">
             <span class="course-badge">{{ $course->category->name ?? 'LavaNet' }}</span>
         </div>
         <div class="course-info">
@@ -30,20 +30,25 @@
             <div class="course-meta">
                 <span class="course-duration">
                     <i class="fas fa-clock"></i>
-                        {{ $course->duration ?? $course->chapters->sum(fn($ch) => $ch->lessons->count()) ?? 0 }} giờ
+                    {{-- Ưu tiên hiển thị duration, nếu không có thì tính tổng --}}
+                    {{ $course->duration ?? 0 }} giờ
                 </span>
             </div>
             <div class="course-price">{{ number_format($course->price) }}₫</div>
-            <a href="/courses/{{ $course->id }}" class="btn-detail">Xem chi tiết</a>
+            
+            {{-- Dùng route để an toàn hơn --}}
+            <a href="{{ route('course.detail', $course->id) }}" class="btn-detail">Xem chi tiết</a>
         </div>
     </div>
     @empty
-    <p class="no-courses">Không có khóa học nào</p>
+    <div class="col-12 text-center py-5">
+        <p class="no-courses text-muted">Không có khóa học nào phù hợp với tìm kiếm của bạn.</p>
+    </div>
     @endforelse
 </div>
 
 {{-- Phân trang --}}
-<div class="pagination">
+<div class="pagination d-flex justify-content-center mt-4">
     {{ $courses->links() }}
 </div>
 @endsection

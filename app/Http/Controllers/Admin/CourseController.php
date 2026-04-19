@@ -78,15 +78,15 @@ public function store(Request $request)
 
         // --- 2. TẠO KHÓA HỌC ---
         // Sử dụng Auth::user()->courses()->create sẽ tự động gán provider_id cho bạn
-        $course = Auth::user()->courses()->create([
-            'category_id' => $request->category_id,
-            'title'       => $request->title,
-            'slug'        => Str::slug($request->title) . '-' . time(), // Thêm time để tránh trùng slug
-            'description' => $request->description ?? '',
-            'price'       => $request->price,
-            'status'      => 'active',
-            'thumbnail'   => $thumbnailPath,
-        ]);
+        $course = Auth::user()->createdCourses()->create([
+        'category_id' => $request->category_id,
+        'title' => $request->title,
+        'slug' => Str::slug($request->title) . '-' . time(),
+        'description' => $request->description ?? '',
+        'price' => $request->price,
+        'status' => 'pending',
+        'thumbnail' => $thumbnailPath,
+    ]);
 
         // --- 3. LƯU CHƯƠNG VÀ BÀI HỌC (DEMO ẢNH) ---
         if ($request->has('chapters')) {

@@ -22,20 +22,16 @@ class HomeController extends Controller
 
     }
     // Hiển thị chi tiết khóa học
-    public function detail($id)
-    {
-        // Lấy chi tiết khóa học cùng với các bài học (lessons) liên quan
-        $course = Course::with(['category', 'lessons'])->findOrFail($id);
-
-        // Kiểm tra xem User đã đăng ký khóa học này chưa
-        $isEnrolled = false;
-        if (Auth::check()) {
-            $isEnrolled = Auth::user()->enrollments()->where('course_id', $id)->exists();
+         public function detail($id)
+        {
+            $course = Course::with(['category', 'chapters'])->findOrFail($id);
+            $isEnrolled = false;
+            if (Auth::check()) {
+                // Kiểm tra quan hệ enrollments trong Model User
+                $isEnrolled = Auth::user()->enrollments()->where('course_id', $id)->exists();
+            }
+            return view('users.course-detail', compact('course', 'isEnrolled'));
         }
-
-        return view('users.course-detail', compact('course', 'isEnrolled'));
-    }
-
     //Xử lý đăng ký khóa học
     public function enroll(Request $request, $id)
     {
