@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
-
+use App\Models\Chapter;
 class Course extends Model
 {
     use HasFactory;
@@ -71,9 +71,10 @@ class Course extends Model
     /**
      * Get the chapters for the course.
      */
-    public function chapters(): HasMany
+    public function chapters()
     {
-        return $this->hasMany(Chapter::class)->orderBy('sort_order');
+        // Phải là hasMany và trỏ đúng vào Model Chapter
+        return $this->hasMany(Chapter::class, 'course_id'); 
     }
 
     /**

@@ -79,6 +79,11 @@ Route::prefix('provider')->middleware(['auth:provider', 'ensure.provider'])->gro
     Route::get('/students', [ProviderController::class, 'students'])->name('provider.students');
     Route::get('/earnings', [ProviderController::class, 'earnings'])->name('provider.earnings');
     Route::get('/profile', [ProviderController::class, 'profile'])->name('provider.profile');
+    Route::post('/update-profile', [ProviderController::class, 'updateProfile'])
+    ->name('provider.updateProfile');
+
+    Route::post('/change-password', [ProviderController::class, 'changePassword'])
+        ->name('provider.changePassword');
 });
 
 // About and Contact pages

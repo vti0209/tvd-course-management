@@ -53,12 +53,6 @@
                     <hr style="border-color: rgba(255, 255, 255, 0.2); margin: 10px 0;">
                 </li>
                 <li>
-                    <a href="{{ route('home') }}">
-                        <i class="fas fa-home"></i>
-                        <span>Về trang chủ</span>
-                    </a>
-                </li>
-                <li>
                     <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                         @csrf
                         <button type="submit" style="border: none; background: none; width: 100%; text-align: left;">

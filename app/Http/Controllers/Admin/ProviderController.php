@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Models\Course;
 
 class ProviderController extends Controller
 {
@@ -165,6 +168,37 @@ class ProviderController extends Controller
         return view('provider.earnings', compact('earnings', 'totalEarnings', 'year', 'month'));
     }
 
+
+    public function approve($id)
+    {
+        // 1. Tìm khóa học theo ID
+        $course = Course::findOrFail($id);
+
+        // 2. Cập nhật trạng thái để hiển thị lên trang chủ
+        // Giả sử bạn có cột 'status' (1 là hiển thị, 0 là chờ duyệt)
+        // Hoặc cột 'is_active' = true
+        $course->update([
+            'status' => 'active', // Thay đổi tùy theo tên cột trong Database của bạn
+            // 'is_active' => 1,     // Ví dụ nếu bạn dùng cột ẩn/hiện
+        ]);
+
+        // 3. Thông báo thành công và quay lại trang danh sách
+        return redirect()->back()->with('success', 'Khóa học "' . $course->title . '" đã được duyệt và hiển thị trên trang chủ!');
+    }
+
+    public function reject(Request $request, $id)
+{
+    // 1. Tìm khóa học
+    $course = \App\Models\Course::findOrFail($id);
+
+    // 2. Cập nhật trạng thái
+    $course->update([
+        'status' => 'rejected', 
+    ]);
+
+    // 3. Quay lại với thông báo màu đỏ (error)
+    return redirect()->back()->with('error', 'Đã từ chối khóa học và gửi thông báo.');
+}
     /**
      * Get provider's profile
      */
@@ -173,4 +207,35 @@ class ProviderController extends Controller
         $provider = Auth::user();
         return view('provider.profile', compact('provider'));
     }
+
+    public function updateProfile(Request $request)
+{
+    $user = auth()->user();
+
+    $user->full_name = $request->full_name;
+    $user->save();
+
+    return back()->with('success', 'Cập nhật thành công');
+}
+
+public function changePassword(Request $request)
+{
+    $user = auth()->user();
+
+    // check mật khẩu cũ
+    if (!Hash::check($request->old_password, $user->password)) {
+        return back()->with('error', 'Mật khẩu cũ không đúng');
+    }
+
+    // check confirm
+    if ($request->new_password !== $request->confirm_password) {
+        return back()->with('error', 'Xác nhận mật khẩu không đúng');
+    }
+
+    // update
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+
+    return back()->with('success', 'Đổi mật khẩu thành công');
+}
 }

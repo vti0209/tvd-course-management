@@ -9,7 +9,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Course;
 use App\Models\Enrollment;
-
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -42,7 +41,10 @@ class User extends Authenticatable
                     ->withPivot('payment_status', 'price_at_purchase', 'enrolled_at')
                     ->withTimestamps();
     }
-
+public function createdCourses()
+{
+    return $this->hasMany(Course::class, 'provider_id');
+}
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
