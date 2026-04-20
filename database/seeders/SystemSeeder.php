@@ -76,7 +76,7 @@ class SystemSeeder extends Seeder
             'description' => 'Khóa học giúp bạn làm chủ Framework Laravel mạnh mẽ nhất của PHP qua việc xây dựng dự án Course Management.',
             'price' => 1200000,
             'duration' => 40,
-            'thumbnail' => 'images/courses/laravel_course.jpg',
+            'thumbnail' => 'images/courses/Laravel_11_Fullstack.jpg',
             'status' => 'active',
             'created_at' => now(),
         ]);
@@ -89,7 +89,7 @@ class SystemSeeder extends Seeder
             'description' => 'Học cách tư duy thiết kế người dùng và sử dụng thành thạo Figma chỉ trong 4 tuần.',
             'price' => 850000,
             'duration' => 28,
-            'thumbnail' => 'figma_uiux.png',
+            'thumbnail' => 'images/courses/UI_UX_Design_Pro.jpg',
             'status' => 'active',
             'created_at' => now(),
         ]);
@@ -102,7 +102,112 @@ class SystemSeeder extends Seeder
             'description' => 'Khóa học JavaScript từ zero đến hero hoàn toàn miễn phí. Học lập trình web với JavaScript thuần và ES6+.',
             'price' => 0,
             'duration' => 20,
-            'thumbnail' => 'javascript_free.jpg',
+            'thumbnail' => 'images/courses/1776605790_download.png',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // --- 4. TẠO 8 KHÓA HỌC BỔ SUNG ---
+        // Khóa học 4: React.js - Lập trình Frontend hiện đại
+        $course4Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[0],
+            'category_id' => 1,
+            'title' => 'React.js - Lập trình Frontend hiện đại',
+            'description' => 'Học React từ cơ bản đến nâng cao, xây dựng ứng dụng web single-page đơn giản và phức tạp.',
+            'price' => 950000,
+            'duration' => 32,
+            'thumbnail' => 'images/courses/ReactJS.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 5: Vue.js 3 - Framework linh hoạt
+        $course5Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[1],
+            'category_id' => 1,
+            'title' => 'Vue.js 3 - Framework linh hoạt',
+            'description' => 'Nắm vững Vue.js 3, Composition API, và các công cụ phát triển hiện đại. Hoàn hảo cho người mới bắt đầu.',
+            'price' => 799000,
+            'duration' => 24,
+            'thumbnail' => 'images/courses/Vue.js_3_Advanced.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 6: Node.js & Express - Backend Development
+        $course6Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[0],
+            'category_id' => 1,
+            'title' => 'Node.js & Express - Backend Development',
+            'description' => 'Tạo máy chủ web mạnh mẽ với Node.js và Express. Học REST API, databases, authentication và deployment.',
+            'price' => 1100000,
+            'duration' => 36,
+            'thumbnail' => 'images/courses/1775536311_images.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 7: Python - Lập trình từ cơ bản đến ứng dụng
+        $course7Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[1],
+            'category_id' => 1,
+            'title' => 'Python - Lập trình từ cơ bản đến ứng dụng',
+            'description' => 'Tìm hiểu Python, từ syntax cơ bản đến xây dựng ứng dụng thực tế. Bao gồm Web development với Django.',
+            'price' => 1050000,
+            'duration' => 40,
+            'thumbnail' => 'images/courses/khoa-hoc-thuyet-trinh.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 8: TypeScript - Hệ thống kiểu cho JavaScript
+        $course8Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[0],
+            'category_id' => 1,
+            'title' => 'TypeScript - Hệ thống kiểu cho JavaScript',
+            'description' => 'Nâng cấp kỹ năng JavaScript với TypeScript. Học kiểu dữ liệu, interface, decorator và design patterns.',
+            'price' => 850000,
+            'duration' => 28,
+            'thumbnail' => 'images/courses/TypeScript.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 9: Thiết kế Web với HTML5 & CSS3
+        $course9Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[2],
+            'category_id' => 3,
+            'title' => 'Thiết kế Web với HTML5 & CSS3',
+            'description' => 'Nền tảng của web development. Học HTML5 mới, CSS3 hiện đại, Flexbox, Grid và responsive design.',
+            'price' => 599000,
+            'duration' => 20,
+            'thumbnail' => 'images/courses/1776605954_download (1).jfif',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 10: Branding & Thiết kế Logo chuyên nghiệp
+        $course10Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[2],
+            'category_id' => 3,
+            'title' => 'Branding & Thiết kế Logo chuyên nghiệp',
+            'description' => 'Học tạo bộ nhận diện thương hiệu mạnh mẽ, thiết kế logo, color theory, typography, và brand guidelines.',
+            'price' => 750000,
+            'duration' => 25,
+            'thumbnail' => 'images/courses/Thiet_ke_logo.jpg',
+            'status' => 'active',
+            'created_at' => now(),
+        ]);
+
+        // Khóa học 11: Digital Marketing - Chiến lược quảng cáo online
+        $course11Id = DB::table('courses')->insertGetId([
+            'provider_id' => $providerIds[1],
+            'category_id' => 4,
+            'title' => 'Digital Marketing - Chiến lược quảng cáo online',
+            'description' => 'Hiểu biết sâu về SEO, SEM, Social Media Marketing, Email Marketing và Google Analytics để phát triển kinh doanh.',
+            'price' => 899000,
+            'duration' => 30,
+            'thumbnail' => 'images/courses/khoa-hoc-quang-cao-facebook.jpg',
             'status' => 'active',
             'created_at' => now(),
         ]);
@@ -171,9 +276,16 @@ class SystemSeeder extends Seeder
                 'created_at' => now(),
             ]);
 
-            // Cho mỗi học viên mua ngẫu nhiên khóa học 1, 2 hoặc 3
-            $randomCourse = [$course1Id, $course2Id, $course3Id][array_rand([$course1Id, $course2Id, $course3Id])];
-            $coursePrices = [$course1Id => 1200000, $course2Id => 850000, $course3Id => 0];
+            // Cho mỗi học viên mua ngẫu nhiên khóa học từ 11 khóa học
+            $allCourses = [$course1Id, $course2Id, $course3Id, $course4Id, $course5Id, $course6Id, $course7Id, $course8Id, $course9Id, $course10Id, $course11Id];
+            $coursePrices = [
+                $course1Id => 1200000, $course2Id => 850000, $course3Id => 0,
+                $course4Id => 950000, $course5Id => 799000, $course6Id => 1100000,
+                $course7Id => 1050000, $course8Id => 850000, $course9Id => 599000,
+                $course10Id => 750000, $course11Id => 899000
+            ];
+
+            $randomCourse = $allCourses[array_rand($allCourses)];
 
             DB::table('enrollments')->insert([
                 'user_id' => $uId,
