@@ -1,4 +1,4 @@
-```blade
+
 @extends('provider.layout')
 
 @section('content')
