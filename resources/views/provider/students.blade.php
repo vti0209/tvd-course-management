@@ -48,11 +48,11 @@
         <table>
             <thead>
                 <tr>
-                    <th class="col-student">Học viên</th>
-                    <th class="col-course">Khóa học đã đăng ký</th>
-                    <th class="col-date">Ngày đăng ký</th>
-                    <th class="col-learning">Trạng thái học</th>
-                    <th class="col-payment">Thanh toán</th>
+                    <th style="width: 20%;">Học viên</th>
+                    <th style="width: 35%;">Khóa học đã đăng ký</th> {{-- Tăng không gian cho cột này --}}
+                    <th style="width: 15%;">Ngày đăng ký</th>
+                    <th style="width: 15%;">Trạng thái học</th>
+                    <th style="width: 15%;">Thanh toán</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +65,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="course-info-cell">
+                        <div class="course-info-cell" style="word-break: break-word; min-width: 200px;">
                             {{ $enrollment->course->title }}
                         </div>
                     </td>

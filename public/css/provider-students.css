@@ -78,3 +78,29 @@ td {
         width: auto;
     }
 }
+/* Đảm bảo bảng luôn chiếm 100% và các ô không đè lên nhau */
+.table-container table {
+    width: 100%;
+    table-layout: auto; /* Để trình duyệt tự tính toán dựa trên nội dung */
+    border-collapse: collapse;
+}
+
+.table-container td, .table-container th {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* Xử lý riêng cho cột Khóa học */
+.course-info-cell {
+    display: block;
+    max-width: 100%;
+    line-height: 1.4;
+    white-space: normal; /* Cho phép xuống dòng */
+}
+
+/* Ép cột ngày tháng không được co lại quá nhỏ */
+.col-date {
+    white-space: nowrap; /* Ngày tháng thì không nên xuống dòng */
+    min-width: 100px;
+}
