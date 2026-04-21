@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserStatusRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -49,8 +50,8 @@ class UserController extends Controller
 
             // Log the action
             Log::info('Admin viewed users list', [
-                'admin_id' => auth()->id(),
-                'admin_email' => auth()->user()->email,
+                'admin_id' => Auth::user()->id,
+                'admin_email' => Auth::user()->email,
                 'filters_applied' => count(array_filter($validated)),
                 'results_count' => $users->total(),
             ]);
@@ -61,7 +62,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error('Error fetching users list', [
                 'error' => $e->getMessage(),
-                'admin_id' => auth()->id(),
+                'admin_id' => Auth::user()->id,
                 'trace' => $e->getTraceAsString(),
             ]);
 
@@ -85,8 +86,8 @@ class UserController extends Controller
 
             // Log the action
             Log::info('Admin viewed user details', [
-                'admin_id' => auth()->id(),
-                'admin_email' => auth()->user()->email,
+                'admin_id' => Auth::user()->id,
+                'admin_email' => Auth::user()->email,
                 'user_id' => $user->id,
                 'user_username' => $user->username,
                 'user_role' => $user->role,
@@ -104,7 +105,7 @@ class UserController extends Controller
 
             Log::error('Error displaying user details', [
                 'error' => $e->getMessage(),
-                'admin_id' => auth()->id(),
+                'admin_id' => Auth::user()->id,
                 'user_id' => $user->id,
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -127,10 +128,10 @@ class UserController extends Controller
             $validated = $request->validated();
 
             // Check if user is trying to change their own status to blocked
-            if (auth()->id() === $user->id && $validated['status'] === 'blocked') {
+            if (Auth::user()->id === $user->id && $validated['status'] === 'blocked') {
                 Log::warning('Admin attempted to block their own account', [
-                    'admin_id' => auth()->id(),
-                    'admin_email' => auth()->user()->email,
+                    'admin_id' => Auth::user()->id,
+                    'admin_email' => Auth::user()->email,
                 ]);
                 return redirect()->back()
                     ->with('error', 'Bạn không thể khóa chính tài khoản của mình!');
@@ -139,8 +140,8 @@ class UserController extends Controller
             // Check if trying to change an admin's status
             if ($user->role === 'admin' && $validated['status'] === 'blocked') {
                 Log::warning('Admin attempted to block another admin account', [
-                    'admin_id' => auth()->id(),
-                    'admin_email' => auth()->user()->email,
+                    'admin_id' => Auth::user()->id,
+                    'admin_email' => Auth::user()->email,
                     'target_user_id' => $user->id,
                     'target_username' => $user->username,
                 ]);
@@ -153,8 +154,8 @@ class UserController extends Controller
 
             // Log the action
             Log::info('Admin updated user status', [
-                'admin_id' => auth()->id(),
-                'admin_email' => auth()->user()->email,
+                'admin_id' => Auth::user()->id,
+                'admin_email' => Auth::user()->email,
                 'target_user_id' => $user->id,
                 'target_username' => $user->username,
                 'target_role' => $user->role,
@@ -168,7 +169,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error('Error updating user status', [
                 'error' => $e->getMessage(),
-                'admin_id' => auth()->id(),
+                'admin_id' => Auth::user()->id,
                 'user_id' => $user->id,
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -188,10 +189,10 @@ class UserController extends Controller
     {
         try {
             // Prevent deleting the current admin user
-            if (auth()->id() === $user->id) {
+            if (Auth::user()->id === $user->id) {
                 Log::warning('Admin attempted to delete their own account', [
-                    'admin_id' => auth()->id(),
-                    'admin_email' => auth()->user()->email,
+                    'admin_id' => Auth::user()->id,
+                    'admin_email' => Auth::user()->email,
                 ]);
                 return redirect()->back()
                     ->with('error', 'Bạn không thể xóa chính tài khoản của mình!');
@@ -200,8 +201,8 @@ class UserController extends Controller
             // Prevent deleting other admin accounts
             if ($user->role === 'admin') {
                 Log::warning('Admin attempted to delete another admin account', [
-                    'admin_id' => auth()->id(),
-                    'admin_email' => auth()->user()->email,
+                    'admin_id' => Auth::user()->id,
+                    'admin_email' => Auth::user()->email,
                     'target_user_id' => $user->id,
                     'target_username' => $user->username,
                 ]);
@@ -226,8 +227,8 @@ class UserController extends Controller
 
             // Log the action (warning level because deletion is significant)
             Log::warning('Admin deleted user', [
-                'admin_id' => auth()->id(),
-                'admin_email' => auth()->user()->email,
+                'admin_id' => Auth::user()->id,
+                'admin_email' => Auth::user()->email,
                 'deleted_user_id' => $userId,
                 'deleted_username' => $username,
                 'deleted_user_email' => $userEmail,
@@ -239,8 +240,8 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error('Error deleting user', [
                 'error' => $e->getMessage(),
-                'admin_id' => auth()->id(),
-                'admin_email' => auth()->user()->email,
+                'admin_id' => Auth::user()->id,
+                'admin_email' => Auth::user()->email,
                 'user_id' => $user->id,
                 'trace' => $e->getTraceAsString(),
             ]);

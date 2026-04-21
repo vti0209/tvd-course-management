@@ -150,7 +150,7 @@
                                             {{ $course->title }}
                                         </a>
                                     </td>
-                                    <td>{{ $course->pivot->enrolled_at ? $course->pivot->enrolled_at->format('d/m/Y H:i') : 'N/A' }}
+                                    <td>{{ $course->pivot->enrolled_at ? \Carbon\Carbon::parse($course->pivot->enrolled_at)->format('d/m/Y') : 'N/A' }}
                                     </td>
                                     <td>
                                         <span

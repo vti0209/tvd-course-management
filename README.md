@@ -48,95 +48,20 @@ Online Course Management System là hệ thống quản lý khóa học trực t
 
 ### 4.2 Quản trị viên
 * Dashboard thống kê (User, Course)
+* Quản lý khóa học (duyệt)
+* Quản lý người dùng (block, tìm theo tên, lọc user)
+
+### 4.2 Nhà cung cấp
+* Dashboard thống kê
 * Quản lý khóa học (CRUD, tìm kiếm tên, lọc theo danh mục, phân trang)
 * Quản lý người dùng (CRUD, tìm theo tên, lọc user đã đăng ký khóa học)
 
 ## 5. Cấu trúc thư mục
 ```text
-TVD/
-├── app/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   │   ├── Admin/                      # Quản trị viên
-│   │   │   │   ├── DashboardController.php  # Thống kê tổng số User & Khóa học
-│   │   │   │   ├── CourseController.php     # CRUD Khóa học (Lọc danh mục, 8 hàng/trang)
-│   │   │   │   └── UserController.php       # CRUD Users (Lọc người đã đăng ký, 8 hàng/trang)
-│   │   │   ├── Auth/                       # Hệ thống đăng nhập
-│   │   │   │   ├── LoginController.php      
-│   │   │   │   └── RegisterController.php   
-│   │   │   └── User/                       # Người dùng (Học viên)
-│   │   │       ├── HomeController.php       # Trang chủ (8 khóa học mới, Slide 4 ảnh)
-│   │   │       ├── ProfileController.php    # Xem và cập nhật Profile
-│   │   │       └── MyCourseController.php   # Danh sách khóa học đã đăng ký
-│   │   └── Middleware/
-│   │       └── AdminRole.php                # Bảo vệ vùng Admin
-│   └── Models/                              # Thực thể Database (3NF)
-│       ├── Category.php                     # Quan hệ 1-N với Course
-│       ├── Course.php                       # Quan hệ N-N với User (via course_user)
-│       ├── Lesson.php                       # Bài học thuộc Course
-│       └── User.php                         
-│
-├── database/
-│   ├── factories/                          
-│   │   ├── CategoryFactory.php              # Fake tên danh mục
-│   │   ├── UserFactory.php                  # Fake email, tên, pass
-│   │   ├── CourseFactory.php                # Fake tiêu đề, giá, slug
-│   │   ├── LessonFactory.php                # Fake bài học
-│   │   └── CourseUserFactory.php            # Fake quan hệ đăng ký học
-│   ├── migrations/                          # Cấu trúc 5 bảng Database
-│   └── seeders/
-│       └── DatabaseSeeder.php               # Dữ liệu mẫu (5 dòng/bảng)
-│
-├── public/
-│   ├── css/
-│   │   ├── style.css                        # CSS chính cho User/Guest
-│   │   └── admin.css                        # CSS riêng cho bảng quản trị
-│   ├── js/
-│   │   └── slider.js                        # Script chạy 4 ảnh Slide
-│   └── uploads/                             # Nơi lưu Thumbnail & Avatar
-│
-├── resources/
-│   └── views/
-│       ├── admin/                           # Giao diện ADMIN
-│       │   ├── dashboard.blade.php          # View Dashboard tổng quan
-│       │   ├── courses/                     # Quản lý khóa học
-│       │   │   ├── index.blade.php          # Bảng danh sách (8 hàng, Tìm kiếm, Lọc)
-│       │   │   ├── create.blade.php         # Form thêm mới
-│       │   │   ├── edit.blade.php           # Form chỉnh sửa
-│       │   │   └── add.blade.php            # (Hỗ trợ thêm nhanh)
-│       │   ├── users/                       # Quản lý người dùng
-│       │   │   ├── index.blade.php          # Bảng danh sách (8 hàng, Lọc đã đăng ký)
-│       │   │   ├── create.blade.php         # Form Admin tạo User
-│       │   │   ├── edit.blade.php           # Form Admin sửa User
-│       │   │   └── add.blade.php            
-│       │   └── admin_layouts/               # Layout Admin
-│       │       ├── master.blade.php         # Khung chính Admin
-│       │       ├── header.blade.php         # Header (Logo, QL Khóa học, QL User, Tên Admin)
-│       │       └── footer.blade.php         
-│       │
-│       ├── user/                            # Giao diện USER/GUEST
-│       │   ├── home.blade.php               # Trang chủ (Slide, 8 khóa học, Phân trang)
-│       │   ├── profile.blade.php            # Xem thông tin cá nhân
-│       │   ├── editprofile.blade.php        # Form tự chỉnh sửa tên/avatar
-│       │   ├── my-courses.blade.php         # Danh sách khóa học đã mua
-│       │   └── formdangkykhoahoc.blade.php  # Form cho người dùng đăng ký khóa học
-│       │
-│       ├── auth/
-│       │   ├── login.blade.php
-│       │   └── register.blade.php
-│       │
-│       └── layouts/                         # Layout chính cho khách/user
-│           ├── master.blade.php             
-│           ├── header.blade.php             # Header động (Guest/User/Số lượng khóa học)
-│           ├── footer.blade.php             # Footer (Chúng tôi, Học tập, Kết nối)
-│           └── script.blade.php             
-│
-└── routes/
-    └── web.php                              # Định nghĩa tất cả URL dự án
-```
+Xem ở nhánh dev 
 
 ## 6. Database
-Hệ thống sử dụng 5 bảng chính:
+Hệ thống sử dụng các bảng chính, ngoài ra sẽ có các bảng phụ:
 * `users`
 * `categories`
 * `courses`

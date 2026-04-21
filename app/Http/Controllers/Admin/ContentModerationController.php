@@ -11,8 +11,12 @@ use App\Http\Requests\RejectCourseRequest;
 use App\Traits\LogsAdminActions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth; // Đảm bảo có dòng này để tránh lỗi 'Auth not found'
 use Exception;
-
+/**
+ * @method void logAdminAction(string $action, string $description, array $details = [])
+ * @method void logAdminError(string $message, array $context = [])
+ */
 class ContentModerationController extends Controller
 {
     use LogsAdminActions;
@@ -31,22 +35,13 @@ class ContentModerationController extends Controller
     {
         try {
             $filters = $request->validated();
-            
-            // Get statistics
+
+            // Get statistics & data
             $stats = $this->moderationService->getStatistics();
-            
-            // Get courses based on filters
             $courses = $this->moderationService->getCoursesForModeration($filters);
-            
-            // Get pending courses
             $pendingCourses = $this->moderationService->getPendingCourses(5);
 
-            return view('admin.content-moderation.index', [
-                'courses' => $courses,
-                'pendingCourses' => $pendingCourses,
-                'stats' => $stats,
-                'filters' => $filters,
-            ]);
+            return view('admin.content-moderation.index', compact('courses', 'pendingCourses', 'stats', 'filters'));
         } catch (Exception $e) {
             $this->logAdminError('Error retrieving courses for moderation', ['error' => $e->getMessage()]);
             return back()->with('error', 'Có lỗi khi tải danh sách khóa học.');
@@ -59,6 +54,7 @@ class ContentModerationController extends Controller
     public function show(Course $course)
     {
         try {
+            // Eager loading để tối ưu query
             $course->load(['provider', 'category', 'chapters.lessons', 'enrollments', 'approvedBy']);
 
             return view('admin.content-moderation.show', [
@@ -80,7 +76,7 @@ class ContentModerationController extends Controller
         try {
             $this->moderationService->approveCourse(
                 $course,
-                auth()->user(),
+                Auth::user(), // Sử dụng Auth facade đồng nhất
                 $request->input('notes', '')
             );
 
@@ -91,7 +87,7 @@ class ContentModerationController extends Controller
             );
 
             return redirect()->back()
-                ->with('success', "✅ Khóa học '{$course->title}' đã được phê duyệt thành công! Email thông báo đã gửi đến nhà cung cấp.");
+                ->with('success', "Khóa học '{$course->title}' đã được phê duyệt thành công!");
         } catch (Exception $e) {
             $this->logAdminError('Error approving course', [
                 'course_id' => $course->id,
@@ -112,70 +108,57 @@ class ContentModerationController extends Controller
 
             $this->moderationService->rejectCourse(
                 $course,
-                auth()->user(),
+                Auth::user(),
                 $reason
             );
 
             $this->logAdminAction(
                 'COURSE_REJECTED',
-                "Đã từ chối khóa học: {$course->title} (ID: {$course->id}) | Lý do: {$reason}",
-                [
-                    'course_id' => $course->id,
-                    'course_title' => $course->title,
-                    'reason' => $reason
-                ]
+                "Đã từ chối khóa học: {$course->title} (ID: {$course->id})",
+                ['course_id' => $course->id, 'reason' => $reason]
             );
 
             return redirect()->back()
-                ->with('success', "❌ Khóa học '{$course->title}' đã bị từ chối. Email thông báo với lý do đã gửi đến nhà cung cấp.");
+                ->with('success', "Khóa học '{$course->title}' đã bị từ chối.");
         } catch (Exception $e) {
             $this->logAdminError('Error rejecting course', [
                 'course_id' => $course->id,
                 'error' => $e->getMessage()
             ]);
 
-            return back()->with('error', 'Có lỗi khi từ chối khóa học: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi khi từ chối: ' . $e->getMessage());
         }
     }
 
     /**
-     * Request changes on a course (alternative to hard rejection)
+     * Request changes on a course.
      */
     public function requestChanges(RejectCourseRequest $request, Course $course)
     {
         try {
             $reason = $request->validated()['reason'];
 
-            $this->moderationService->requestChanges(
-                $course,
-                auth()->user(),
-                $reason
-            );
+            $this->moderationService->requestChanges($course, Auth::user(), $reason);
 
             $this->logAdminAction(
                 'COURSE_CHANGES_REQUESTED',
-                "Yêu cầu sửa đổi khóa học: {$course->title} (ID: {$course->id})",
-                [
-                    'course_id' => $course->id,
-                    'course_title' => $course->title,
-                    'reason' => $reason
-                ]
+                "Yêu cầu sửa đổi: {$course->title}",
+                ['course_id' => $course->id, 'reason' => $reason]
             );
 
             return redirect()->back()
-                ->with('success', "✏️ Yêu cầu sửa đổi khóa học '{$course->title}' đã gửi đến nhà cung cấp. Họ có thể tái nộp sau khi chỉnh sửa.");
+                ->with('success', "Đã gửi yêu cầu sửa đổi cho khóa học '{$course->title}'.");
         } catch (Exception $e) {
             $this->logAdminError('Error requesting changes', [
                 'course_id' => $course->id,
                 'error' => $e->getMessage()
             ]);
-
-            return back()->with('error', 'Có lỗi khi yêu cầu sửa đổi: ' . $e->getMessage());
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
 
     /**
-     * Bulk approve courses
+     * Bulk approve courses.
      */
     public function bulkApprove(Request $request)
     {
@@ -185,81 +168,50 @@ class ContentModerationController extends Controller
                 'course_ids.*' => 'integer|exists:courses,id',
             ]);
 
-            $courseIds = $validated['course_ids'];
-            $courses = Course::whereIn('id', $courseIds)->get();
-            
+            $courses = Course::whereIn('id', $validated['course_ids'])->get();
             $approved = 0;
             $failed = 0;
 
             foreach ($courses as $course) {
                 try {
-                    $this->moderationService->approveCourse($course, auth()->user());
+                    $this->moderationService->approveCourse($course, Auth::user());
                     $approved++;
                 } catch (Exception $e) {
                     $failed++;
-                    Log::warning("Failed to approve course {$course->id}: " . $e->getMessage());
+                    Log::error("Bulk Approve Fail ID {$course->id}: " . $e->getMessage());
                 }
             }
 
-            $this->logAdminAction(
-                'BULK_COURSE_APPROVED',
-                "Phê duyệt hàng loạt $approved khóa học",
-                ['approved' => $approved, 'failed' => $failed]
-            );
+            $this->logAdminAction('BULK_COURSE_APPROVED', "Phê duyệt $approved khóa học", ['count' => $approved]);
 
-            $message = "✅ Đã phê duyệt $approved khóa học";
-            if ($failed > 0) {
-                $message .= " ($failed khóa học không thể phê duyệt)";
-            }
-
-            return redirect()->back()->with('success', $message);
+            return redirect()->back()->with('success', "Đã phê duyệt $approved khóa học" . ($failed > 0 ? " ($failed lỗi)" : ""));
         } catch (Exception $e) {
-            $this->logAdminError('Error in bulk approve', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Có lỗi khi phê duyệt hàng loạt: ' . $e->getMessage());
+            return back()->with('error', 'Lỗi phê duyệt hàng loạt: ' . $e->getMessage());
         }
     }
 
     /**
-     * Export courses data for reports
+     * Export data.
      */
     public function export(FilterCoursesRequest $request)
     {
         try {
-            $filters = $request->validated();
-            $data = $this->moderationService->exportCoursesData($filters);
-
-            $this->logAdminAction(
-                'COURSES_EXPORTED',
-                'Xuất dữ liệu khóa học',
-                ['total_exported' => count($data)]
-            );
-
-            return response()->json([
-                'success' => true,
-                'data' => $data,
-                'count' => count($data),
-            ]);
+            $data = $this->moderationService->exportCoursesData($request->validated());
+            return response()->json(['success' => true, 'data' => $data]);
         } catch (Exception $e) {
-            $this->logAdminError('Error exporting courses', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Có lỗi khi xuất dữ liệu: ' . $e->getMessage()
-            ], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
     /**
-     * Get statistics
+     * Get statistics.
      */
     public function statistics()
     {
         try {
-            $stats = $this->moderationService->getStatistics();
-            return response()->json($stats);
+            return response()->json($this->moderationService->getStatistics());
         } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Có lỗi khi lấy thống kê'
-            ], 500);
+            return response()->json(['error' => 'Lỗi lấy thống kê'], 500);
         }
     }
 }

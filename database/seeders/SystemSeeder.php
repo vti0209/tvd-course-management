@@ -29,9 +29,9 @@ class SystemSeeder extends Seeder
         // --- 2. TẠO PROVIDERS (Giảng viên) ---
         $providerIds = [];
         $providers = [
-            ['u' => 'son.dang', 'name' => 'Sơn Đặng F8', 'email' => 'sondang@f8.edu.vn'],
-            ['u' => 'hoang.dev', 'name' => 'Hoàng Lập Trình', 'email' => 'hoangdev@gmail.com'],
-            ['u' => 'huong.design', 'name' => 'Thanh Hương Design', 'email' => 'huongthanh@gmail.com'],
+            ['u' => 'tiet.ho', 'name' => 'Vanw Tiet', 'email' => 'tiet.ho@geminiacademy.edu.vn'],
+            ['u' => 'dung.nguyen', 'name' => 'Dung Nguyen', 'email' => 'dung.nguyen@gmail.com'],
+            ['u' => 'Vai.design', 'name' => 'Thị Vãi Design', 'email' => 'vai.design@gmail.com'],
         ];
 
         foreach ($providers as $p) {

@@ -193,7 +193,7 @@ class ProviderController extends Controller
 
     // 2. Cập nhật trạng thái
     $course->update([
-        'status' => 'rejected', 
+        'status' => 'rejected',
     ]);
 
     // 3. Quay lại với thông báo màu đỏ (error)
@@ -210,7 +210,7 @@ class ProviderController extends Controller
 
     public function updateProfile(Request $request)
 {
-    $user = auth()->user();
+    $user = Auth::user();
 
     $user->full_name = $request->full_name;
     $user->save();
@@ -220,7 +220,7 @@ class ProviderController extends Controller
 
 public function changePassword(Request $request)
 {
-    $user = auth()->user();
+    $user = Auth::user(); // nó giống như auth()->user() nhưng dùng Facade Auth để lấy thông tin người dùng hiện tại
 
     // check mật khẩu cũ
     if (!Hash::check($request->old_password, $user->password)) {

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserStatusRequest extends FormRequest
 {
@@ -12,7 +13,8 @@ class UpdateUserStatusRequest extends FormRequest
     public function authorize(): bool
     {
         // Authorization is handled in the controller
-        return auth()->check() && auth()->user()->role === 'admin';
+        $user = Auth::user();
+        return $user && $user->role === 'admin';
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 trait LogsAdminActions
 {
@@ -16,8 +17,8 @@ trait LogsAdminActions
     protected function logAdminAction(string $action, array $context = [], string $level = 'info'): void
     {
         $data = array_merge([
-            'admin_id' => auth()->id(),
-            'admin_email' => auth()->user()?->email,
+            'admin_id' => Auth::user()->id,
+            'admin_email' => Auth::user()?->email,
             'timestamp' => now(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),

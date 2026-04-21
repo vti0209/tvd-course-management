@@ -19,8 +19,8 @@ class CourseController extends Controller
      */
   public function index(Request $request) // Thêm Request $request vào đây
 {
-    $providerId = auth()->id();
-    
+    $providerId = Auth::user()->id; // Lấy ID của provider hiện tại
+
     // Lấy giá trị từ form lọc
     $search = $request->input('search');
     $categoryId = $request->input('category_id');
@@ -28,17 +28,17 @@ class CourseController extends Controller
     $courses = Course::where('provider_id', $providerId) // Dùng provider_id như đã fix
         ->with('category')
         ->withCount('enrollments') // Đếm số học viên để hiện thay cho số 0
-        
+
         // Logic tìm kiếm theo tên khóa học
         ->when($search, function ($query, $search) {
             return $query->where('title', 'LIKE', "%{$search}%");
         })
-        
+
         // Logic lọc theo danh mục
         ->when($categoryId, function ($query, $categoryId) {
             return $query->where('category_id', $categoryId);
         })
-        
+
         ->latest() // Hiện khóa học mới nhất lên đầu
         ->paginate(10)
         ->withQueryString(); // QUAN TRỌNG: Giữ lại thanh tìm kiếm khi bấm chuyển trang
@@ -65,7 +65,7 @@ public function store(Request $request)
 {
     // Sử dụng DB Transaction để đảm bảo nếu lỗi ở bất kỳ bước nào thì dữ liệu sẽ không bị lưu dở dang
     DB::transaction(function () use ($request) {
-        
+
         // --- 1. XỬ LÝ LƯU THUMBNAIL KHÓA HỌC ---
         $thumbnailPath = 'images/courses/default.jpg'; // Ảnh mặc định nếu không upload
         if ($request->hasFile('thumbnail')) {

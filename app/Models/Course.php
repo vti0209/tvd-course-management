@@ -74,7 +74,7 @@ class Course extends Model
     public function chapters()
     {
         // Phải là hasMany và trỏ đúng vào Model Chapter
-        return $this->hasMany(Chapter::class, 'course_id'); 
+        return $this->hasMany(Chapter::class, 'course_id');
     }
 
     /**
@@ -123,10 +123,10 @@ class Course extends Model
     public function getApprovalStatusLabel(): string
     {
         return match($this->status) {
-            'pending' => '⏳ Chờ phê duyệt',
-            'active' => '✅ Đã phê duyệt',
-            'rejected' => '❌ Bị từ chối',
-            default => '❓ Không xác định',
+            'pending' => 'Chờ phê duyệt',
+            'active' => 'Đã phê duyệt',
+            'rejected' => 'Bị từ chối',
+            default => 'Không xác định',
         };
     }
 }

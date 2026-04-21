@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class FilterUsersRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class FilterUsersRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->role === 'admin';
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        return $user && $user->role === 'admin';
     }
 
     /**
