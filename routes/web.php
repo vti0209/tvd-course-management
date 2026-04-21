@@ -10,7 +10,7 @@ use App\Http\Controllers\Provider\DashboardproController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\MyCourseController;
-use App\Http\Controllers\Provider\ProviderController as ProviderActionsController; 
+use App\Http\Controllers\Provider\ProviderController as ProviderActionsController;
 use App\Http\Controllers\Admin\ProviderController as AdminProviderController;
 use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
