@@ -84,20 +84,13 @@ class ProviderController extends Controller
     }
     public function updateStudentStatus(Request $request, $courseId, $userId)
     {
-        try {
-            $user = \App\Models\User::findOrFail($userId);
+        // Cập nhật trực tiếp vào bảng Enrollments cho nhanh và chính xác
+        \App\Models\Enrollment::where('course_id', $courseId)
+            ->where('user_id', $userId)
+            ->update(['status' => $request->status]);
 
-            // Cập nhật trạng thái trong bảng trung gian
-            $user->enrollments()->updateExistingPivot($courseId, [
-                'status' => $request->status,
-            ]);
-
-            return back()->with('success', 'Cập nhật trạng thái thành công!');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
-        }
+        return back()->with('success', 'Cập nhật trạng thái thành công!');
     }
-
     /**
      * Get provider's profile
      */

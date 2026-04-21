@@ -12,8 +12,10 @@
                     <div class="position-absolute top-0 end-0 m-2">
                         @if($course->pivot->status == 'active')
                             <span class="badge bg-success shadow-sm">Đang học</span>
-                        @else
+                        @elseif($course->pivot->status == 'pending')
                             <span class="badge bg-warning text-dark shadow-sm">Chờ duyệt</span>
+                        @elseif($course->pivot->status == 'inactive')
+                            <span class="badge bg-danger shadow-sm">Đã khóa</span>
                         @endif
                     </div>
 
@@ -42,9 +44,13 @@
                                 <a href="{{ route('course.detail', $course->id) }}" class="btn btn-primary w-100 btn-learn-now fw-bold">
                                     Vào học ngay
                                 </a>
-                            @else
+                            @elseif($course->pivot->status == 'pending')
                                 <button class="btn btn-secondary w-100 disabled" style="cursor: not-allowed;">
-                                    Đang chờ kích hoạt
+                                    <i class="bi bi-clock-history me-1"></i> Đang chờ kích hoạt
+                                </button>
+                            @elseif($course->pivot->status == 'inactive')
+                                <button class="btn btn-outline-danger w-100 disabled" style="cursor: not-allowed;">
+                                    <i class="bi bi-lock-fill me-1"></i> Khóa học bị tạm khóa
                                 </button>
                             @endif
                         </div>

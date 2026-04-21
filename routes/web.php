@@ -10,7 +10,8 @@ use App\Http\Controllers\Provider\DashboardproController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\MyCourseController;
-use App\Http\Controllers\Admin\ProviderController;
+use App\Http\Controllers\Provider\ProviderController as ProviderActionsController; 
+use App\Http\Controllers\Admin\ProviderController as AdminProviderController;
 use App\Http\Controllers\Admin\ContentModerationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
@@ -64,7 +65,8 @@ Route::prefix('provider')->middleware(['auth:provider', 'ensure.provider'])->gro
 
     // Trang Dashboard
     Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
-
+    Route::post('/update-student-status/{courseId}/{userId}', [ProviderActionsController::class, 'updateStudentStatus'])
+        ->name('provider.updateStudentStatus');
     // Quản lý Courses (Tự động tạo route cho index, create, edit, store, update, destroy)
     Route::resource('courses', CourseController::class)->names([
         'index' => 'provider.courses.index',
@@ -76,13 +78,13 @@ Route::prefix('provider')->middleware(['auth:provider', 'ensure.provider'])->gro
     ]);
 
     // Các trang khác trỏ về hàm tương ứng trong CourseController (hoặc bạn tạo Controller riêng)
-    Route::get('/students', [ProviderController::class, 'students'])->name('provider.students');
-    Route::get('/earnings', [ProviderController::class, 'earnings'])->name('provider.earnings');
-    Route::get('/profile', [ProviderController::class, 'profile'])->name('provider.profile');
-    Route::post('/update-profile', [ProviderController::class, 'updateProfile'])
+    Route::get('/students', [ProviderActionsController::class, 'students'])->name('provider.students');
+    Route::get('/earnings', [ProviderActionsController::class, 'earnings'])->name('provider.earnings');
+    Route::get('/profile', [ProviderActionsController::class, 'profile'])->name('provider.profile');
+    Route::post('/update-profile', [ProviderActionsController::class, 'updateProfile'])
     ->name('provider.updateProfile');
 
-    Route::post('/change-password', [ProviderController::class, 'changePassword'])
+    Route::post('/change-password', [ProviderActionsController::class, 'changePassword'])
         ->name('provider.changePassword');
 });
 
@@ -107,12 +109,12 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     ]);
 
     // Provider Management & Approval
-    Route::get('/providers', [ProviderController::class, 'index'])->name('admin.providers.index');
-    Route::get('/providers/{provider}', [ProviderController::class, 'show'])->name('admin.providers.show');
-    Route::post('/providers/{provider}/approve', [ProviderController::class, 'approve'])->name('admin.providers.approve');
-    Route::post('/providers/{provider}/reject', [ProviderController::class, 'reject'])->name('admin.providers.reject');
-    Route::post('/providers/user/{user}/approve', [ProviderController::class, 'approveUser'])->name('admin.providers.approve-user');
-    Route::post('/providers/user/{user}/reject', [ProviderController::class, 'rejectUser'])->name('admin.providers.reject-user');
+    Route::get('/providers', [AdminProviderController::class, 'index'])->name('admin.providers.index');
+    Route::get('/providers/{provider}', [AdminProviderController::class, 'show'])->name('admin.providers.show');
+    Route::post('/providers/{provider}/approve', [AdminProviderController::class, 'approve'])->name('admin.providers.approve');
+    Route::post('/providers/{provider}/reject', [AdminProviderController::class, 'reject'])->name('admin.providers.reject');
+    Route::post('/providers/user/{user}/approve', [AdminProviderController::class, 'approveUser'])->name('admin.providers.approve-user');
+    Route::post('/providers/user/{user}/reject', [AdminProviderController::class, 'rejectUser'])->name('admin.providers.reject-user');
 
     // Content Moderation
     Route::get('/content-moderation', [ContentModerationController::class, 'index'])->name('admin.content-moderation.index');
@@ -154,8 +156,8 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::post('/users/{user}/status', [UserController::class, 'updateStatus'])->name('admin.users.update-status');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
-Route::post('/provider/update-student-status/{courseId}/{userId}', [ProviderController::class, 'updateStudentStatus'])
-    ->name('provider.updateStudentStatus');
+
+
 // ==========================================
 // REMOVED DUPLICATE - Provider Routes are defined above in line 62-81
 // ==========================================
