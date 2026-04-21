@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="student-management-wrapper">
-    
+
     {{-- KHỐI CÔNG CỤ (Action Bar) --}}
     <div class="action-bar">
         <div class="page-title">
@@ -73,10 +73,25 @@
                         {{ optional($enrollment->enrolled_at)->format('d/m/Y') ?? 'N/A' }}
                     </td>
                     <td>
-                        <span class="badge {{ $enrollment->status == 'completed' ? 'badge-completed' : 'badge-learning' }}">
-                            <i class="fas {{ $enrollment->status == 'completed' ? 'fa-check-double' : 'fa-book-reader' }}"></i>
-                            {{ $enrollment->status == 'completed' ? 'Hoàn thành' : 'Đang học' }}
-                        </span>
+                        <form action="{{ route('provider.updateStudentStatus', [$enrollment->course_id, $enrollment->user_id]) }}" method="POST">
+                                @csrf
+                                <select name="status" onchange="this.form.submit()" class="form-select form-select-sm border-0 shadow-sm"
+                                    style="cursor: pointer; border-radius: 20px; padding: 5px 10px; font-size: 12px;
+                                    {{-- Sửa $student->pivot->status thành $enrollment->status --}}
+                                    background-color: {{ $enrollment->status == 'active' ? '#d4edda' : '#fff3cd' }};
+                                    color: {{ $enrollment->status == 'active' ? '#155724' : '#856404' }};">
+
+                                    <option value="active" {{ $enrollment->status == 'active' ? 'selected' : '' }}>
+                                        ● Đang học
+                                    </option>
+                                    <option value="pending" {{ $enrollment->status == 'pending' ? 'selected' : '' }}>
+                                        ● Chờ duyệt
+                                    </option>
+                                    <option value="inactive" {{ $enrollment->status == 'inactive' ? 'selected' : '' }}>
+                                        ● Đã khóa
+                                    </option>
+                                </select>
+                        </form>
                     </td>
                     <td>
                         <span class="badge {{ $enrollment->payment_status == 'paid' ? 'badge-paid' : 'badge-unpaid' }}">

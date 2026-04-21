@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Provider routes
 Route::prefix('provider')->middleware(['auth:provider', 'ensure.provider'])->group(function () {
-    
+
     // Trang Dashboard
     Route::get('/dashboard', [DashboardproController::class, 'index'])->name('provider.dashboard');
 
@@ -154,7 +154,8 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::post('/users/{user}/status', [UserController::class, 'updateStatus'])->name('admin.users.update-status');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 });
-
+Route::post('/provider/update-student-status/{courseId}/{userId}', [ProviderController::class, 'updateStudentStatus'])
+    ->name('provider.updateStudentStatus');
 // ==========================================
 // REMOVED DUPLICATE - Provider Routes are defined above in line 62-81
 // ==========================================

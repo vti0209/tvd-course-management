@@ -17,9 +17,9 @@
                         @endif
                     </div>
 
-                    <img src="{{ asset('images/' . $course->thumbnail) }}"
-                         class="course-card-img"
-                         alt="{{ $course->title }}"
+                    <img src="{{ asset($course->thumbnail) }}"
+                        class="course-card-img"
+                        alt="{{ $course->title }}"
                          style="height: 200px; object-fit: cover; border-top-left-radius: 8px; border-top-right-radius: 8px;">
 
                     <div class="card-body d-flex flex-column course-card-body">
@@ -33,7 +33,7 @@
                         <div class="mb-3 mt-2">
                             <small class="text-secondary">
                                 <i class="bi bi-calendar-check me-1"></i>
-                                Đã đăng ký: {{ \Carbon\Carbon::parse($course->pivot->enrolled_at)->format('d/m/Y') }}
+                                Đã đăng ký: {{ $course->pivot->enrolled_at ? \Carbon\Carbon::parse($course->pivot->enrolled_at)->format('d/m/Y') : 'Chưa xác định' }}
                             </small>
                         </div>
 

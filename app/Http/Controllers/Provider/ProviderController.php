@@ -82,6 +82,21 @@ class ProviderController extends Controller
 
         return view('provider.earnings', compact('earnings', 'totalEarnings', 'monthlyEarnings', 'year', 'month'));
     }
+    public function updateStudentStatus(Request $request, $courseId, $userId)
+    {
+        try {
+            $user = \App\Models\User::findOrFail($userId);
+
+            // Cập nhật trạng thái trong bảng trung gian
+            $user->enrollments()->updateExistingPivot($courseId, [
+                'status' => $request->status,
+            ]);
+
+            return back()->with('success', 'Cập nhật trạng thái thành công!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Get provider's profile

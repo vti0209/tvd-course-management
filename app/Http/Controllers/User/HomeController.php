@@ -49,6 +49,7 @@ class HomeController extends Controller
                 'payment_status' => 'paid',
                 'price_at_purchase' => Course::find($id)->price,
                 'enrolled_at' => now(),
+                'status' => 'active',
             ]);
 
             // 3. Log thông tin đăng ký (tuỳ chọn)
