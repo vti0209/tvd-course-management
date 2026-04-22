@@ -51,11 +51,6 @@
                     <i class="fas fa-list"></i>
                     <span>Quản lý danh mục</span>
                 </a>
-                <a href="/admin/withdrawals"
-                    class="nav-item {{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Quản lý rút tiền</span>
-                </a>
             </nav>
 
             <div class="sidebar-footer">
@@ -141,15 +136,15 @@
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('adminSearch');
         if (!searchInput) return;
-        
+
         let searchTimeout;
-        
+
         searchInput.addEventListener('keyup', function() {
             clearTimeout(searchTimeout);
             const query = this.value.trim();
             const currentUrl = window.location.pathname;
             const currentParams = new URLSearchParams(window.location.search);
-            
+
             searchTimeout = setTimeout(() => {
                 // Xây dựng URL mới với search parameter
                 let newUrl = currentUrl;
@@ -161,12 +156,12 @@
                     currentParams.delete('search');
                     currentParams.delete('page');
                 }
-                
+
                 const params = currentParams.toString();
                 if (params) {
                     newUrl += '?' + params;
                 }
-                
+
                 window.location.href = newUrl;
             }, 500); // Debounce 500ms
         });
