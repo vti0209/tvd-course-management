@@ -184,12 +184,6 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::get('/system/announcements/create', [SystemController::class, 'createAnnouncement'])->name('admin.system.create-announcement');
     Route::post('/system/announcements', [SystemController::class, 'storeAnnouncement'])->name('admin.system.store-announcement');
 
-    // Withdrawal Management
-    Route::get('/withdrawals', [WithdrawController::class, 'index'])->name('admin.withdrawals.index');
-    Route::get('/withdrawals/{id}', [WithdrawController::class, 'show'])->name('admin.withdrawals.show');
-    Route::post('/withdrawals/{id}/approve', [WithdrawController::class, 'approve'])->name('admin.withdrawals.approve');
-    Route::post('/withdrawals/{id}/reject', [WithdrawController::class, 'reject'])->name('admin.withdrawals.reject');
-
     // User Management
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
