@@ -17,12 +17,12 @@
         <div>
             <strong>Trạng thái khóa học:</strong>
             @if($course->status === 'pending')
-            <span class="badge bg-warning text-dark ms-2">⏳ Chờ phê duyệt</span>
+            <span class="badge bg-warning text-dark ms-2"><i class="fas fa-hourglass-half"></i> Chờ phê duyệt</span>
             @elseif($course->status === 'active')
-            <span class="badge bg-success ms-2">✅ Đã phê duyệt</span>
+            <span class="badge bg-success ms-2"><i class="fas fa-check-circle"></i> Đã phê duyệt</span>
             <small class="ms-2">(Ngày: {{ $course->approved_at?->format('d/m/Y H:i') }})</small>
             @else
-            <span class="badge bg-danger ms-2">❌ Bị từ chối</span>
+            <span class="badge bg-danger ms-2"><i class="fas fa-times-circle"></i> Bị từ chối</span>
             <small class="ms-2">(Ngày: {{ $course->rejected_at?->format('d/m/Y H:i') }})</small>
             @endif
         </div>
@@ -34,7 +34,7 @@
             <!-- Course Information -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">📚 Thông tin khóa học</h5>
+                    <h5 class="mb-0"><i class="fas fa-book"></i> Thông tin khóa học</h5>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -94,7 +94,7 @@
             <!-- Provider Information -->
             <div class="card mb-4">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">👤 Thông tin nhà cung cấp</h5>
+                    <h5 class="mb-0"><i class="fas fa-user"></i> Thông tin nhà cung cấp</h5>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -119,11 +119,12 @@
                             <h6 class="text-muted">Trạng thái</h6>
                             <p>
                                 @if($course->provider->status === 'active')
-                                <span class="badge bg-success">✅ Hoạt động</span>
+                                <span class="badge bg-success"><i class="fas fa-check-circle"></i> Hoạt động</span>
                                 @elseif($course->provider->status === 'pending')
-                                <span class="badge bg-warning text-dark">⏳ Chờ duyệt</span>
+                                <span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half"></i> Chờ
+                                    duyệt</span>
                                 @else
-                                <span class="badge bg-danger">❌ Bị khóa</span>
+                                <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Bị khóa</span>
                                 @endif
                             </p>
                         </div>
@@ -139,7 +140,7 @@
             <!-- Course Content -->
             <div class="card mb-4">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">📖 Nội dung khóa học</h5>
+                    <h5 class="mb-0"><i class="fas fa-book-open"></i> Nội dung khóa học</h5>
                 </div>
                 <div class="card-body">
                     @if($course->chapters->count() > 0)
@@ -189,7 +190,7 @@
             @if($course->status === 'rejected' && $course->rejection_reason)
             <div class="card mb-4 border-danger">
                 <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">❌ Lý do từ chối</h5>
+                    <h5 class="mb-0"><i class="fas fa-times-circle"></i> Lý do từ chối</h5>
                 </div>
                 <div class="card-body">
                     <div
@@ -204,7 +205,7 @@
             @if($course->status === 'active' && $course->approved_by)
             <div class="card mb-4 border-success">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">✅ Lịch sử phê duyệt</h5>
+                    <h5 class="mb-0"><i class="fas fa-check-circle"></i> Lịch sử phê duyệt</h5>
                 </div>
                 <div class="card-body">
                     <p class="mb-1">
@@ -224,7 +225,7 @@
             <!-- Quick Stats -->
             <div class="card mb-4">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0">📊 Thống kê nhanh</h6>
+                    <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Thống kê nhanh</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -246,7 +247,7 @@
             @if($canApprove)
             <div class="card mb-4 border-success">
                 <div class="card-header bg-success text-white">
-                    <h6 class="mb-0">✅ Phê duyệt khóa học</h6>
+                    <h6 class="mb-0"><i class="fas fa-check-circle"></i> Phê duyệt khóa học</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.content-moderation.approve', $course->id) }}" method="POST">
@@ -268,7 +269,7 @@
             <!-- Reject Form -->
             <div class="card mb-4 border-danger">
                 <div class="card-header bg-danger text-white">
-                    <h6 class="mb-0">❌ Từ chối khóa học</h6>
+                    <h6 class="mb-0"><i class="fas fa-times-circle"></i> Từ chối khóa học</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.content-moderation.reject', $course->id) }}" method="POST">
@@ -293,7 +294,7 @@
             <!-- Request Changes Form -->
             <div class="card border-warning">
                 <div class="card-header bg-warning text-dark">
-                    <h6 class="mb-0">✏️ Yêu cầu sửa đổi</h6>
+                    <h6 class="mb-0"><i class="fas fa-edit"></i> Yêu cầu sửa đổi</h6>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('admin.content-moderation.request-changes', $course->id) }}" method="POST">

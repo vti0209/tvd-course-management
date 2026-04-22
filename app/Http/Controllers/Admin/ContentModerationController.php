@@ -77,7 +77,7 @@ class ContentModerationController extends Controller
             $this->moderationService->approveCourse(
                 $course,
                 Auth::user(), // Sử dụng Auth facade đồng nhất
-                $request->input('notes', '')
+                $request->input('notes') ?? ''
             );
 
             $this->logAdminAction(

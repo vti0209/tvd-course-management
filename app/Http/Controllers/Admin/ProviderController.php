@@ -56,6 +56,33 @@ class ProviderController extends Controller
     }
 
     /**
+     * Show provider details.
+     */
+    public function show(User $provider)
+    {
+        // Kiểm tra xem user có phải là provider không
+        if ($provider->role !== 'provider') {
+            abort(404, 'Provider không tồn tại');
+        }
+
+        // Lấy thông tin courses của provider
+        $courses = Course::where('provider_id', $provider->id)
+            ->with(['category', 'enrollments'])
+            ->get();
+
+        // Tính toán thống kê
+        $stats = [
+            'total_courses' => $courses->count(),
+            'pending_courses' => $courses->where('status', 'pending')->count(),
+            'active_courses' => $courses->where('status', 'active')->count(),
+            'rejected_courses' => $courses->where('status', 'rejected')->count(),
+            'total_students' => $courses->sum(fn($c) => $c->enrollments->count()),
+        ];
+
+        return view('admin.providers.show', compact('provider', 'courses', 'stats'));
+    }
+
+    /**
      * Approve a user-based provider request.
      */
     public function approveUser(Request $request, User $user)
@@ -169,36 +196,58 @@ class ProviderController extends Controller
     }
 
 
-    public function approve($id)
+    public function approve(Request $request, User $provider)
     {
-        // 1. Tìm khóa học theo ID
-        $course = Course::findOrFail($id);
+        if ($provider->role !== 'provider') {
+            abort(404, 'Provider không tồn tại');
+        }
 
-        // 2. Cập nhật trạng thái để hiển thị lên trang chủ
-        // Giả sử bạn có cột 'status' (1 là hiển thị, 0 là chờ duyệt)
-        // Hoặc cột 'is_active' = true
-        $course->update([
-            'status' => 'active', // Thay đổi tùy theo tên cột trong Database của bạn
-            // 'is_active' => 1,     // Ví dụ nếu bạn dùng cột ẩn/hiện
-        ]);
+        try {
+            $provider->update(['status' => 'active']);
 
-        // 3. Thông báo thành công và quay lại trang danh sách
-        return redirect()->back()->with('success', 'Khóa học "' . $course->title . '" đã được duyệt và hiển thị trên trang chủ!');
+            // Send approval email
+            Mail::send('emails.provider-approved', [
+                'user' => $provider,
+                'email' => $provider->email,
+            ], function ($message) use ($provider) {
+                $message->to($provider->email)
+                    ->subject('Yêu cầu cung cấp khóa học của bạn được phê duyệt!');
+            });
+
+            return redirect()->back()->with('success', 'Nhà cung cấp đã được phê duyệt thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Phê duyệt thất bại: ' . $e->getMessage());
+        }
     }
 
-    public function reject(Request $request, $id)
-{
-    // 1. Tìm khóa học
-    $course = \App\Models\Course::findOrFail($id);
+    public function reject(Request $request, User $provider)
+    {
+        if ($provider->role !== 'provider') {
+            abort(404, 'Provider không tồn tại');
+        }
 
-    // 2. Cập nhật trạng thái
-    $course->update([
-        'status' => 'rejected',
-    ]);
+        $validated = $request->validate([
+            'reason' => 'required|string|max:1000',
+        ]);
 
-    // 3. Quay lại với thông báo màu đỏ (error)
-    return redirect()->back()->with('error', 'Đã từ chối khóa học và gửi thông báo.');
-}
+        try {
+            $provider->update(['status' => 'rejected']);
+
+            // Send rejection email
+            Mail::send('emails.provider-rejected', [
+                'user' => $provider,
+                'reason' => $validated['reason'],
+            ], function ($message) use ($provider) {
+                $message->to($provider->email)
+                    ->subject('Yêu cầu cung cấp khóa học của bạn bị từ chối');
+            });
+
+            return redirect()->back()->with('success', 'Nhà cung cấp bị từ chối thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Từ chối thất bại: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Get provider's profile
      */

@@ -20,9 +20,14 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-{
-    Paginator::useBootstrapFour();
+    {
+        Paginator::useBootstrapFour();
 
-    View::share('categories', Category::all());
-}
+        try {
+            View::share('categories', Category::all());
+        } catch (\Exception $e) {
+            // Database not available during bootstrap
+            View::share('categories', []);
+        }
+    }
 }
