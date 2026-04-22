@@ -87,9 +87,12 @@ class ContentModerationService
      * Check if course can be approved
      */
     public function canApproveCourse(Course $course): bool
-    {
-        return $course->status === 'pending' && $course->provider->status === 'active';
-    }
+{
+    // Giữ nguyên logic chặt chẽ của bạn
+    return $course->status === 'pending' 
+           && $course->provider 
+           && $course->provider->status === 'active';
+}
 
     /**
      * Check if course can be rejected
@@ -102,125 +105,101 @@ class ContentModerationService
     /**
      * Approve a course
      */
-    public function approveCourse(Course $course, User $admin, string $notes = ''): bool
-    {
-        if (!$this->canApproveCourse($course)) {
-            throw new Exception('Khóa học này không thể được phê duyệt.');
-        }
-
-        try {
-            DB::beginTransaction();
-
-            // Update course
-            $course->update([
-                'status' => 'active',
-                'approved_at' => now(),
-                'approved_by' => $admin->id,
-                'rejection_reason' => null,
-                'rejected_at' => null,
-            ]);
-
-            // Send email notification
-            Mail::to($course->provider->email)->send(
-                new CourseApprovedMail($course)
-            );
-
-            // Log the action
-            $this->logModerationAction(
-                'approve',
-                $course,
-                $admin,
-                $notes ?: 'Được phê duyệt bởi admin',
-                'success'
-            );
-
-            DB::commit();
-
-            return true;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error('Error approving course: ' . $e->getMessage(), [
-                'course_id' => $course->id,
-                'admin_id' => $admin->id,
-            ]);
-            throw $e;
-        }
+   public function approveCourse(Course $course, $admin, string $notes = ''): bool
+{
+    // 1. Kiểm tra từng điều kiện và ném lỗi cụ thể
+    if ($course->status !== 'pending') {
+        throw new \Exception('Khóa học này không ở trạng thái chờ duyệt.');
     }
 
+    if (!$course->provider || $course->provider->status !== 'active') {
+        throw new \Exception('Không thể duyệt! Tài khoản giảng viên này hiện đang bị khóa hoặc chưa kích hoạt.');
+    }
+
+    try {
+        \DB::beginTransaction();
+        
+        // 2. Tạm thời COMMENT dòng gửi Mail để test xem Database có chạy không
+        // \Mail::to($course->provider->email)->send(new CourseApprovedMail($course));
+
+        $course->update([
+            'status' => 'active',
+            'approved_at' => now(),
+            'approved_by' => $admin->id,
+        ]);
+
+        \DB::commit();
+        return true;
+    } catch (\Exception $e) {
+        \DB::rollBack();
+        throw $e; // Đẩy lỗi ra ngoài để Controller bắt được
+    }
+}
     /**
      * Reject a course
      */
-    public function rejectCourse(Course $course, User $admin, string $reason): bool
-    {
-        if (!$this->canRejectCourse($course)) {
-            throw new Exception('Khóa học này không thể bị từ chối.');
-        }
-
-        try {
-            DB::beginTransaction();
-
-            // Update course
-            $course->update([
-                'status' => 'rejected',
-                'rejection_reason' => $reason,
-                'rejected_at' => now(),
-                'approved_at' => null,
-                'approved_by' => null,
-            ]);
-
-            // Send email notification with reason
-            Mail::to($course->provider->email)->send(
-                new CourseRejectedMail($course, $reason)
-            );
-
-            // Log the action
-            $this->logModerationAction(
-                'reject',
-                $course,
-                $admin,
-                $reason,
-                'success'
-            );
-
-            DB::commit();
-
-            return true;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::error('Error rejecting course: ' . $e->getMessage(), [
-                'course_id' => $course->id,
-                'admin_id' => $admin->id,
-            ]);
-            throw $e;
-        }
+    public function rejectCourse(Course $course, $admin, string $reason): bool
+{
+    if (!$this->canRejectCourse($course)) {
+        throw new \Exception('Khóa học này không ở trạng thái có thể từ chối.');
     }
 
-    /**
-     * Request changes on a course (alternative to rejection)
-     */
-    public function requestChanges(Course $course, User $admin, string $reason): bool
-    {
-        // This is similar to rejection but indicates the provider can resubmit
+    try {
+        \DB::beginTransaction();
+
         $course->update([
-            'status' => 'pending',
+            'status' => 'rejected',
+            'rejection_reason' => $reason,
+            'rejected_at' => now(),
+            'approved_at' => null,
+            'approved_by' => null,
+        ]);
+
+        // QUAN TRỌNG: Kiểm tra xem Class Mail này đã được tạo chưa
+        if (class_exists(\App\Mail\CourseRejectedMail::class)) {
+            \Mail::to($course->provider->email)->send(
+                new \App\Mail\CourseRejectedMail($course, $reason)
+            );
+        }
+
+        $this->logModerationAction('reject', $course, $admin, $reason, 'success');
+
+        \DB::commit();
+        return true;
+    } catch (\Exception $e) {
+        \DB::rollBack();
+        \Log::error('Error rejecting course: ' . $e->getMessage());
+        throw $e;
+    }
+}
+
+public function requestChanges(Course $course, $admin, string $reason): bool
+{
+    try {
+        \DB::beginTransaction();
+
+        // Cập nhật trạng thái yêu cầu sửa đổi
+        $course->update([
+            'status' => 'pending', // Hoặc 'needs_revision' nếu DB có hỗ trợ
             'rejection_reason' => $reason,
         ]);
 
-        Mail::to($course->provider->email)->send(
-            new CourseRejectedMail($course, $reason)
-        );
+        if (class_exists(\App\Mail\CourseRejectedMail::class)) {
+             \Mail::to($course->provider->email)->send(
+                new \App\Mail\CourseRejectedMail($course, $reason)
+            );
+        }
 
-        $this->logModerationAction(
-            'request_changes',
-            $course,
-            $admin,
-            $reason,
-            'success'
-        );
+        $this->logModerationAction('request_changes', $course, $admin, $reason, 'success');
 
+        \DB::commit();
         return true;
+    } catch (\Exception $e) {
+        \DB::rollBack();
+        \Log::error('Error requesting changes: ' . $e->getMessage());
+        throw $e;
     }
-
+}
     /**
      * Resubmit a rejected course (for provider)
      */

@@ -71,65 +71,78 @@ class ContentModerationController extends Controller
     /**
      * Approve a course.
      */
-    public function approve(ApproveCourseRequest $request, Course $course)
-    {
-        try {
-            $this->moderationService->approveCourse(
-                $course,
-                Auth::user(), // Sử dụng Auth facade đồng nhất
-                $request->input('notes') ?? ''
-            );
+   public function approve(ApproveCourseRequest $request, Course $course)
+{
+    try {
+        // 1. Thực hiện phê duyệt thông qua Service
+        $this->moderationService->approveCourse(
+            $course,
+            Auth::user(), 
+            $request->input('notes') ?? ''
+        );
 
-            $this->logAdminAction(
-                'COURSE_APPROVED',
-                "Đã phê duyệt khóa học: {$course->title} (ID: {$course->id})",
-                ['course_id' => $course->id, 'course_title' => $course->title]
-            );
+        // 2. Sửa lỗi TypeError tại đây:
+        // Đưa chuỗi mô tả vào trong một mảng để khớp với tham số array $context
+        $this->logAdminAction(
+            'COURSE_APPROVED', 
+            [
+                'message' => "Đã phê duyệt khóa học: {$course->title} (ID: {$course->id})",
+                'course_id' => $course->id, 
+                'course_title' => $course->title
+            ]
+        );
 
-            return redirect()->back()
-                ->with('success', "Khóa học '{$course->title}' đã được phê duyệt thành công!");
-        } catch (Exception $e) {
-            $this->logAdminError('Error approving course', [
-                'course_id' => $course->id,
-                'error' => $e->getMessage()
-            ]);
+        return redirect()->back()
+            ->with('success', "Khóa học '{$course->title}' đã được phê duyệt thành công!");
 
-            return back()->with('error', 'Có lỗi khi phê duyệt khóa học: ' . $e->getMessage());
-        }
+    } catch (\Exception $e) {
+        // Ghi log lỗi nếu có Exception xảy ra
+        $this->logAdminError('Error approving course', [
+            'course_id' => $course->id,
+            'error' => $e->getMessage()
+        ]);
+
+        return back()->with('error', 'Có lỗi khi phê duyệt khóa học: ' . $e->getMessage());
     }
-
+}
     /**
      * Reject a course.
      */
+   /**
+     * Reject a course.
+     */
     public function reject(RejectCourseRequest $request, Course $course)
-    {
-        try {
-            $reason = $request->validated()['reason'];
+{
+    // XÓA DÒNG DD TẠI ĐÂY
+    try {
+        $reason = $request->validated()['reason'];
 
-            $this->moderationService->rejectCourse(
-                $course,
-                Auth::user(),
-                $reason
-            );
+        $this->moderationService->rejectCourse(
+            $course,
+            Auth::user(),
+            $reason
+        );
 
-            $this->logAdminAction(
-                'COURSE_REJECTED',
-                "Đã từ chối khóa học: {$course->title} (ID: {$course->id})",
-                ['course_id' => $course->id, 'reason' => $reason]
-            );
+        $this->logAdminAction(
+            'COURSE_REJECTED',
+            [
+                'message' => "Đã từ chối khóa học: {$course->title} (ID: {$course->id})",
+                'course_id' => $course->id, 
+                'reason' => $reason
+            ]
+        );
 
-            return redirect()->back()
-                ->with('success', "Khóa học '{$course->title}' đã bị từ chối.");
-        } catch (Exception $e) {
-            $this->logAdminError('Error rejecting course', [
-                'course_id' => $course->id,
-                'error' => $e->getMessage()
-            ]);
+        return redirect()->back()
+            ->with('success', "Khóa học '{$course->title}' đã bị từ chối.");
 
-            return back()->with('error', 'Có lỗi khi từ chối: ' . $e->getMessage());
-        }
+    } catch (\Exception $e) {
+        // Ghi log lỗi vào file storage/logs/laravel.log để kiểm tra sau
+        \Log::error('Reject error: ' . $e->getMessage());
+
+        // Quan trọng: Trả về lỗi để hiển thị lên màn hình
+        return back()->with('error', 'Có lỗi khi từ chối: ' . $e->getMessage());
     }
-
+}
     /**
      * Request changes on a course.
      */
@@ -140,15 +153,19 @@ class ContentModerationController extends Controller
 
             $this->moderationService->requestChanges($course, Auth::user(), $reason);
 
+            // FIX: Đưa string vào mảng ['message' => ...]
             $this->logAdminAction(
                 'COURSE_CHANGES_REQUESTED',
-                "Yêu cầu sửa đổi: {$course->title}",
-                ['course_id' => $course->id, 'reason' => $reason]
+                [
+                    'message' => "Yêu cầu sửa đổi: {$course->title}",
+                    'course_id' => $course->id, 
+                    'reason' => $reason
+                ]
             );
 
             return redirect()->back()
                 ->with('success', "Đã gửi yêu cầu sửa đổi cho khóa học '{$course->title}'.");
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logAdminError('Error requesting changes', [
                 'course_id' => $course->id,
                 'error' => $e->getMessage()

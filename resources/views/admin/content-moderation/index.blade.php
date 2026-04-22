@@ -75,17 +75,20 @@
                                             <h5 class="modal-title">Phê duyệt khóa học</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
-                                        <form method="POST" action="{{ route('admin.providers.approve', $course->id) }}">
-                                        @csrf 
-                                        <div class="modal-body">
-                                            <p>Phê duyệt khóa học <strong>{{ $course->title }}</strong>?</p>
-                                            <p class="text-muted small">Khóa học sẽ hiển thị công khai trên hệ thống</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                            <button type="submit" class="btn btn-success">Phê duyệt</button>
-                                        </div>
-                                    </form>
+                                        <form method="POST"
+                                            action="{{ route('admin.content-moderation.approve', $course->id) }}">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <p>Phê duyệt khóa học <strong>{{ $course->title }}</strong>?</p>
+                                                <p class="text-muted small">Khóa học sẽ hiển thị công khai trên hệ thống
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Hủy</button>
+                                                <button type="submit" class="btn btn-success">Phê duyệt</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -94,22 +97,28 @@
                             <div class="modal fade" id="rejectModal{{ $course->id }}" tabindex="-1">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        <form method="POST" action="{{ route('admin.providers.reject', $course->id) }}">
+                                        <form method="POST"
+                                            action="{{ route('admin.content-moderation.reject', $course->id) }}">
                                             @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Từ chối khóa học</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p>Bạn chắc chắn muốn từ chối khóa học <strong>{{ $course->title }}</strong>?</p>
-                                                
+                                                <p>Bạn chắc chắn muốn từ chối khóa học
+                                                    <strong>{{ $course->title }}</strong>?
+                                                </p>
+
                                                 <div class="mb-3">
                                                     <label class="form-label">Lý do từ chối:</label>
-                                                    <textarea class="form-control" name="reason" rows="3" required placeholder="Nhập lý do để thông báo cho giảng viên..."></textarea>
+                                                    <textarea class="form-control" name="reason" rows="3" required
+                                                        placeholder="Nhập lý do để thông báo cho giảng viên..."></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Hủy</button>
                                                 <button type="submit" class="btn btn-danger">Xác nhận từ chối</button>
                                             </div>
                                         </form>

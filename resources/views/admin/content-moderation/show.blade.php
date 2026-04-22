@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-md-6">
                             <h6 class="text-muted">Cập nhật lần cuối</h6>
-                            <p>{{ $course->updated_at->format('d/m/Y H:i') }}</p>
+                            <p>{{ $course->updated_at?->format('d/m/Y H:i') ?? 'Chưa có cập nhật' }}</p>
                         </div>
                     </div>
 
@@ -84,8 +84,8 @@
                     @if($course->thumbnail)
                     <div class="mt-3">
                         <h6 class="text-muted mb-2">Ảnh bìa</h6>
-                        <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}"
-                            class="img-fluid rounded" style="max-height: 300px;">
+                        <img src="{{ asset($course->thumbnail) }}" alt="{{ $course->title }}" class="img-fluid rounded"
+                            style="max-height: 300px;">
                     </div>
                     @endif
                 </div>

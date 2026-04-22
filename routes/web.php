@@ -125,6 +125,46 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::post('/content-moderation/bulk/approve', [ContentModerationController::class, 'bulkApprove'])->name('admin.content-moderation.bulk-approve');
     Route::get('/content-moderation/export/data', [ContentModerationController::class, 'export'])->name('admin.content-moderation.export');
     Route::get('/content-moderation/api/statistics', [ContentModerationController::class, 'statistics'])->name('admin.content-moderation.statistics');
+    // DEBUG: Test approval form
+    Route::get('/content-moderation/debug/{course}', function(\App\Models\Course $course) {
+        return view('admin.content-moderation.debug', compact('course'));
+    })->name('admin.content-moderation.debug');
+    
+    // DEBUG: Simple test endpoint
+    Route::post('/content-moderation/test-approve/{course}', function(\App\Models\Course $course) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Test approve endpoint reached!',
+            'course_id' => $course->id,
+            'course_title' => $course->title,
+            'user' => auth()->guard('admin')->user() ? auth()->guard('admin')->user()->email : 'Not authenticated'
+        ]);
+    })->name('admin.content-moderation.test-approve');
+    
+    // DEBUG: Test actual approve controller
+    Route::post('/content-moderation/test-real-approve/{course}', function(\App\Models\Course $course) {
+        try {
+            $admin = auth()->guard('admin')->user();
+            $service = app(\App\Services\ContentModerationService::class);
+            
+            return response()->json([
+                'admin_email' => $admin->email,
+                'can_approve' => $service->canApproveCourse($course),
+                'course_status' => $course->status,
+                'provider_status' => $course->provider->status,
+                'approval_will_proceed' => $service->canApproveCourse($course) ? 'YES' : 'NO (condition failed)'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ], 500);
+        }
+    })->name('admin.content-moderation.test-real-approve');
+    
+    // DEBUG: Call actual approve method with request
+    Route::post('/content-moderation/test-call-approve/{course}', [ContentModerationController::class, 'approve'])->name('admin.content-moderation.test-call-approve');
 
     // Category Management
     Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');

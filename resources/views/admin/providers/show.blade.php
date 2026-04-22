@@ -18,7 +18,7 @@
             <strong>Trạng thái nhà cung cấp:</strong>
             @if($provider->status === 'active')
             <span class="badge bg-success ms-2"><i class="fas fa-check-circle"></i> Đã phê duyệt</span>
-            <small class="ms-2">(Ngày: {{ $provider->updated_at->format('d/m/Y H:i') }})</small>
+            <small class="ms-2">(Ngày: {{ $provider->updated_at?->format('d/m/Y H:i') ?? 'N/A' }})</small>
             @elseif($provider->status === 'pending')
             <span class="badge bg-warning text-dark ms-2"><i class="fas fa-hourglass-half"></i> Chờ phê duyệt</span>
             @else
@@ -62,13 +62,13 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <h6 class="text-muted">Ngày đăng ký</h6>
-                            <p>{{ $provider->created_at->format('d/m/Y H:i') }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Cập nhật lần cuối</h6>
-                            <p>{{ $provider->updated_at->format('d/m/Y H:i') }}</p>
-                        </div>
+    <h6 class="text-muted">Ngày đăng ký</h6>
+    <p>{{ $provider->created_at?->format('d/m/Y H:i') ?? 'N/A' }}</p>
+</div>
+<div class="col-md-6">
+    <h6 class="text-muted">Cập nhật lần cuối</h6>
+    <p>{{ $provider->updated_at?->format('d/m/Y H:i') ?? 'Chưa có cập nhật' }}</p>
+</div>
                     </div>
 
                     @if($provider->provider_info)
@@ -112,11 +112,14 @@
                                     </td>
                                     <td>
                                         @if($course->status === 'pending')
-                                        <span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half"></i> Chờ duyệt</span>
-                                    @elseif($course->status === 'active')
-                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Đã phê duyệt</span>
-                                    @else
-                                        <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Bị từ chối</span>
+                                        <span class="badge bg-warning text-dark"><i class="fas fa-hourglass-half"></i>
+                                            Chờ duyệt</span>
+                                        @elseif($course->status === 'active')
+                                        <span class="badge bg-success"><i class="fas fa-check-circle"></i> Đã phê
+                                            duyệt</span>
+                                        @else
+                                        <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Bị từ
+                                            chối</span>
                                         @endif
                                     </td>
                                     <td>{{ $course->enrollments->count() }}</td>
