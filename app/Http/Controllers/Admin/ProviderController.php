@@ -98,7 +98,7 @@ class ProviderController extends Controller
                 'password' => 'Gemini2026!', // Default password set during registration
             ], function ($message) use ($user) {
                 $message->to($user->email)
-                        ->subject('Yêu cầu cung cấp khóa học của bạn được phê duyệt!');
+                        ->subject('Chúc mừng! Yêu cầu trở thành đối tác (Provider) của bạn đã được phê duyệt');
             });
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Phê duyệt thành công nhưng gửi email thất bại!');
@@ -196,57 +196,57 @@ class ProviderController extends Controller
     }
 
 
-    public function approve(Request $request, User $provider)
-    {
-        if ($provider->role !== 'provider') {
-            abort(404, 'Provider không tồn tại');
-        }
+    // public function approve(Request $request, User $provider)
+    // {
+    //     if ($provider->role !== 'provider') {
+    //         abort(404, 'Provider không tồn tại');
+    //     }
 
-        try {
-            $provider->update(['status' => 'active']);
+    //     try {
+    //         $provider->update(['status' => 'active']);
 
-            // Send approval email
-            Mail::send('emails.provider-approved', [
-                'user' => $provider,
-                'email' => $provider->email,
-            ], function ($message) use ($provider) {
-                $message->to($provider->email)
-                    ->subject('Yêu cầu cung cấp khóa học của bạn được phê duyệt!');
-            });
+    //         // Send approval email
+    //         Mail::send('emails.provider-approved', [
+    //             'user' => $provider,
+    //             'email' => $provider->email,
+    //         ], function ($message) use ($provider) {
+    //             $message->to($provider->email)
+    //                 ->subject('Chúc mừng! Yêu cầu trở thành đối tác (Provider) của bạn đã được phê duyệt');
+    //         });
 
-            return redirect()->back()->with('success', 'Nhà cung cấp đã được phê duyệt thành công!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Phê duyệt thất bại: ' . $e->getMessage());
-        }
-    }
+    //         return redirect()->back()->with('success', 'Nhà cung cấp đã được phê duyệt thành công!');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'Phê duyệt thất bại: ' . $e->getMessage());
+    //     }
+    // }
 
-    public function reject(Request $request, User $provider)
-    {
-        if ($provider->role !== 'provider') {
-            abort(404, 'Provider không tồn tại');
-        }
+    // public function reject(Request $request, User $provider)
+    // {
+    //     if ($provider->role !== 'provider') {
+    //         abort(404, 'Provider không tồn tại');
+    //     }
 
-        $validated = $request->validate([
-            'reason' => 'required|string|max:1000',
-        ]);
+    //     $validated = $request->validate([
+    //         'reason' => 'required|string|max:1000',
+    //     ]);
 
-        try {
-            $provider->update(['status' => 'rejected']);
+    //     try {
+    //         $provider->update(['status' => 'rejected']);
 
-            // Send rejection email
-            Mail::send('emails.provider-rejected', [
-                'user' => $provider,
-                'reason' => $validated['reason'],
-            ], function ($message) use ($provider) {
-                $message->to($provider->email)
-                    ->subject('Yêu cầu cung cấp khóa học của bạn bị từ chối');
-            });
+    //         // Send rejection email
+    //         Mail::send('emails.provider-rejected', [
+    //             'user' => $provider,
+    //             'reason' => $validated['reason'],
+    //         ], function ($message) use ($provider) {
+    //             $message->to($provider->email)
+    //                 ->subject('Yêu cầu cung cấp khóa học của bạn bị từ chối');
+    //         });
 
-            return redirect()->back()->with('success', 'Nhà cung cấp bị từ chối thành công!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Từ chối thất bại: ' . $e->getMessage());
-        }
-    }
+    //         return redirect()->back()->with('success', 'Nhà cung cấp bị từ chối thành công!');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'Từ chối thất bại: ' . $e->getMessage());
+    //     }
+    // }
 
     /**
      * Get provider's profile

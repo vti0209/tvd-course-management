@@ -29,13 +29,12 @@
             <div class="credentials">
                 <h3>Thông tin đăng nhập:</h3>
                 <p><strong>Email:</strong> {{ $email }}</p>
-                <p style="color: #dc3545; font-weight: bold;">⚠️ Vui lòng đổi mật khẩu ngay sau khi đăng nhập lần đầu!</p>
             </div>
 
             <p>Để bắt đầu:</p>
             <ol>
                 <li>Truy cập <a href="{{ url('/login') }}">trang đăng nhập</a></li>
-                <li>Đăng nhập với thông tin ở trên</li>
+                <li>Đăng nhập với thông tin tài khoản của bạn đã tạo</li>
                 <li>Bắt đầu tạo khóa học đầu tiên của bạn!</li>
             </ol>
 
