@@ -8,6 +8,9 @@ use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+
 
 class ProviderController extends Controller
 {
@@ -100,4 +103,46 @@ class ProviderController extends Controller
 
         return view('provider.profile', compact('provider'));
     }
+public function updateProfile(Request $request)
+{
+    // 1. Validate dữ liệu đầu vào
+    $request->validate([
+        'full_name' => 'required|string|max:255',
+    ]);
+
+    // 2. Lấy User hiện tại (Provider)
+    $user = Auth::user(); 
+
+    // 3. Cập nhật thông tin
+    $user->update([
+        'full_name' => $request->full_name,
+    ]);
+
+    // 4. Trả về trang cũ với thông báo thành công
+    return back()->with('success', 'Cập nhật thông tin cá nhân thành công!');
+}
+public function changePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:8',
+            'confirm_password' => 'required|same:new_password',
+        ], [
+            'new_password.min' => 'Mật khẩu mới phải từ 8 ký tự.',
+            'confirm_password.same' => 'Mật khẩu xác nhận không khớp.'
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->with('error', 'Mật khẩu cũ không chính xác.');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'Đổi mật khẩu thành công!');
+    }
+
 }
