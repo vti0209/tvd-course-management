@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class ProviderController extends Controller
@@ -105,21 +107,38 @@ class ProviderController extends Controller
     }
 public function updateProfile(Request $request)
 {
-    // 1. Validate dữ liệu đầu vào
+    // 1. Lấy thông tin Provider đang đăng nhập
+    // Tùy vào cách bạn đặt tên guard, thường là 'provider'
+    $provider = auth('provider')->user(); 
+
+    // 2. Kiểm tra dữ liệu đầu vào
     $request->validate([
         'full_name' => 'required|string|max:255',
+        'avatar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Ảnh tối đa 2MB
     ]);
 
-    // 2. Lấy User hiện tại (Provider)
-    $user = Auth::user(); 
+    // 3. Cập nhật họ tên
+    $provider->full_name = $request->full_name;
 
-    // 3. Cập nhật thông tin
-    $user->update([
-        'full_name' => $request->full_name,
-    ]);
+    // 4. Xử lý upload ảnh đại diện
+    if ($request->hasFile('avatar')) {
+        // Xóa ảnh cũ nếu đã tồn tại để tránh rác server
+        if ($provider->avatar) {
+            Storage::disk('public')->delete($provider->avatar);
+        }
 
-    // 4. Trả về trang cũ với thông báo thành công
-    return back()->with('success', 'Cập nhật thông tin cá nhân thành công!');
+        // Lưu file mới vào thư mục storage/app/public/avatars
+        // store() sẽ tự động tạo tên file ngẫu nhiên để tránh trùng lặp
+        $path = $request->file('avatar')->store('avatars', 'public');
+
+        // Lưu đường dẫn mới vào database
+        $provider->avatar = $path;
+    }
+
+    // 5. Lưu lại toàn bộ thay đổi
+    $provider->save();
+
+    return back()->with('success', 'Cập nhật thông tin và ảnh đại diện thành công!');
 }
 public function changePassword(Request $request)
     {

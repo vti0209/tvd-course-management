@@ -76,8 +76,14 @@
                 </div>
                 <div class="header-actions">
                     <div class="user-profile">
-                        <div class="user-avatar">
-                            {{ strtoupper(substr(Auth::user()->full_name ?? Auth::user()->username, 0, 1)) }}
+                        <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ asset('storage/' . Auth::user()->avatar) }}" 
+                                    alt="Avatar" 
+                                    style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                {{ strtoupper(substr(Auth::user()->full_name ?? Auth::user()->username, 0, 1)) }}
+                            @endif
                         </div>
                         <div>
                             <p style="margin: 0; color: #333; font-weight: 500;">{{ Auth::user()->full_name ?? Auth::user()->username }}</p>
