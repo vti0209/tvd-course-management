@@ -3,18 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Withdrawal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class WithdrawController extends Controller
 {
     /**
-     * Display pending withdrawal requests.
+     * Display pending and approved withdrawal requests.
      */
     public function index()
     {
-        // TODO: Fetch withdrawal requests from database
-        $pendingWithdrawals = [];
-        $approvedWithdrawals = [];
+        $pendingWithdrawals = Withdrawal::where('status', 'pending')
+            ->with('provider')
+            ->latest('requested_at')
+            ->paginate(15);
+
+        $approvedWithdrawals = Withdrawal::where('status', 'approved')
+            ->with('provider')
+            ->latest('processed_at')
+            ->paginate(15);
 
         return view('admin.withdrawals.index', [
             'pendingWithdrawals' => $pendingWithdrawals,
@@ -27,8 +36,7 @@ class WithdrawController extends Controller
      */
     public function show($id)
     {
-        // TODO: Fetch withdrawal details from database
-        $withdrawal = null;
+        $withdrawal = Withdrawal::with(['provider', 'processedBy'])->findOrFail($id);
 
         return view('admin.withdrawals.show', [
             'withdrawal' => $withdrawal,
@@ -40,10 +48,27 @@ class WithdrawController extends Controller
      */
     public function approve(Request $request, $id)
     {
-        // TODO: Update withdrawal status
-        // TODO: Send email confirmation to provider
+        $withdrawal = Withdrawal::where('status', 'pending')->findOrFail($id);
 
-        return redirect()->back()->with('success', 'Yêu cầu rút tiền được phê duyệt thành công!');
+        $withdrawal->update([
+            'status' => 'approved',
+            'processed_by' => Auth::guard('admin')->id() ?? Auth::id(),
+            'processed_at' => now(),
+            'rejection_reason' => null,
+        ]);
+
+        try {
+            Mail::send('emails.withdrawal-approved', [
+                'withdrawal' => $withdrawal,
+            ], function ($message) use ($withdrawal) {
+                $message->to($withdrawal->provider->email)
+                    ->subject('Yêu cầu rút tiền của bạn đã được phê duyệt');
+            });
+        } catch (\Exception $e) {
+            // Nếu gửi email thất bại thì vẫn tiếp tục xử lý yêu cầu
+        }
+
+        return redirect()->back()->with('success', 'Yêu cầu rút tiền đã được phê duyệt thành công!');
     }
 
     /**
@@ -55,9 +80,27 @@ class WithdrawController extends Controller
             'reason' => 'required|string|max:1000',
         ]);
 
-        // TODO: Update withdrawal status
-        // TODO: Send email rejection to provider
+        $withdrawal = Withdrawal::where('status', 'pending')->findOrFail($id);
 
-        return redirect()->back()->with('success', 'Yêu cầu rút tiền bị từ chối!');
+        $withdrawal->update([
+            'status' => 'rejected',
+            'processed_by' => Auth::guard('admin')->id() ?? Auth::id(),
+            'processed_at' => now(),
+            'rejection_reason' => $validated['reason'],
+        ]);
+
+        try {
+            Mail::send('emails.withdrawal-rejected', [
+                'withdrawal' => $withdrawal,
+                'reason' => $validated['reason'],
+            ], function ($message) use ($withdrawal) {
+                $message->to($withdrawal->provider->email)
+                    ->subject('Yêu cầu rút tiền của bạn đã bị từ chối');
+            });
+        } catch (\Exception $e) {
+            // Không dừng quá trình nếu email thất bại
+        }
+
+        return redirect()->back()->with('success', 'Yêu cầu rút tiền đã bị từ chối.');
     }
 }

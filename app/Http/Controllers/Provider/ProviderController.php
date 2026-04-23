@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\User;
+use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -76,6 +77,17 @@ class ProviderController extends Controller
             $query->where('provider_id', $providerId);
         })->where('payment_status', 'paid')->sum('price_at_purchase');
 
+        // Calculate remaining earnings after withdrawals
+        $approvedWithdrawals = Withdrawal::where('provider_id', $providerId)
+            ->where('status', 'approved')
+            ->sum('amount');
+
+        $pendingWithdrawals = Withdrawal::where('provider_id', $providerId)
+            ->where('status', 'pending')
+            ->sum('amount');
+
+        $remainingEarnings = max(0, $totalEarnings - $approvedWithdrawals - $pendingWithdrawals);
+
         $monthlyEarnings = Enrollment::whereHas('course', function($query) use ($providerId) {
             $query->where('provider_id', $providerId);
         })
@@ -85,8 +97,87 @@ class ProviderController extends Controller
         ->orderBy('month', 'desc')
         ->get();
 
-        return view('provider.earnings', compact('earnings', 'totalEarnings', 'monthlyEarnings', 'year', 'month'));
+        return view('provider.earnings', compact('earnings', 'totalEarnings', 'remainingEarnings', 'approvedWithdrawals', 'monthlyEarnings', 'year', 'month'));
     }
+
+    public function withdrawals(Request $request)
+    {
+        $provider = Auth::guard('provider')->user() ?? Auth::user();
+        $providerId = $provider->id;
+
+        $totalEarnings = Enrollment::whereHas('course', function ($query) use ($providerId) {
+            $query->where('provider_id', $providerId);
+        })->where('payment_status', 'paid')->sum('price_at_purchase');
+
+        $approvedWithdrawals = Withdrawal::where('provider_id', $providerId)
+            ->where('status', 'approved')
+            ->sum('amount');
+
+        $pendingWithdrawals = Withdrawal::where('provider_id', $providerId)
+            ->where('status', 'pending')
+            ->sum('amount');
+
+        $availableBalance = max(0, $totalEarnings - $approvedWithdrawals - $pendingWithdrawals);
+
+        $withdrawals = Withdrawal::where('provider_id', $providerId)
+            ->with('processedBy')
+            ->latest('requested_at')
+            ->paginate(12);
+
+        return view('provider.withdrawals.index', compact(
+            'withdrawals',
+            'availableBalance',
+            'totalEarnings',
+            'approvedWithdrawals',
+            'pendingWithdrawals',
+            'provider'
+        ));
+    }
+
+    public function requestWithdrawal(Request $request)
+    {
+        $provider = Auth::guard('provider')->user() ?? Auth::user();
+
+        if ($provider->status !== 'active') {
+            return back()->with('error', 'Bạn chưa được phê duyệt, không thể gửi yêu cầu rút tiền.');
+        }
+
+        $totalEarnings = Enrollment::whereHas('course', function ($query) use ($provider) {
+            $query->where('provider_id', $provider->id);
+        })->where('payment_status', 'paid')->sum('price_at_purchase');
+
+        $approvedWithdrawals = Withdrawal::where('provider_id', $provider->id)
+            ->where('status', 'approved')
+            ->sum('amount');
+
+        $pendingWithdrawals = Withdrawal::where('provider_id', $provider->id)
+            ->where('status', 'pending')
+            ->sum('amount');
+
+        $availableBalance = max(0, $totalEarnings - $approvedWithdrawals - $pendingWithdrawals);
+
+        $validated = $request->validate([
+            'amount' => ['required', 'numeric', 'min:100000', "max:{$availableBalance}"],
+            'bank_account' => 'required|string|max:255',
+            'bank_name' => 'required|string|max:255',
+            'account_holder' => 'required|string|max:255',
+        ], [
+            'amount.max' => 'Số tiền yêu cầu không được vượt quá số dư khả dụng.',
+        ]);
+
+        Withdrawal::create([
+            'provider_id' => $provider->id,
+            'amount' => $validated['amount'],
+            'bank_account' => $validated['bank_account'],
+            'bank_name' => $validated['bank_name'],
+            'account_holder' => $validated['account_holder'],
+            'status' => 'pending',
+            'requested_at' => now(),
+        ]);
+
+        return back()->with('success', 'Yêu cầu rút tiền đã được gửi. Vui lòng chờ admin xử lý.');
+    }
+
     public function updateStudentStatus(Request $request, $courseId, $userId)
     {
         // Cập nhật trực tiếp vào bảng Enrollments cho nhanh và chính xác

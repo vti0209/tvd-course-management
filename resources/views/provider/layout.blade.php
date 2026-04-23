@@ -44,6 +44,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('provider.withdrawals.index') }}" class="@if(request()->routeIs('provider.withdrawals.*')) active @endif">
+                        <i class="fas fa-wallet"></i>
+                        <span>Rút tiền</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('provider.profile') }}" class="@if(request()->routeIs('provider.profile')) active @endif">
                         <i class="fas fa-user-circle"></i>
                         <span>Hồ sơ</span>

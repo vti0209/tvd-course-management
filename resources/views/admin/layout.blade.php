@@ -51,6 +51,11 @@
                     <i class="fas fa-list"></i>
                     <span>Quản lý danh mục</span>
                 </a>
+                <a href="/admin/withdrawals"
+                    class="nav-item {{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Quản lý rút tiền</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">

@@ -86,6 +86,11 @@ Route::prefix('provider')->middleware(['auth:provider', 'ensure.provider'])->gro
 
     Route::post('/change-password', [ProviderActionsController::class, 'changePassword'])
         ->name('provider.changePassword');
+
+    Route::get('/withdrawals', [ProviderActionsController::class, 'withdrawals'])
+        ->name('provider.withdrawals.index');
+    Route::post('/withdrawals', [ProviderActionsController::class, 'requestWithdrawal'])
+        ->name('provider.withdrawals.store');
 });
 
 // About and Contact pages
@@ -183,6 +188,12 @@ Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     Route::get('/system/announcements', [SystemController::class, 'announcements'])->name('admin.system.announcements');
     Route::get('/system/announcements/create', [SystemController::class, 'createAnnouncement'])->name('admin.system.create-announcement');
     Route::post('/system/announcements', [SystemController::class, 'storeAnnouncement'])->name('admin.system.store-announcement');
+
+// Withdrawal Management
+    Route::get('/withdrawals', [WithdrawController::class, 'index'])->name('admin.withdrawals.index');
+    Route::get('/withdrawals/{id}', [WithdrawController::class, 'show'])->name('admin.withdrawals.show');
+    Route::post('/withdrawals/{id}/approve', [WithdrawController::class, 'approve'])->name('admin.withdrawals.approve');
+    Route::post('/withdrawals/{id}/reject', [WithdrawController::class, 'reject'])->name('admin.withdrawals.reject');
 
     // User Management
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');

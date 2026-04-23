@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Provider;
+use App\Models\Withdrawal;
 /**
  * @property int $id
  * @property string $username
@@ -95,6 +97,16 @@ public function createdCourses()
     public function taughtCourses(): HasMany
     {
         return $this->hasMany(Course::class, 'provider_id');
+    }
+
+    public function providerProfile()
+    {
+        return $this->hasOne(Provider::class, 'user_id');
+    }
+
+    public function withdrawals(): HasMany
+    {
+        return $this->hasMany(Withdrawal::class, 'provider_id');
     }
 
     /**

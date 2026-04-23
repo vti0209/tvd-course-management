@@ -17,6 +17,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Số dư còn lại</h6>
+                            <h3 class="text-primary">{{ number_format($remainingEarnings, 0, '.', ',') }} đ</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Số tiền đã rút</h6>
+                            <h3 class="text-warning">{{ number_format($approvedWithdrawals, 0, '.', ',') }} đ</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Earnings Table -->
