@@ -99,7 +99,8 @@ class ContentModerationService
      */
     public function canRejectCourse(Course $course): bool
     {
-        return $course->status === 'pending';
+        // Có thể từ chối khóa học ở trạng thái pending hoặc active
+        return $course->status === 'pending' || $course->status === 'active';
     }
 
     /**
@@ -119,14 +120,16 @@ class ContentModerationService
     try {
         \DB::beginTransaction();
         
-        // 2. Tạm thời COMMENT dòng gửi Mail để test xem Database có chạy không
-        // \Mail::to($course->provider->email)->send(new CourseApprovedMail($course));
-
         $course->update([
             'status' => 'active',
             'approved_at' => now(),
             'approved_by' => $admin->id,
         ]);
+
+        // Gửi email phê duyệt
+        if (class_exists(\App\Mail\CourseApprovedMail::class)) {
+            \Mail::to($course->provider->email)->send(new \App\Mail\CourseApprovedMail($course));
+        }
 
         \DB::commit();
         return true;
@@ -135,45 +138,49 @@ class ContentModerationService
         throw $e; // Đẩy lỗi ra ngoài để Controller bắt được
     }
 }
+
     /**
      * Reject a course
      */
     public function rejectCourse(Course $course, $admin, string $reason): bool
-{
-    if (!$this->canRejectCourse($course)) {
-        throw new \Exception('Khóa học này không ở trạng thái có thể từ chối.');
-    }
-
-    try {
-        \DB::beginTransaction();
-
-        $course->update([
-            'status' => 'rejected',
-            'rejection_reason' => $reason,
-            'rejected_at' => now(),
-            'approved_at' => null,
-            'approved_by' => null,
-        ]);
-
-        // QUAN TRỌNG: Kiểm tra xem Class Mail này đã được tạo chưa
-        if (class_exists(\App\Mail\CourseRejectedMail::class)) {
-            \Mail::to($course->provider->email)->send(
-                new \App\Mail\CourseRejectedMail($course, $reason)
-            );
+    {
+        if (!$this->canRejectCourse($course)) {
+            throw new \Exception('Khóa học này không thể từ chối.');
         }
 
-        $this->logModerationAction('reject', $course, $admin, $reason, 'success');
+        try {
+            \DB::beginTransaction();
 
-        \DB::commit();
-        return true;
-    } catch (\Exception $e) {
-        \DB::rollBack();
-        \Log::error('Error rejecting course: ' . $e->getMessage());
-        throw $e;
+            $course->update([
+                'status' => 'rejected',
+                'rejection_reason' => $reason,
+                'rejected_at' => now(),
+                'approved_at' => null,
+                'approved_by' => null,
+            ]);
+
+            // Gửi email từ chối
+            if (class_exists(\App\Mail\CourseRejectedMail::class)) {
+                \Mail::to($course->provider->email)->send(
+                    new \App\Mail\CourseRejectedMail($course, $reason)
+                );
+            }
+
+            $this->logModerationAction('reject', $course, $admin, $reason, 'success');
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Error rejecting course: ' . $e->getMessage());
+            throw $e;
+        }
     }
-}
 
-public function requestChanges(Course $course, $admin, string $reason): bool
+    /**
+     * Request changes on a course
+     */
+    public function requestChanges(Course $course, $admin, string $reason): bool
 {
     try {
         \DB::beginTransaction();
@@ -276,5 +283,4 @@ public function requestChanges(Course $course, $admin, string $reason): bool
                     'rejection_reason' => $course->rejection_reason,
                 ];
             });
-    }
-}
+    }}

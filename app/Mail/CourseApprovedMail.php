@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Course;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,12 +14,14 @@ class CourseApprovedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $course;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(Course $course)
     {
-        //
+        $this->course = $course;
     }
 
     /**
@@ -27,7 +30,7 @@ class CourseApprovedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Course Approved Mail',
+            subject: 'Khóa học của bạn đã được phê duyệt - ' . $this->course->title,
         );
     }
 
@@ -37,7 +40,10 @@ class CourseApprovedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.course-approved',
+            with: [
+                'course' => $this->course,
+            ],
         );
     }
 
