@@ -37,38 +37,66 @@ Online Course Management System là hệ thống quản lý khóa học trực t
 * **Authentication:** Laravel Auth
 
 ## 4. Chức năng chính
-### 4.1 Người dùng
-* Đăng ký tài khoản
+
+### 4.1 Người dùng (User)
+* Đăng ký tài khoản mới
 * Đăng nhập / Đăng xuất
 * Xem danh sách khóa học (có phân trang)
-* Xem chi tiết khóa học
-* Đăng ký khóa học
+* Tìm kiếm và lọc khóa học theo danh mục
+* Xem chi tiết khóa học đầy đủ
+* Đăng ký khóa học (miễn phí)
 * Quản lý thông tin cá nhân
 * Xem danh sách khóa học đã đăng ký
 
-### 4.2 Quản trị viên
-* Dashboard thống kê (User, Course)
-* Quản lý khóa học (duyệt)
-* Quản lý người dùng (block, tìm theo tên, lọc user)
+### 4.2 Quản trị viên (Admin)
+* Dashboard thống kê (tổng số User, Course, thống kê hoạt động)
+* Duyệt và phê duyệt khóa học trước khi công khai
+* Quản lý người dùng (tạo, sửa, xóa, block tài khoản)
+* Tìm kiếm và lọc người dùng
+* Xem lịch sử hoạt động
 
-### 4.2 Nhà cung cấp
-* Dashboard thống kê
-* Quản lý khóa học (CRUD, tìm kiếm tên, lọc theo danh mục, phân trang)
-* Quản lý người dùng (CRUD, tìm theo tên, lọc user đã đăng ký khóa học)
+### 4.3 Nhà cung cấp (Provider)
+* Dashboard thống kê (số khóa học, số học viên, tăng trưởng)
+* Quản lý khóa học - CRUD đầy đủ (tạo, sửa, xóa, công khai)
+* Tìm kiếm tên khóa học
+* Lọc khóa học theo danh mục
+* Quản lý bài học trong mỗi khóa học
+* Xem danh sách học viên đã đăng ký
+* Phân trang và tìm kiếm học viên
 
-## 5. Cấu trúc thư mục
-```text
-Xem ở nhánh dev 
+## 5. Yêu cầu hệ thống
+* **PHP:** >= 8.1
+* **Composer:** >= 2.0
+* **Node.js:** >= 14.0 (cho Vite)
+* **MySQL:** >= 5.7
+* **Apache/Nginx** với mod_rewrite
 
-## 6. Database
+## 6. Cấu trúc thư mục chính
+```
+tvd-course-management/
+├── app/                 # Code ứng dụng
+│   ├── Http/           # Controllers, Middleware, Requests
+│   ├── Models/         # Eloquent Models
+│   ├── Mail/           # Email classes
+│   └── Services/       # Business logic
+├── database/           # Migrations, Seeders, Factories
+├── resources/          # Views, CSS, JavaScript
+├── routes/             # Web routes
+├── public/             # Assets công khai
+├── config/             # Cấu hình ứng dụng
+└── storage/            # Logs, cache
+
+## 7. Database
 Hệ thống sử dụng các bảng chính, ngoài ra sẽ có các bảng phụ:
-* `users`
-* `categories`
-* `courses`
-* `lessons`
-* `course_user` (quan hệ N-N giữa User và Course)
+* `users` - Thông tin người dùng, admin, nhà cung cấp
+* `categories` - Phân loại khóa học
+* `courses` - Thông tin khóa học
+* `chapters` - Chương trong khóa học
+* `lessons` - Bài học trong chương
+* `enrollments` - Ghi nhận học viên đã đăng ký
+* `sessions` - Quản lý phiên đăng nhập
 
-## 7. Cài đặt dự án
+## 8. Cài đặt dự án
 **Bước 1: Clone project**
 ```bash
 git clone <repository_url>
@@ -99,7 +127,7 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-## 8. Tài khoản mẫu
+## 9. Tài khoản mẫu
 #### Admin:
 * Email: `admin@example.com`
 * Password: `123456`
@@ -108,17 +136,20 @@ php artisan serve
 * Email: `user@example.com`
 * Password: `123456`
 
-## 9. Hướng phát triển
-* Thanh toán online
-* Đánh giá khóa học
-* Upload video bài học
-* API cho mobile app
+## 10. Quy trình phê duyệt khóa học
+1. **Nhà cung cấp** tạo khóa học và submit
+2. **Quản trị viên** kiểm tra thông tin khóa học
+3. **Admin** phê duyệt hoặc từ chối
+4. **Người dùng** có thể nhìn thấy khóa học đã phê duyệt
 
-## 9. Hướng phát triển tương lai
-* [ ] Tích hợp cổng thanh toán trực tuyến (VNPay/Momo).
-* [ ] Hệ thống đánh giá và nhận xét (Rating & Review).
-* [ ] Upload và phát video bài học trực tiếp.
-* [ ] Xây dựng RESTful API cho ứng dụng Mobile.
+## 11. Hướng phát triển tương lai
+* [ ] Tích hợp cổng thanh toán trực tuyến (VNPay/Momo)
+* [ ] Hệ thống đánh giá và nhận xét (Rating & Review)
+* [ ] Upload và phát video bài học trực tiếp
+* [ ] Xây dựng RESTful API cho ứng dụng Mobile
+* [ ] Hệ thống thông báo email tự động
+* [ ] Chứng chỉ hoàn thành khóa học
+* [ ] Forum/Đàm thoại giữa giáo viên và học viên
 
 ---
 
