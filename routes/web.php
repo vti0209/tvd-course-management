@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\WithdrawController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // ==========================================
@@ -101,6 +102,11 @@ Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::prefix('admin')->middleware(['auth:admin', 'admin'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Admin Profile
+    Route::get('/profile', [AdminProfileController::class, 'show'])->name('admin.profile.show');
+    Route::get('/profile/edit', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::put('/profile/update', [AdminProfileController::class, 'update'])->name('admin.profile.update');
 
     Route::resource('courses', CourseController::class, [
         'names' => [

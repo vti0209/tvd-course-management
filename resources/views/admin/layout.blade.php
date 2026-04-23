@@ -59,16 +59,24 @@
             </nav>
 
             <div class="sidebar-footer">
-                @auth
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <i class="fas fa-user-circle"></i>
+                @auth('admin')
+                <a href="{{ route('admin.profile.show') }}" class="user-info-link">
+                    <div class="user-info">
+                        @if(auth('admin')->user()->avatar && auth('admin')->user()->avatar != 'default-avatar.png')
+                            <div class="user-avatar">
+                                <img src="{{ asset('uploads/' . auth('admin')->user()->avatar) }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                            </div>
+                        @else
+                            <div class="user-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        @endif
+                        <div class="user-details">
+                            <p class="user-name">{{ auth('admin')->user()->full_name }}</p>
+                            <p class="user-role">{{ auth('admin')->user()->role ?? 'Quản trị viên' }}</p>
+                        </div>
                     </div>
-                    <div class="user-details">
-                        <p class="user-name">{{ auth()->user()->full_name }}</p>
-                        <p class="user-role">{{ auth()->user()->role ?? 'Quản trị viên' }}</p>
-                    </div>
-                </div>
+                </a>
                 <form action="/logout" method="POST" class="logout-form">
                     @csrf
                     <button type="submit" class="btn-logout">
