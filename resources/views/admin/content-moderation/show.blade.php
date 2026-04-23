@@ -272,6 +272,13 @@
                     <h6 class="mb-0"><i class="fas fa-times-circle"></i> Từ chối khóa học</h6>
                 </div>
                 <div class="card-body">
+                    @if($course->status === 'active')
+                    <div class="alert alert-warning mb-3" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        <strong>Cảnh báo:</strong> Khóa học này đã được phê duyệt và hiển thị công khai. 
+                        Từ chối sẽ ẩn khóa học và thông báo cho nhà cung cấp.
+                    </div>
+                    @endif
                     <form action="{{ route('admin.content-moderation.reject', $course->id) }}" method="POST">
                         @csrf
                         <div class="mb-3">

@@ -1,0 +1,232 @@
+/* Email Styles */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.header {
+    color: white;
+    padding: 20px;
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.header.success {
+    background-color: #28a745;
+}
+
+.header.danger {
+    background-color: #dc3545;
+}
+
+.header.info {
+    background-color: #007bff;
+}
+
+.content {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.content p {
+    margin: 10px 0;
+}
+
+.content h3 {
+    color: #333;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.content ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.content ul li {
+    margin: 8px 0;
+}
+
+.content ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.content ol li {
+    margin: 8px 0;
+}
+
+/* Info Box Styles */
+.info-box {
+    background-color: #e7f3ff;
+    padding: 15px;
+    border-left: 4px solid #2196F3;
+    margin: 15px 0;
+    border-radius: 3px;
+}
+
+.info-box h3 {
+    margin-top: 0;
+}
+
+.info-box ul {
+    margin: 10px 0;
+}
+
+/* Success Box */
+.success-box {
+    background-color: #e8f5e9;
+    padding: 15px;
+    border-left: 4px solid #28a745;
+    margin: 15px 0;
+    border-radius: 3px;
+}
+
+/* Warning Box */
+.warning-box {
+    background-color: #fff3cd;
+    padding: 15px;
+    border-left: 4px solid #ffc107;
+    margin: 15px 0;
+    border-radius: 3px;
+}
+
+/* Danger Box / Reason Box */
+.reason {
+    background-color: #fff3cd;
+    padding: 15px;
+    border-left: 4px solid #ff6b6b;
+    margin: 15px 0;
+    border-radius: 3px;
+}
+
+.reason p {
+    margin: 0;
+}
+
+/* Credentials Box */
+.credentials {
+    background-color: #fff;
+    padding: 15px;
+    border-left: 4px solid #28a745;
+    margin: 20px 0;
+    border-radius: 3px;
+}
+
+.credentials h3 {
+    margin-top: 0;
+}
+
+.credentials p {
+    margin: 8px 0;
+}
+
+/* Button Styles */
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+.button:hover {
+    background-color: #218838;
+    text-decoration: none;
+    color: white;
+}
+
+.button.primary {
+    background-color: #007bff;
+}
+
+.button.primary:hover {
+    background-color: #0056b3;
+}
+
+.button.danger {
+    background-color: #dc3545;
+}
+
+.button.danger:hover {
+    background-color: #c82333;
+}
+
+/* Footer Styles */
+.footer {
+    padding: 20px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+/* Link Styles */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Strong Text */
+strong {
+    font-weight: 600;
+    color: #222;
+}
+
+/* List Styles */
+.list-group {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.list-group li {
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    border-radius: 3px;
+}
+
+.list-group li:first-child {
+    border-radius: 3px 3px 0 0;
+}
+
+.list-group li:last-child {
+    border-radius: 0 0 3px 3px;
+    margin-bottom: 0;
+}
