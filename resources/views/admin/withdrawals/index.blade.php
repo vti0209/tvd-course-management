@@ -118,5 +118,13 @@
             </div>
         </div>
     </div>
+
+    <div class="card mt-4">
+        <div class="card-body bg-light">
+            <h5 class="mb-3">Tổng doanh thu của admin</h5>
+            <p class="mb-0">Tổng tiền phí xử lý 20% từ các yêu cầu rút tiền đã phê duyệt:</p>
+            <h3 class="mt-2">{{ number_format($adminRevenue, 0, '.', ',') }} đ</h3>
+        </div>
+    </div>
 </div>
 @endsection

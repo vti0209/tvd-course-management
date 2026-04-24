@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class WithdrawController extends Controller
@@ -25,9 +26,14 @@ class WithdrawController extends Controller
             ->latest('processed_at')
             ->paginate(15);
 
+        $adminRevenue = Withdrawal::approved()
+            ->selectRaw('SUM(amount * ?) as total', [Withdrawal::FEE_RATE])
+            ->value('total') ?: 0;
+
         return view('admin.withdrawals.index', [
             'pendingWithdrawals' => $pendingWithdrawals,
             'approvedWithdrawals' => $approvedWithdrawals,
+            'adminRevenue' => $adminRevenue,
         ]);
     }
 

@@ -8,6 +8,12 @@
     <h1>Yêu cầu rút tiền đã được phê duyệt</h1>
     <p>Xin chào {{ $withdrawal->provider->full_name ?? $withdrawal->provider->username }},</p>
     <p>Yêu cầu rút tiền <strong>#{{ $withdrawal->id }}</strong> với số tiền <strong>{{ number_format($withdrawal->amount, 0, '.', ',') }} đ</strong> đã được phê duyệt.</p>
+    <p>Hệ thống đã trừ <strong>20%</strong> phí xử lý, số tiền bạn sẽ nhận sau khi trừ phí là:</p>
+    <ul>
+        <li>Số tiền yêu cầu: <strong>{{ number_format($withdrawal->amount, 0, '.', ',') }} đ</strong></li>
+        <li>Phí xử lý 20%: <strong>{{ number_format($withdrawal->fee_amount, 0, '.', ',') }} đ</strong></li>
+        <li>Số tiền sau khi trừ phí: <strong>{{ number_format($withdrawal->net_amount, 0, '.', ',') }} đ</strong></li>
+    </ul>
     <p>Thông tin thanh toán:</p>
     <ul>
         <li>Ngân hàng: {{ $withdrawal->bank_name }}</li>

@@ -22,7 +22,9 @@
                 </div>
                 <div class="col-md-6">
                     <h6>Thông tin giao dịch</h6>
-                    <p>Số tiền: <strong>{{ number_format($withdrawal->amount, 0, '.', ',') }} đ</strong></p>
+                    <p>Số tiền yêu cầu: <strong>{{ number_format($withdrawal->amount, 0, '.', ',') }} đ</strong></p>
+                    <p>Phí xử lý 20%: <strong>{{ number_format($withdrawal->fee_amount, 0, '.', ',') }} đ</strong></p>
+                    <p>Số tiền sau khi trừ phí: <strong>{{ number_format($withdrawal->net_amount, 0, '.', ',') }} đ</strong></p>
                     <p>Ngân hàng: <strong>{{ $withdrawal->bank_name }}</strong></p>
                     <p>Số tài khoản: <strong>{{ $withdrawal->bank_account }}</strong></p>
                     <p>Chủ tài khoản: <strong>{{ $withdrawal->account_holder }}</strong></p>

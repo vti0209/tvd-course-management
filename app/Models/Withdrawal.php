@@ -29,6 +29,13 @@ class Withdrawal extends Model
         'processed_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'fee_amount',
+        'net_amount',
+    ];
+
+    public const FEE_RATE = 0.2;
+
     public function provider()
     {
         return $this->belongsTo(User::class, 'provider_id');
@@ -52,5 +59,15 @@ class Withdrawal extends Model
     public function scopeRejected($query)
     {
         return $query->where('status', 'rejected');
+    }
+
+    public function getFeeAmountAttribute()
+    {
+        return round($this->amount * self::FEE_RATE, 2);
+    }
+
+    public function getNetAmountAttribute()
+    {
+        return round($this->amount - $this->fee_amount, 2);
     }
 }
