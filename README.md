@@ -3,10 +3,16 @@
 
 # TVD - Online Course Management System
 
+### Hồ Văn Tiết - Full-stack Developer - 24PNV1A
+### Hồ Thị Vãi - Full-stack Developer - 24PNV1A
+### Nguyễn Thị Dung - Full-stack Developer- 24PNV1A
+
 ## 1. Giới thiệu
 Online Course Management System là hệ thống quản lý khóa học trực tuyến cho phép:
-* Người dùng đăng ký, đăng nhập và tham gia đăng ký khóa học.
-* Quản trị viên quản lý khóa học và người dùng (CRUD).
+* User và Provider: Đăng ký, đăng nhập, đăng xuất. Admin: Đăng nhập, đăng xuất
+* Người dùng xem, đăng ký mua khóa học và tham gia khóa học.
+* Quản trị viên (Admin) quản lý khóa học, người dùng và xử lý các vấn đề được yêu cầu từ Provider.
+* Nhà cung cấp (Provider) Khóa học (CRUD), học viên (quản lý học viên học khóa học của mình).
 * Tìm kiếm, lọc và xem chi tiết khóa học.
 * Dự án được xây dựng theo mô hình MVC sử dụng Laravel.
 
@@ -21,11 +27,11 @@ Online Course Management System là hệ thống quản lý khóa học trực t
 ### Hồ Thị Vãi:
 * Xây dựng chức năng Authentication (Login, Register, Logout)
 * Phân quyền truy cập (User/Admin)
-* Thực thi các thao tác nhanh cho user, admin (lọc, tìm kiếm)
+* Thực thi xử lý các phần liên quan đến gửi mail và quên mật khẩu
 
 ### Hồ Văn Tiết:
 * Giao diện người dùng (Header, Footer, Banner)
-* Trang Home, Profile, My Courses
+* Trang Home, Profile, My Courses, Contact, About
 * Trang chi tiết khóa học + đăng ký khóa học
 * Tìm kiếm và lọc khóa học
 
@@ -67,9 +73,7 @@ Online Course Management System là hệ thống quản lý khóa học trực t
 ## 5. Yêu cầu hệ thống
 * **PHP:** >= 8.1
 * **Composer:** >= 2.0
-* **Node.js:** >= 14.0 (cho Vite)
 * **MySQL:** >= 5.7
-* **Apache/Nginx** với mod_rewrite
 
 ## 6. Cấu trúc thư mục chính
 ```
@@ -129,16 +133,20 @@ php artisan serve
 
 ## 9. Tài khoản mẫu
 #### Admin:
-* Email: `admin@example.com`
-* Password: `123456`
+* Email: `admin@gmail.com`
+* Password: `admin123`
 
 #### User:
-* Email: `user@example.com`
+* Email: `hocvien5@gmail.com`
+* Password: `123456`
+
+#### Provider:
+* Email: `tiet.ho@geminiacademy.edu.vn`
 * Password: `123456`
 
 ## 10. Quy trình phê duyệt khóa học
 1. **Nhà cung cấp** tạo khóa học và submit
-2. **Quản trị viên** kiểm tra thông tin khóa học
+2. **Admin** kiểm tra thông tin khóa học
 3. **Admin** phê duyệt hoặc từ chối
 4. **Người dùng** có thể nhìn thấy khóa học đã phê duyệt
 
@@ -148,8 +156,6 @@ php artisan serve
 * [ ] Upload và phát video bài học trực tiếp
 * [ ] Xây dựng RESTful API cho ứng dụng Mobile
 * [ ] Hệ thống thông báo email tự động
-* [ ] Chứng chỉ hoàn thành khóa học
-* [ ] Forum/Đàm thoại giữa giáo viên và học viên
 
 ---
 
