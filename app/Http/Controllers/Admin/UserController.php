@@ -82,7 +82,13 @@ class UserController extends Controller
             \Log::info('Show method called', ['user_id' => $user->id, 'user_username' => $user->username]);
 
             // Load relationships
-            $user->load('courses');
+            if ($user->isProvider()) {
+                // For providers, load created courses
+                $user->load('createdCourses');
+            } else {
+                // For regular users, load enrolled courses
+                $user->load('courses');
+            }
 
             // Log the action
             Log::info('Admin viewed user details', [

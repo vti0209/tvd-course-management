@@ -124,10 +124,10 @@
                 </div>
             </div>
 
-            @if($user->isUser() || $user->isProvider())
+            @if($user->isUser())
             <div class="card mt-4">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">Khóa học</h5>
+                    <h5 class="mb-0">Khóa học đã đăng ký</h5>
                 </div>
                 <div class="card-body">
                     @if($user->courses->count() > 0)
@@ -138,7 +138,7 @@
                                     <th>ID</th>
                                     <th>Tên khóa học</th>
                                     <th>Ngày đăng ký</th>
-                                    <th>Trạng thái</th>
+                                    <th>Trạng thái thanh toán</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -167,6 +167,57 @@
                     <p class="text-muted text-center py-4">
                         <i class="fas fa-inbox" style="font-size: 32px;"></i>
                         <br>Chưa đăng ký khóa học nào
+                    </p>
+                    @endif
+                </div>
+            </div>
+            @elseif($user->isProvider())
+            <div class="card mt-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Khóa học đã tạo</h5>
+                </div>
+                <div class="card-body">
+                    @if($user->createdCourses->count() > 0)
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên khóa học</th>
+                                    <th>Trạng thái duyệt</th>
+                                    <th>Học viên</th>
+                                    <th>Ngày tạo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($user->createdCourses as $course)
+                                <tr>
+                                    <td>#{{ $course->id }}</td>
+                                    <td>
+                                        <a href="/admin/content-moderation/{{ $course->id }}" target="_blank">
+                                            {{ $course->title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @if($course->status === 'pending')
+                                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                        @elseif($course->status === 'active')
+                                        <span class="badge bg-success">Đã phê duyệt</span>
+                                        @else
+                                        <span class="badge bg-danger">Bị từ chối</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $course->enrollments->count() }}</td>
+                                    <td>{{ $course->created_at->format('d/m/Y') }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @else
+                    <p class="text-muted text-center py-4">
+                        <i class="fas fa-inbox" style="font-size: 32px;"></i>
+                        <br>Chưa tạo khóa học nào
                     </p>
                     @endif
                 </div>
