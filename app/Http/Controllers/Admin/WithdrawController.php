@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Enrollment;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,14 @@ class WithdrawController extends Controller
             ->latest('processed_at')
             ->paginate(15);
 
+        $totalCoursePayments = Enrollment::where('payment_status', 'paid')
+            ->sum('price_at_purchase');
+
+        $totalWithdrawalRequests = Withdrawal::whereIn('status', ['pending', 'approved'])
+            ->sum('amount');
+
+        $remainingCourseBalance = max(0, $totalCoursePayments - $totalWithdrawalRequests);
+
         $adminRevenue = Withdrawal::approved()
             ->selectRaw('SUM(amount * ?) as total', [Withdrawal::FEE_RATE])
             ->value('total') ?: 0;
@@ -34,6 +43,9 @@ class WithdrawController extends Controller
             'pendingWithdrawals' => $pendingWithdrawals,
             'approvedWithdrawals' => $approvedWithdrawals,
             'adminRevenue' => $adminRevenue,
+            'totalCoursePayments' => $totalCoursePayments,
+            'totalWithdrawalRequests' => $totalWithdrawalRequests,
+            'remainingCourseBalance' => $remainingCourseBalance,
         ]);
     }
 

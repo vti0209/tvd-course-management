@@ -121,6 +121,18 @@
 
     <div class="card mt-4">
         <div class="card-body bg-light">
+            <h5 class="mb-3">Tổng tiền tất cả các khóa học</h5>
+            <p class="mb-0">Tổng doanh thu từ các giao dịch học viên đã thanh toán thành công:</p>
+            <h3 class="mt-2">{{ number_format($totalCoursePayments, 0, '.', ',') }} đ</h3>
+            <p class="mb-0 mt-3">Tổng tiền đã được yêu cầu rút (pending + approved):</p>
+            <h4 class="mt-2 text-danger">{{ number_format($totalWithdrawalRequests, 0, '.', ',') }} đ</h4>
+            <p class="mb-0 mt-3">Số dư còn lại sau khi trừ yêu cầu rút tiền:</p>
+            <h4 class="mt-2 text-success">{{ number_format($remainingCourseBalance, 0, '.', ',') }} đ</h4>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body bg-light">
             <h5 class="mb-3">Tổng doanh thu của admin</h5>
             <p class="mb-0">Tổng tiền phí xử lý 20% từ các yêu cầu rút tiền đã phê duyệt:</p>
             <h3 class="mt-2">{{ number_format($adminRevenue, 0, '.', ',') }} đ</h3>
