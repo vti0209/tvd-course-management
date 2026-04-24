@@ -22,16 +22,18 @@ class HomeController extends Controller
 
     }
     // Hiển thị chi tiết khóa học
-         public function detail($id)
-        {
-            $course = Course::with(['category', 'chapters'])->findOrFail($id);
-            $isEnrolled = false;
-            if (Auth::check()) {
-                // Kiểm tra quan hệ enrollments trong Model User
-                $isEnrolled = Auth::user()->enrollments()->where('course_id', $id)->exists();
-            }
-            return view('users.course-detail', compact('course', 'isEnrolled'));
+    public function detail($id)
+    {
+        $course = Course::with(['category', 'chapters'])
+            ->where('status', 'active')
+            ->findOrFail($id);
+        $isEnrolled = false;
+        if (Auth::check()) {
+            // Kiểm tra quan hệ enrollments trong Model User
+            $isEnrolled = Auth::user()->enrollments()->where('course_id', $id)->exists();
         }
+        return view('users.course-detail', compact('course', 'isEnrolled'));
+    }
     //Xử lý đăng ký khóa học
     public function enroll(Request $request, $id)
     {
@@ -93,13 +95,14 @@ class HomeController extends Controller
         return view('users.courses', compact('courses', 'searchHeading', 'filterHeading'));
     }
     public function courses()
-{
-    $courses = Course::with(['category:id,name', 'chapters.lessons'])
-        ->orderBy('created_at', 'desc')
-        ->paginate(8); // phân trang 8 khóa học mỗi trang
+    {
+        $courses = Course::with(['category:id,name', 'chapters.lessons'])
+            ->where('status', 'active')
+            ->orderBy('created_at', 'desc')
+            ->paginate(8); // phân trang 8 khóa học mỗi trang
 
-    return view('users.courses', compact('courses'));
-}
+        return view('users.courses', compact('courses'));
+    }
 
     public function about()
     {
